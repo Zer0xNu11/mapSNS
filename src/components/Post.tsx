@@ -11,7 +11,7 @@ const Post:React.FC<PostProps> = ({post}) => {
     <div className="flex items-center mb-2">
       <img
         className="w-10 h-10 rounded-full mr-2"
-        src="https://via.placeholder.com/150"
+        src="/images/placeholder"
         alt="User Avatar"
       />
       <div>
