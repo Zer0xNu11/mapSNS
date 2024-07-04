@@ -43,6 +43,7 @@ export const login = async (values: z.infer<typeof LoginSchema> ) => {
 
 export async function logout() {
   try {
+    console.log('signout')
     await signOut();
   } catch (error) {
     throw error;
@@ -69,7 +70,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   await prismadb.user.create({
     data: {
-      username: name,
+      name: name,
       email: email,
       password: hashedPassword,
     },

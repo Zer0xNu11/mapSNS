@@ -21,6 +21,7 @@ model User{
   email String @unique
   password String
   posts Post[]
+  comments Comment[]
 }
 
 model Post{
@@ -28,5 +29,18 @@ model Post{
   content String 
   createdAt DateTime @default(now())
   authorId String  @db.ObjectId
-  author User @relation(fields: [authorId], references:[id])
+  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
+  comments Comment[]
+}
+
+model Comment{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  body String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  author User @relation(fields: [userId], references:[id], onDelete:Cascade)
+  post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
 }

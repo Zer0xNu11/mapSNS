@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 
 const noto_Sans_JP = Noto_Sans_JP({ subsets: ["latin"] });
 
@@ -16,9 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={noto_Sans_JP.className}>
-        <Navbar />
+    <html lang="ja">
+      <body className={noto_Sans_JP.className}> 
         {children}
       </body>
     </html>

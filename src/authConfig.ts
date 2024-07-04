@@ -12,15 +12,30 @@ export const authConfig = {
   session: { strategy: "jwt" }, //JWT利用によりサーバーメモリ節約
   callbacks: {
 
-    // async session({token, session}){
-    //   console.log({sessionToken: token})
-    //   return session;
-    // },
+    //session
+    
+    async session({token, session}){
+      if(token.sub && session.user){
+        session.user.id = token.sub;
+      }
 
-    // async jwt({token, user, profile}){
-    //   console.log(token);
-    //   return token;
-    // },
+      // if(token.role && session.user){
+      //   session.user.role = token.role as UserRole;
+      // }
+      
+      return session;
+    },
+
+    async jwt({token, user}){
+      if(user){token.name = user.name}else{console.log('noUser')}
+      console.log({token:token});
+      //sub _id
+      return token;
+    },
+
+    
+
+
 
     authorized({ request, auth }) {
       //認証前後の制約について設定する request情報 auth認証情報オブジェクト

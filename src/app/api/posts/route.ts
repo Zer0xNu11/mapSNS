@@ -6,6 +6,9 @@ export const GET = async () => {
     const latestPosts = await prismadb.post.findMany({
       take: 10,
       orderBy: { createdAt: "desc" },
+      include: {
+        author:true,
+      }
     });
     return NextResponse.json({message:'load done', data: latestPosts})
     //jsonレスポンス
