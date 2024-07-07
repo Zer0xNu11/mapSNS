@@ -6,6 +6,9 @@ import { prismadb } from "@/globals/db";
 export async function post(formData: FormData){
   const session = await auth();
   const content:string = formData.get('post') as string;
+  console.log({
+    memo: 'action/post.ts',
+    session: session})
   if(content === null){
     throw new Error
   }
@@ -21,8 +24,8 @@ export async function post(formData: FormData){
       },
     });
   }
-  console.log(session)
   }catch(error){
+    console.log('投稿できない')
     throw error;
   }
 }

@@ -10,11 +10,11 @@ export const GET = async () => {
         author:true,
       }
     });
-    return NextResponse.json({message:'load done', data: latestPosts})
+    return NextResponse.json({message:'成功', data: latestPosts})
     //jsonレスポンス
   } catch (err) {
     console.log(err);
-    return NextResponse.json({message:'load done'})
+    return NextResponse.json({message:'失敗'})
   }
 };
 

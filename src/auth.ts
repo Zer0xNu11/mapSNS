@@ -1,15 +1,81 @@
 import { getUserByEmail } from "@/app/db/user";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import NextAuth, { NextAuthConfig } from "next-auth";
-import { authConfig } from "@/authConfig";
-import Credentials from "next-auth/providers/credentials";
 import github from "next-auth/providers/github";
+import google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "./lib/schemas";
+import { DEFAULT_LOGIN_REDIRECT, authRoutes, publicRoutes } from "./routes";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prismadb } from "./globals/db";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  ...authConfig,
+export const config: NextAuthConfig = ({
+  basePath: "/api/auth",
+  adapter: PrismaAdapter(prismadb),
+  session: { strategy: "jwt" }, //JWT利用によりサーバーメモリ節約
+  callbacks: {
+    //session
+
+    authorized({ auth, request: { nextUrl } }) {
+      //request.nextUrlは現在アクセスしようとしているURLを示す（URLは分割してはいっている）
+      /*
+        https://example.com/dashboard にアクセスしようとしている場合
+        nextUrl.pathname: パス（例: /dashboard）
+        nextUrl.host: ホスト名（例: example.com）
+        nextUrl.protocol: プロトコル（例: https:）
+        nextUrl.search: クエリ文字列（例: ?key=value）
+        nextUrl.hash: URLのハッシュ部分（例: #section1）
+      */
+      //認証前後の制約について設定する request情報 auth認証情報オブジェクト
+      const isLoggedIn = !!auth?.user; //ログインしているかどうかチェック
+      const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+      const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+      try {
+        //ログイン、レジスターのサイト訪問時に、
+        if (isAuthRoute) {
+          // ログイン済みの時リダイレクト
+          if (isLoggedIn) {
+            return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+          }
+
+          return true;
+        }
+
+        //ルートフォルダ以外のページにログインしていない時アクセスすると拒否
+        if (!isPublicRoute && !isLoggedIn) {
+          return false;
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async session({token, session}){
+      if(token.sub && session.user){
+        session.user.id = token.sub;
+      }
+
+      return session;
+    },
+
+    jwt({token, trigger, session}){
+      if(trigger === 'update')token.name = session.user.name;
+      return token;
+    },
+
+  },
+
   providers: [
-    // パスワード認証
+    // // OAuth設定
+    // github({
+    //   clientId: process.env.AUTH_GITHUB_ID,
+    //   clientSecret: process.env.AUTH_GITHUB_SECRET,
+    // }),
+
+    // google({}),
+
+    // パスワード認証 ログイン関連
     Credentials({
       async authorize(credentials) {
         const parsedCredentials = LoginSchema.safeParse(credentials);
@@ -27,13 +93,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return null;
       },
     }),
-    //OAuth設定
-    // github({
-    //   clientId: process.env.AUTH_GITHUB_ID,
-    //   clientSecret:process.env.AUTH_GITHUB_SECRET,
-    // }),
   ],
 });
+
+export const {handlers, auth, signIn, signOut} = NextAuth(config);
+
+
 
 /*  
 =======auth のプロパティ========

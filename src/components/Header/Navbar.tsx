@@ -1,7 +1,9 @@
 import Link from "next/link";
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { logout } from "@/actions/authAction";
+import { signOut } from "@/auth";
+import UserButton from "./UserButton";
 
 const Navbar = () => {
   return (
@@ -13,14 +15,7 @@ const Navbar = () => {
         <nav>
           <ul className="flex space-x-4">
             <>
-              <form
-                action={async () => {
-                  "use server";
-                  logout();
-                }}
-              >
-                <Button>ログアウト</Button>
-              </form>
+                <UserButton />
             </>
           </ul>
         </nav>

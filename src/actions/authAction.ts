@@ -4,7 +4,7 @@ import { AuthError } from "next-auth";
 import bcrypt from "bcrypt";
 
 import { signIn, signOut } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
 import { LoginSchema, RegisterSchema } from "@/lib/schemas";
 import { getUserByEmail } from "@/app/db/user";
 import { prismadb } from "@/globals/db";
@@ -43,7 +43,7 @@ export const login = async (values: z.infer<typeof LoginSchema> ) => {
 
 export async function logout() {
   try {
-    console.log('signout')
+    console.log('================signout=================')
     await signOut();
   } catch (error) {
     throw error;

@@ -6,6 +6,7 @@ const getLatestPosts = async () : Promise<PostType[]> => {
   const response = await fetch(`${process.env.API_URL}/posts`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
+  console.log('Fetching URL:', response);
 
   if(response.status !== 200){
     throw new Error();
@@ -17,7 +18,6 @@ const getLatestPosts = async () : Promise<PostType[]> => {
 
 export default async function Posts(){
   const posts = await getLatestPosts();
-  console.log(posts);
 
   return (
     <>
