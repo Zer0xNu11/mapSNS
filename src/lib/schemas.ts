@@ -21,3 +21,9 @@ export const LoginSchema = z.object({
   }),
 })
 
+export const PostSchema = z.object({
+  postText: z.string().max(60,{
+    message:'最大60文字です'
+  }),
+})
+

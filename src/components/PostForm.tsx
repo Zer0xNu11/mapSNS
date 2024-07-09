@@ -1,14 +1,13 @@
 import React from 'react'
 import Posts from './Posts'
-import PostForm from './test-postform'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import { post } from '@/actions/post'
 
-const Timeline = () => {
+const PostForm = () => {
   return (
     <div className="min-h-screen bg-gray-100">
-    <main className="container mx-auto py-4">
-      {/* <div className="bg-white shadow-md rounded p-4 mb-4">
+      <div className="bg-white shadow-md rounded p-4 mb-4">
         <form action={post}>
           <textarea
             name='post'
@@ -22,15 +21,9 @@ const Timeline = () => {
             投稿
           </button>
         </form>
-      </div> */}
-      <PostForm />
-      <Link href='/create-post'>
-      <Button>投稿</Button>
-      </Link>
-      <Posts />
-    </main>
+      </div>
   </div>
   )
 }
 
-export default Timeline
+export default PostForm

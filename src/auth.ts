@@ -43,7 +43,7 @@ export const config: NextAuthConfig = ({
 
         //ルートフォルダ以外のページにログインしていない時アクセスすると拒否
         if (!isPublicRoute && !isLoggedIn) {
-          return false;
+          return Response.redirect(new URL('/', nextUrl));
         }
         return true;
       } catch (error) {
@@ -54,13 +54,14 @@ export const config: NextAuthConfig = ({
     async session({token, session}){
       if(token.sub && session.user){
         session.user.id = token.sub;
+        // session.user.image = token.
       }
 
       return session;
     },
 
-    jwt({token, trigger, session}){
-      if(trigger === 'update')token.name = session.user.name;
+    async jwt({token, trigger, session}){
+      console.log(token);
       return token;
     },
 

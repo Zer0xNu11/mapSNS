@@ -78,3 +78,93 @@ Next.js 14における`NextResponse`は、サーバーサイドのAPI routesやS
 `NextResponse`を使用することで、Next.js 14アプリケーションのサーバーサイド機能で柔軟かつ強力なレスポンス処理が可能になります。APIルート、ミドルウェア、Server Actionsなど、様々な場面で活用できる重要な機能です。
 
 これらの機能を適切に使用することで、より高度で効率的なサーバーサイドロジックを実装できます。特定の使用例や詳細について知りたい点があれば、お気軽にお尋ねください。
+
+
+<< PostForm>>
+import { post } from "@/actions/post";
+import { PostSchema } from "@/lib/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React, { startTransition } from "react";
+import { Form, useForm } from "react-hook-form";
+import { z } from "zod";
+
+const PostForm = () => {
+  const form = useForm<z.infer<typeof PostSchema>>({
+    resolver: zodResolver(PostSchema),
+    defaultValues: {
+      postText: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof PostSchema>) => {
+    startTransition(() => {
+      post(values);
+    });
+  };
+
+  return (
+    <div className="bg-white shadow-md rounded p-4 mb-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <textarea
+            name="post"
+            className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+            placeholder="What's on your mind?"
+          ></textarea>
+          <button
+            type="submit"
+            className="mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded"
+          >
+            投稿
+          </button>
+        </form>
+      </Form>
+    </div>
+  );
+};
+
+export default PostForm;
+
+
+<<post copy>>
+
+'use server'
+
+import { auth } from "@/auth";
+import { prismadb } from "@/globals/db";
+import { PostSchema } from "@/lib/schemas";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
+export const post = async (values: z.infer<typeof PostSchema> ) => {
+  
+  const validatedFields = PostSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: "Invalid fields!" };
+  }
+
+  const {postText} = validatedFields.data;
+  const session = await auth();
+  console.log({
+    memo: 'action/post.ts',
+    session: session})
+
+  try{
+    if(session?.user?.id){
+    await prismadb.post.create({
+      data:{
+        content: postText,
+        authorId: session?.user?.id,
+      },
+      include:{
+        author: true,
+      },
+    });
+    redirect('/home')
+  }
+  }catch(error){
+    console.log('投稿できない')
+    throw error;
+  }
+}

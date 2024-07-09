@@ -18,9 +18,6 @@ export default async function Top() {
           <Link href="/register" className="m-5">
             <Button>新規登録</Button>
           </Link>
-          <Link href="/home" className="m-5">
-            <Button>ログインせず使用する</Button>
-          </Link>
         </div>
       </main>
     </>

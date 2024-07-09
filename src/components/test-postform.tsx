@@ -1,15 +1,23 @@
+'use client'
+
 import React from 'react'
 import Posts from './Posts'
-import PostForm from './test-postform'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import { post } from '@/actions/post'
+import { createPost, FormState } from '@/actions/createPost'
+import { useFormState } from 'react-dom'
 
-const Timeline = () => {
+const PostForm = () => {
+  const initialState: FormState = {error: ''};
+  const [state, formAction] = useFormState(createPost, initialState);
+  useFormState
+
+
   return (
     <div className="min-h-screen bg-gray-100">
-    <main className="container mx-auto py-4">
-      {/* <div className="bg-white shadow-md rounded p-4 mb-4">
-        <form action={post}>
+      <div className="bg-white shadow-md rounded p-4 mb-4">
+        <form action={formAction}>
           <textarea
             name='post'
             className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -22,15 +30,9 @@ const Timeline = () => {
             投稿
           </button>
         </form>
-      </div> */}
-      <PostForm />
-      <Link href='/create-post'>
-      <Button>投稿</Button>
-      </Link>
-      <Posts />
-    </main>
+      </div>
   </div>
   )
 }
 
-export default Timeline
+export default PostForm

@@ -1,6 +1,7 @@
 import React from "react";
 import { signIn, signOut } from "@/auth";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export function SignIn({
   provider,
@@ -32,3 +33,24 @@ export function SignOut({
     </form>
   );
 }
+
+export function BioMenu(){
+  return(
+    <Link href="/bio-menu" className="w-full">
+    <Button variant="ghost" className="w-full p-0 ">
+      プロフィール
+    </Button>
+    </Link>
+  )
+}
+
+export function UserSetting(){
+  return(
+    <Link href="/user-setting" className="w-full">
+    <Button variant="ghost" className="w-full p-0 ">
+      設定
+    </Button>
+    </Link>
+  )
+}
+

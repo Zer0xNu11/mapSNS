@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { logout } from "@/actions/authAction";
 import { signOut } from "@/auth";
 import UserButton from "./UserButton";
+import SortButton from "./SortButton";
 
 const Navbar = () => {
   return (
@@ -15,6 +16,7 @@ const Navbar = () => {
         <nav>
           <ul className="flex space-x-4">
             <>
+                <SortButton/>
                 <UserButton />
             </>
           </ul>
