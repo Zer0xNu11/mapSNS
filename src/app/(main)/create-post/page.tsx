@@ -1,5 +1,5 @@
 'use client'
-import PostForm from '@/components/PostForm'
+import PostForm from '@/components/Post/PostForm'
 import React from 'react'
 
 const CleatePost = () => {

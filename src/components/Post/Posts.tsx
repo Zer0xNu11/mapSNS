@@ -6,13 +6,14 @@ const getLatestPosts = async () : Promise<PostType[]> => {
   const response = await fetch(`${process.env.API_URL}/posts`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
-  console.log('Fetching URL:', response);
+  // console.log('Fetching URL:', response);
 
   if(response.status !== 200){
     throw new Error();
   }
 
   const data = await response.json();
+  console.log({data: data})
   return data.data as PostType[];
 }
 
@@ -21,7 +22,7 @@ export default async function Posts(){
 
   return (
     <>
-      {posts.map((post)=><Post key={post.id} post={post} />)}
+      {posts ? posts.map((post)=><Post key={post.id} post={post}/>) : 'No post'}
     </>
   )
 }

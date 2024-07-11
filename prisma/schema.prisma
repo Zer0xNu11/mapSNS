@@ -20,7 +20,7 @@ model User{
   name String
   email String @unique
   password String
-  imageUrl String
+  imageUrl String?
   posts Post[]
   comments Comment[]
 }
@@ -31,7 +31,12 @@ model Post{
   createdAt DateTime @default(now())
   authorId String  @db.ObjectId
   author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
+  likedIds String[] @db.ObjectId
+  open Boolean[]
+  point String[]
+
   comments Comment[]
+
 }
 
 model Comment{

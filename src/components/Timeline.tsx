@@ -1,8 +1,7 @@
 import React from 'react'
-import Posts from './Posts'
-import PostForm from './test-postform'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import Posts from './Post/Posts'
 
 const Timeline = () => {
   return (
@@ -23,7 +22,6 @@ const Timeline = () => {
           </button>
         </form>
       </div> */}
-      <PostForm />
       <Link href='/create-post'>
       <Button>投稿</Button>
       </Link>
