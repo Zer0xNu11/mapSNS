@@ -1,33 +1,44 @@
+'use server'
+
 import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 
-export async function likeHandler(toggle: string, postId: string, formData: FormData) {
+export async function likeHandler(postId: string) {
+  console.log({postId : postId})
   const session = await auth();
+  const userId = session?.user?.id
   try {
-    if (session?.user?.id) {
-      if (postId !== 'string') {
-        return new Error('invalid ID');
+    if (userId) { 
+      if (!postId) {
+        console.log('無効な投稿')
+        return ''
       }
-
       const post = await prismadb.post.findUnique({
         where:{
           id: postId
         }
       });
 
+
       if(!post){
         throw new Error('invalid ID')
       }
 
+      const userExists = post?.likedIds.includes(userId) ?? false;
+      console.log({
+        userExists : userExists,
+        postId : post.id
+      })
+
       let updatedLikedIds = [...(post.likedIds || [])]
 
-      if(toggle === 'like'){
-        updatedLikedIds.push(session.user.id);
+      if(userExists === false){
+        updatedLikedIds.push(userId);
       }
 
 
-      if(toggle === 'unlike'){
-        updatedLikedIds = updatedLikedIds.filter((likedId)=> likedId !== session.user?.id);
+      if(userExists === true){
+        updatedLikedIds = updatedLikedIds.filter((likedId)=> likedId !== userId);
       }
       
       const updatedPost = await prismadb.post.update({

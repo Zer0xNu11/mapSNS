@@ -20,8 +20,10 @@ import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
 import { RegisterSchema } from "@/lib/schemas";
 import { register } from "@/actions/authAction";
+import { useRouter } from "next/navigation";
 
 export const RegisterForm = () => {
+  const router = useRouter();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition(); //遅延処理用のhook
@@ -54,6 +56,7 @@ export const RegisterForm = () => {
       .then((data)=>{
         setError(data.error);
         setSuccess(data.success)
+        router.push('/login');
       });
     });
   };

@@ -1,6 +1,7 @@
 import React from 'react'
 import Post from './Post'
 import { PostType } from '@/types'
+import { SessionProvider } from 'next-auth/react';
 
 const getLatestPosts = async () : Promise<PostType[]> => {
   const response = await fetch(`${process.env.API_URL}/posts`,{

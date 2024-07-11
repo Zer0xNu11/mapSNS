@@ -1,36 +1,74 @@
 import { PostType } from "@/types";
-// import { PostLikeIcon } from "./PostLikeIcon";
 import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
+import { PostLikeIcon } from "./PostLikeIcon";
 
 export interface PostProps {
   post: PostType;
   isLiked?: boolean;
+  countLikes? : number
+}
+
+interface dataModel{
+  userExists : boolean,
+  countLikes : number,
 }
 
 const getIsLiked = async (postId: string) => {
+  console.log({postId : postId})
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.id
   try {
-    if(!userId){return new Error}
-    const post = await prismadb.post.findUnique({
+    if (userId) { 
+      if (!postId) {
+        console.log('無効な投稿')
+        return ''
+      }
+      const post = await prismadb.post.findUnique({
         where:{
-          id: postId,
-        }});
+          id: postId
+        }
+      });
+
+
+      if(!post){
+        throw new Error('invalid ID')
+      }
+
+      const userExists = post?.likedIds.includes(userId) ?? false;
+      const countLikes = post?.likedIds.length
+
+      const data : dataModel = {
+        userExists : userExists,
+        countLikes : countLikes,
+      }
+
+      console.log({
+        postId : post.id,
+        userExists : userExists,
+        countLikes : countLikes,
+      })
+
+      return data;
       
-    const userExists = post?.likedIds.includes(userId) ?? false;
-
-    const isLiked = userExists ? true : false;
-    return isLiked;
-
+      
+    }
   } catch (err) {
-    console.log(err);
+    console.log("いいねできない");
+    return err;
   }
+
 }
+
+
 
 const Post: React.FC<PostProps> = async ({post}) => {
   // const isLiked = await getIsLiked(post.id);
-  const isLiked = true;
+  const data : dataModel = await getIsLiked(post.id) as dataModel;
+  const {userExists, countLikes} = data
+  const isLiked = userExists;
+  
+
   console.log({ isLiked: isLiked });
 
   return (
@@ -50,7 +88,8 @@ const Post: React.FC<PostProps> = async ({post}) => {
           </div>
         </div>
         <p className="text-gray-700 break-all">{post.content}</p>
-        {/* <PostLikeIcon post={post} isLiked={!!isLiked} /> */}
+        <PostLikeIcon post={post} isLiked={!!isLiked} countLikes={countLikes}/>
+        {/* <p>{`${isLiked}`}</p> */}
       </div>
     </div>
   );

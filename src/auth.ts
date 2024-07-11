@@ -61,7 +61,7 @@ export const config: NextAuthConfig = ({
     },
 
     async jwt({token, trigger, session}){
-      console.log(token);
+      // console.log(token);
       return token;
     },
 
