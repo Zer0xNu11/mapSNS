@@ -9,6 +9,8 @@
 
 # testing
 /coverage
+memo
+memo.md
 
 # next.js
 /.next/
