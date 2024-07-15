@@ -9,7 +9,7 @@ import { DEFAULT_LOGIN_REDIRECT, authRoutes, publicRoutes } from "./routes";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prismadb } from "./globals/db";
 
-export const config: NextAuthConfig = ({
+export const config: NextAuthConfig = {
   basePath: "/api/auth",
   adapter: PrismaAdapter(prismadb),
   session: { strategy: "jwt" }, //JWT利用によりサーバーメモリ節約
@@ -43,7 +43,7 @@ export const config: NextAuthConfig = ({
 
         //ルートフォルダ以外のページにログインしていない時アクセスすると拒否
         if (!isPublicRoute && !isLoggedIn) {
-          return Response.redirect(new URL('/', nextUrl));
+          return Response.redirect(new URL("/", nextUrl));
         }
         return true;
       } catch (error) {
@@ -51,8 +51,8 @@ export const config: NextAuthConfig = ({
       }
     },
 
-    async session({token, session}){
-      if(token.sub && session.user){
+    async session({ token, session }) {
+      if (token.sub && session.user) {
         session.user.id = token.sub;
         // session.user.image = token.
       }
@@ -60,11 +60,10 @@ export const config: NextAuthConfig = ({
       return session;
     },
 
-    async jwt({token, trigger, session}){
+    async jwt({ token, trigger, session }) {
       // console.log(token);
       return token;
     },
-
   },
 
   providers: [
@@ -95,11 +94,9 @@ export const config: NextAuthConfig = ({
       },
     }),
   ],
-});
+};
 
-export const {handlers, auth, signIn, signOut} = NextAuth(config);
-
-
+export const { handlers, auth, signIn, signOut } = NextAuth(config);
 
 /*  
 =======auth のプロパティ========

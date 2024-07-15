@@ -199,3 +199,67 @@ const PostForm = () => {
 }
 
 export default PostForm
+
+======================= mongoDB Prisma setting ==================================
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+
+//chema.prismaファイルの内容を元にデータベースの操作に利用するPrisma Clientを作成するために利用
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  password String
+  imageUrl String?
+  posts Post[]
+  comments Comment[]
+}
+
+model Post{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  content String 
+  createdAt DateTime @default(now())
+  authorId String  @db.ObjectId
+  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
+  likedIds String[] @db.ObjectId
+  open Boolean[]
+  point String[]
+
+  comments Comment[]
+
+}
+
+model Comment{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  body String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  userId String @db.ObjectId
+  postId String @db.ObjectId
+
+  author User @relation(fields: [userId], references:[id], onDelete:Cascade)
+  post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
+}
+
+model Record{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  userId String @db.ObjectId
+  postsId String[]
+ 
+}

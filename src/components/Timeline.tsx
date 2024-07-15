@@ -22,7 +22,7 @@ const Timeline = () => {
           </button>
         </form>
       </div> */}
-      <Link href='/create-post'>
+      <Link href='../create-post'>
       <Button>投稿</Button>
       </Link>
       <Posts />

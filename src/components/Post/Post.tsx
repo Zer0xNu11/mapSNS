@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
+import VoiceButton from "../VoiceButton";
 
 export interface PostProps {
   post: PostType;
@@ -78,7 +79,9 @@ const Post: React.FC<PostProps> = async ({post}) => {
         <div className="flex items-center mb-2">
           <Image
             className="w-10 h-10 rounded-full mr-2"
-            src="images/placeholder.png"
+            src='/images/placeholder.png'
+            width='100'
+            height='100'
             alt="User Avatar"
           />
           <div>
@@ -90,7 +93,8 @@ const Post: React.FC<PostProps> = async ({post}) => {
         </div>
         <p className="text-gray-700 break-all">{post.content}</p>
         <PostLikeIcon post={post} isLiked={!!isLiked} countLikes={countLikes}/>
-        {/* <p>{`${isLiked}`}</p> */}
+        <VoiceButton text={post.content as string}/>
+        
       </div>
     </div>
   );

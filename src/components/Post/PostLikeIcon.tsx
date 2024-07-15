@@ -13,16 +13,21 @@ export  function PostLikeIcon({post, isLiked, countLikes} : PostProps){
  const likeHandlerWithPostId = likeHandler.bind(null, postId)
 
   const [like, setLike] = useState(isLiked);
+  const [countLike, setCountLike] = useState(countLikes)
+  const onClick = () =>{
+    if(like){setLike(false); setCountLike(countLike? countLike - 1 : 0); }
+    else {setLike(true); setCountLike(countLike? countLike + 1 : 1);} 
+  }
   // const [state, formAction] = useFormState(postLike, initState);
 
   return (
     <div>
       <form action={likeHandlerWithPostId}>
         <div className='flex '>
-      <button>
+      <button onClick={onClick}>
       {like ? <IoIosHeart color={'#fa5263'}/> : <IoIosHeartEmpty/> }
       </button>
-      <div>{`${countLikes}`}</div>
+      <div>{`${countLike}`}</div>
         </div>
       </form>
           

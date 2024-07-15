@@ -1,9 +1,10 @@
+import VoiceVox from '@/components/VoiceVox'
 import React from 'react'
 
 const BioMenu = () => {
   return (
     <div>
-      Biomenu
+      <VoiceVox/>
     </div>
   )
 }
