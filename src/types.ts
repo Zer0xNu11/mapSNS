@@ -11,5 +11,6 @@ export interface PostType{
     content: string ;
     createdAt: string; 
     authorId: string;  
-    author: UserType
+    author: UserType;
+    imageUrl? : string;
   }

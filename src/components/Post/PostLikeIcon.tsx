@@ -27,7 +27,7 @@ export  function PostLikeIcon({post, isLiked, countLikes} : PostProps){
       <button onClick={onClick}>
       {like ? <IoIosHeart color={'#fa5263'}/> : <IoIosHeartEmpty/> }
       </button>
-      <div>{`${countLike}`}</div>
+      <div>{`${countLike || 0}`}</div>
         </div>
       </form>
           

@@ -2,7 +2,7 @@
 
 import { createPost, FormState } from '@/actions/createPost'
 import { useFormState } from 'react-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 
 
@@ -12,6 +12,14 @@ const PostForm = () => {
   const [state, formAction] = useFormState(createPost, initialState);
   const limitLength = 60;
   const [remLength, setRemLength] = useState(limitLength);
+
+  const fileSelectRef = useRef<HTMLInputElement>(null);
+  const fileSelect = () => {
+    console.log(fileSelectRef.current);
+    if(fileSelectRef.current){
+    fileSelectRef.current.click();
+    }
+  };
 
   useEffect(()=>{
     setRemLength(limitLength-text.length)
@@ -28,6 +36,8 @@ const PostForm = () => {
             onChange={(e)=>{setText(e.target.value)}}
           ></textarea>
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
+          <input type="file" name='file' ref={fileSelectRef}/>
+
           <button
             type="submit"
             className={`mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded disabled:opacity-40`}

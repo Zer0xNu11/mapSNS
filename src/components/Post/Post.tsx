@@ -8,7 +8,8 @@ import VoiceButton from "../VoiceButton";
 export interface PostProps {
   post: PostType;
   isLiked?: boolean;
-  countLikes? : number
+  countLikes? : number;
+  imageUrl? : string;
 }
 
 interface dataModel{
@@ -74,8 +75,9 @@ const Post: React.FC<PostProps> = async ({post}) => {
   console.log({ isLiked: isLiked });
 
   return (
-    <div className="bg-white shadow-md rounded p-4 mb-4">
-      <div className="mb-4">
+    <>
+    <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-row justify-between h-[20vh]">
+      <div className="mb-4 w-1/2 h-full">
         <div className="flex items-center mb-2">
           <Image
             className="w-10 h-10 rounded-full mr-2"
@@ -93,10 +95,17 @@ const Post: React.FC<PostProps> = async ({post}) => {
         </div>
         <p className="text-gray-700 break-all">{post.content}</p>
         <PostLikeIcon post={post} isLiked={!!isLiked} countLikes={countLikes}/>
-        <VoiceButton text={post.content as string}/>
-        
       </div>
+      <div className="w-1/2 h-full items-center">
+        <img
+            className="mr-2 object-contain h-full"
+            src={post.imageUrl || '/images/blank.png'}
+            alt="User Avatar"
+          />
+      </div>
+      
     </div>
+    </>
   );
 };
 

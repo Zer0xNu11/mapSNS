@@ -1,10 +1,11 @@
-import VoiceVox from '@/components/VoiceVox'
+import Map from '@/components/map/Map'
 import React from 'react'
+
 
 const BioMenu = () => {
   return (
     <div>
-      <VoiceVox/>
+      <Map />
     </div>
   )
 }
