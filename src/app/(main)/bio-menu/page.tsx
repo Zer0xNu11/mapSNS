@@ -7,7 +7,7 @@ import React from 'react'
 const MapPage = () => {
   const Map = React.useMemo(
     () =>
-      dynamic(() => import("@/components/map/Map"), {
+      dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
         loading: () => <p>A map is loading</p>,
         ssr: false,
       }),

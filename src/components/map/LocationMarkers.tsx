@@ -16,15 +16,18 @@ const [markers, setMarkers] = useState<LatLng[]>([]);
   const map = useMapEvent("click", (e) => {
     const { lat, lng } = e.latlng;
     setMarkers((markers) => [...markers, latLng(lat, lng)]);
+    console.log(markers)
   });
 
   return (
     <>
       {markers.map((marker) => (
         <Marker key={marker.toString()} position={marker} icon={ICON}>
-          <Popup>{marker.toString()}</Popup>
+          <Popup><a href={`https://www.google.co.jp/maps/@${marker.lat},${marker.lng},${16}z` } target="_blank" rel="noopener noreferrer">googleMapで開く</a></Popup>
         </Marker>
       ))}
     </>
   );
 };
+
+//toString() オブジェクトを文字列に変換

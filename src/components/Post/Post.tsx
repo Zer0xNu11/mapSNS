@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
-import VoiceButton from "../VoiceButton";
 
 export interface PostProps {
   post: PostType;
