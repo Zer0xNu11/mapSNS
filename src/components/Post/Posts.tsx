@@ -1,16 +1,17 @@
 import React from 'react'
 import Post from './Post'
 import { PostType } from '@/types'
-import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/auth'
 
-const getLatestPosts = async () : Promise<PostType[]> => {
-  const response = await fetch(`${process.env.API_URL}/posts`,{
+
+const getLatestPosts = async (id : string) : Promise<PostType[]> => {
+  const response = await fetch(`${process.env.API_URL}/posts/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);
 
   if(response.status !== 200){
-    throw new Error();
+    throw new Error('不正な値です');
   }
 
   const data = await response.json();
@@ -19,7 +20,10 @@ const getLatestPosts = async () : Promise<PostType[]> => {
 }
 
 export default async function Posts(){
-  const posts = await getLatestPosts();
+  const session = await auth();
+  // console.log({sessionPosts:session}) ok
+  const userId = session?.user?.id
+  const posts = userId? await getLatestPosts(userId) : null;
 
   return (
     <>

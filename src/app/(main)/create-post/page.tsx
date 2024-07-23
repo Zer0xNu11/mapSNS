@@ -1,5 +1,4 @@
 'use client'
-import GetLocation from '@/components/Post/GetLocation'
 import PostForm from '@/components/Post/PostForm'
 import React from 'react'
 
