@@ -11,6 +11,9 @@ import { resolve } from "node:path";
 //サーバーアクションズ内でエラーを返す時の型を定義
 export interface FormState {
   error: string;
+  positionLat?: number | null;
+  positionLng?: number | null;
+  // position? : {lat:number | null, lng:number | null};
 }
 
 export async function createPost(state: FormState, formData: FormData) {
@@ -19,7 +22,7 @@ export async function createPost(state: FormState, formData: FormData) {
   const file = formData.get("file") as File;
 
 
-//supabase
+//supabase 画像保存用の関数
   const uploadFileToSupabase = async (file: File) => {
     let debug = 1;
     if (file && file.size > 0) {
@@ -53,7 +56,7 @@ export async function createPost(state: FormState, formData: FormData) {
     return null;
   };
 
-//local
+//local保存用の関数（未使用）
   const makeFilePath = async () =>{
     if (file && file.size > 0) { //filesizeが0より大きい=データが存在する
       const data = await file.arrayBuffer(); //ArrayBuffer は固定長のバイナリデータを表現するオブジェクト
@@ -85,18 +88,24 @@ export async function createPost(state: FormState, formData: FormData) {
       const imageUrl = await uploadFileToSupabase(file);
       // const fileData = await makeFilePath();
       console.log({imageUrl:imageUrl})
-      await prismadb.post.create({
+      const createdPost = await prismadb.post.create({
         data: {
           content: content,
           authorId: session?.user?.id,
           imageUrl: imageUrl || null,
-          likedIds: []
+          likedIds: [],
         },
         include: {
           author: true,
         },
       });
-      console.log('=====ok============')
+
+      //位置情報 SQL
+      await  prismadb.$executeRaw`
+        UPDATE "Post"
+        SET location = ST_SetSRID(ST_MakePoint(${state.positionLng}, ${state.positionLat}), 4326)
+        WHERE id = ${createdPost.id}
+      `;
     }else {
       state.error = "ログインしてください";
       return state;

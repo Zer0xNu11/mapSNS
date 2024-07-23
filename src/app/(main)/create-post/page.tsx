@@ -7,7 +7,6 @@ const CleatePost = () => {
   return (
     <>
     <div>
-    <GetLocation/>
     <PostForm/>
     </div>
 

@@ -1,7 +1,23 @@
 'use client'
-import { useState } from "react";
-import { LatLng, latLng, icon } from "leaflet";
-import { Marker, Popup, useMapEvent } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { LatLng, latLng, icon, LatLngExpression } from "leaflet";
+import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
+import { GOOGLEMAPSETTING} from "@/lib/mapSetting";
+import { prismadb } from "@/globals/db";
+import { MapProps } from "./Map";
+
+interface LocationMarkersProps {
+  position: LatLng;
+}
+
+// interface Post {
+//   id: string;
+//   content: string;
+//   location: {
+//     type: 'Point';
+//     coordinates: [number, number]; // [longitude, latitude]
+//   };
+// }
 
 const ICON = icon({
   iconUrl: "/images/pinsmall.svg",
@@ -10,22 +26,27 @@ const ICON = icon({
   popupAnchor: [0, -30],
 });
 
-export const LocationMarkers = (): JSX.Element => {
-const [markers, setMarkers] = useState<LatLng[]>([]);
-  // useMapEvent は `<MapContainer>` の内側からしか呼び出せない
-  const map = useMapEvent("click", (e) => {
-    const { lat, lng } = e.latlng;
-    setMarkers((markers) => [...markers, latLng(lat, lng)]);
-    console.log(markers)
-  });
+const limeOptions = { color: 'lime' }
+// const polyline : LatLngExpression[] = [
+//   [36.3083509, 139.807],
+//   [36.3083509, 138.807],
+//   [36.3083509, 137.807],
+// ]
+
+export const LocationMarkers : React.FC<LocationMarkersProps&MapProps> = ({position, posts, polylineCoordinates}) => {
+// const [posts, setPosts] = useState<Post[]>([]);
+const [points, setPoint] = useState([]);
+console.log(console.log({posts:latLng(posts[1].coordinates[1], posts[1].coordinates[0]), position:position}))
+
 
   return (
     <>
-      {markers.map((marker) => (
-        <Marker key={marker.toString()} position={marker} icon={ICON}>
-          <Popup><a href={`https://www.google.co.jp/maps/@${marker.lat},${marker.lng},${16}z` } target="_blank" rel="noopener noreferrer">googleMapで開く</a></Popup>
+      {posts.map((post) => (
+        <Marker key={post.id} position={latLng(post.coordinates[0], post.coordinates[1])} icon={ICON}>
+          <Popup>{`${post.content}`}<a href={GOOGLEMAPSETTING(post.coordinates[0],post.coordinates[1])} target="_blank" rel="noopener noreferrer">googleMapで付近を探索</a></Popup>
         </Marker>
       ))}
+      <Polyline pathOptions={limeOptions} positions={polylineCoordinates}/>
     </>
   );
 };

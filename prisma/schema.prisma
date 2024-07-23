@@ -8,11 +8,13 @@
 //chema.prismaファイルの内容を元にデータベースの操作に利用するPrisma Clientを作成するために利用
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  extensions = [postgis]
 }
 
 model User{
@@ -34,9 +36,13 @@ model Post{
   imageUrl String?
   likedIds String[]
   open Boolean[]
-  point String[]
-
   comments Comment[]
+  
+  location  Unsupported("geometry(Point, 4326)")?  // SRID 4326はWGS84座標系を表す null許容
+
+  @@index([location], name: "location_idx", type: Gist)
+
+
 
 }
 

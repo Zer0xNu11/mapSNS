@@ -4,15 +4,10 @@ import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
 import { useEffect, useState } from "react";
-import { LocationMarkers } from "./LocationMarkers";
 import { getPosition } from "@/lib/getPostion";
+import { MakingMarker } from "./MakingMarker";
 
-export interface MapProps {
-posts: Array<{ id: string, content: string, coordinates: [number, number] }>
-polylineCoordinates: [number, number][]
-}
-
-const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
+const PostLocation: React.FC = () => {
   const [position, setPosition] = useState<LatLng | null>(null);
 
   useEffect(() => {
@@ -58,7 +53,6 @@ const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
   }
 
   return (
-    <div className="w-full h-[100vh]">
     <MapContainer center={position} zoom={zoom}>
       <TileLayer
         attribution={mapStyle.attribution}
@@ -66,10 +60,9 @@ const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
         maxZoom={20}
         minZoom={2}
       />
-      <LocationMarkers position={position} posts={posts} polylineCoordinates={polylineCoordinates} />
+      <MakingMarker position={position} />
     </MapContainer>
-    </div>
   );
 };
 
-export default Map;
+export default PostLocation;

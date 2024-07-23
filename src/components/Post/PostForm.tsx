@@ -3,6 +3,8 @@
 import { createPost, FormState } from '@/actions/createPost'
 import { useFormState } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
+import { useMarkerStore } from '@/store'
+import PostLocation from '../map/PostLocation'
 
 
 
@@ -10,8 +12,10 @@ const PostForm = () => {
   const [text, setText] = useState('');
   const initialState: FormState = {error: ''};
   const [state, formAction] = useFormState(createPost, initialState);
-  const limitLength = 60;
+  const limitLength = 60;  //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
+  
+  const {marker} = useMarkerStore();
 
   const fileSelectRef = useRef<HTMLInputElement>(null);
   const fileSelect = () => {
@@ -25,9 +29,16 @@ const PostForm = () => {
     setRemLength(limitLength-text.length)
   }, [text])
 
+  useEffect(()=>{
+    state.positionLat = marker?.lat || null;
+    state.positionLng = marker?.lng || null;
+    console.log({zustandmarker: marker})
+    console.log({state: state.positionLng})
+  },[marker])
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="bg-white shadow-md rounded p-4 mb-4">
+      <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
         <form action={formAction}>
           <textarea
             name='post'
@@ -46,6 +57,9 @@ const PostForm = () => {
             投稿
           </button>
         </form>
+        <div className='w-[80%] h-[50vh]'>
+         <PostLocation/>
+        </div>
       </div>
   </div>
   )
