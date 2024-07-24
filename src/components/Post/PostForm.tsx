@@ -18,12 +18,12 @@ const PostForm = () => {
   const {marker} = useMarkerStore();
 
   const fileSelectRef = useRef<HTMLInputElement>(null);
-  const fileSelect = () => {
-    console.log(fileSelectRef.current);
-    if(fileSelectRef.current){
-    fileSelectRef.current.click();
-    }
-  };
+  // const fileSelect = () => {
+  //   console.log(fileSelectRef.current);
+  //   if(fileSelectRef.current){
+  //   fileSelectRef.current.click();
+  //   }
+  // };
 
   useEffect(()=>{
     setRemLength(limitLength-text.length)
@@ -47,7 +47,8 @@ const PostForm = () => {
             onChange={(e)=>{setText(e.target.value)}}
           ></textarea>
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
-          <input type="file" name='file' ref={fileSelectRef}/>
+          <input type="file" name='file' />
+          {/* <input type="file" name='file' ref={fileSelectRef}/> */}
 
           <button
             type="submit"
