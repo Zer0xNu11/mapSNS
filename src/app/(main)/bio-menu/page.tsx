@@ -1,4 +1,4 @@
-import Map from '@/components/map/Map';
+// import Map from '@/components/map/Map';
 import { prismadb } from '@/globals/db';
 import dynamic from 'next/dynamic';
 import React from 'react'
@@ -33,7 +33,7 @@ const MapPage = async () => {
   const Map = React.useMemo(
     () =>
       dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
-        loading: () => <p>A map is loading</p>,
+        loading: () => <p>map is loading</p>,
         ssr: false,
       }),
     []
