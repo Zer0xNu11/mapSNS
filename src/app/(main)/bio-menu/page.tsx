@@ -30,14 +30,14 @@ async function getBook() {
 
 
 const MapPage = async () => {
-  // const Map = React.useMemo(
-  //   () =>
-  //     dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
-  //       loading: () => <p>A map is loading</p>,
-  //       ssr: false,
-  //     }),
-  //   []
-  // );
+  const Map = React.useMemo(
+    () =>
+      dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
+        loading: () => <p>A map is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
 
   const { posts, polylineCoordinates } = await getBook();
 
