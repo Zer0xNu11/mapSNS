@@ -27,16 +27,11 @@ const ICON = icon({
 });
 
 const limeOptions = { color: 'lime' }
-// const polyline : LatLngExpression[] = [
-//   [36.3083509, 139.807],
-//   [36.3083509, 138.807],
-//   [36.3083509, 137.807],
-// ]
 
 export const LocationMarkers : React.FC<LocationMarkersProps&MapProps> = ({position, posts, polylineCoordinates}) => {
 // const [posts, setPosts] = useState<Post[]>([]);
 const [points, setPoint] = useState([]);
-console.log(console.log({posts:latLng(posts[1].coordinates[1], posts[1].coordinates[0]), position:position}))
+// console.log(console.log({posts:latLng(posts[1].coordinates[1], posts[1].coordinates[0]), position:position}))
 
 
   return (

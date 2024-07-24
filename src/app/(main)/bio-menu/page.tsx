@@ -1,16 +1,21 @@
 // import Map from '@/components/map/Map';
+import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import dynamic from "next/dynamic";
 import React from "react";
 
 async function getBook() {
   //生SQLで時系列順にpostを取得 ->json配列 ->>json文字列
+  const session = await auth();
+  const userId = session?.user?.id || 'empty'
+  console.log({userId : userId})
   const posts = await prismadb.$queryRaw<
     Array<{ id: string; content: string; coordinates: [number, number] }>
   >`
     SELECT id, content, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
     FROM "Post"
     WHERE location IS NOT NULL
+    AND "authorId" = ${userId}
     ORDER BY "createdAt" ASC
   `;
 
