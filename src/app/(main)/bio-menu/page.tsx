@@ -47,8 +47,7 @@ const MapPage = async () => {
   return (
     <div className="w-full h-[100vh]">
       <div className="w-[80%] h-[80vh]">
-        <Map />
-        {/* <Map posts={posts} polylineCoordinates={polylineCoordinates} /> */}
+        <Map posts={posts} polylineCoordinates={polylineCoordinates} />
       </div>
     </div>
   );

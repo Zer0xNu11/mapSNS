@@ -7,13 +7,12 @@ import { useEffect, useState } from "react";
 import { LocationMarkers } from "./LocationMarkers";
 import { getPosition } from "@/lib/getPostion";
 
-// export interface MapProps {
-// posts: Array<{ id: string, content: string, coordinates: [number, number] }>
-// polylineCoordinates: [number, number][]
-// }
+export interface MapProps {
+posts: Array<{ id: string, content: string, coordinates: [number, number] }>
+polylineCoordinates: [number, number][]
+}
 
-// const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
-const Map: React.FC= () => {
+const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
   const [position, setPosition] = useState<LatLng | null>(null);
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const Map: React.FC= () => {
         maxZoom={20}
         minZoom={2}
       />
-      {/* <LocationMarkers position={position} posts={posts} polylineCoordinates={polylineCoordinates} /> */}
+      <LocationMarkers position={position} posts={posts} polylineCoordinates={polylineCoordinates} />
     </MapContainer>
     </div>
   );
