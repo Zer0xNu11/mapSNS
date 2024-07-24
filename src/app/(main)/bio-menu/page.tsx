@@ -32,27 +32,23 @@ async function getBook() {
   };
 }
 
-const Map = dynamic(() => import("@/components/map/Map"), {
-  loading: () => <p>map is loading</p>,
-  ssr: false,
-});
-
 const MapPage = async () => {
-  // const Map = React.useMemo(
-  //   () =>
-  //     dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
-  //       loading: () => <p>map is loading</p>,
-  //       ssr: false,
-  //     }),
-  //   []
-  // );
+  const Map = React.useMemo(
+    () =>
+      dynamic(() => import("@/components/map/Map"), { //SSR停止　window error防止
+        loading: () => <p>map is loading</p>,
+        ssr: false,
+      }),
+    []
+  );
 
   const { posts, polylineCoordinates } = await getBook();
 
   return (
     <div className="w-full h-[100vh]">
       <div className="w-[80%] h-[80vh]">
-        <Map posts={posts} polylineCoordinates={polylineCoordinates} />
+        <Map />
+        {/* <Map posts={posts} polylineCoordinates={polylineCoordinates} /> */}
       </div>
     </div>
   );
