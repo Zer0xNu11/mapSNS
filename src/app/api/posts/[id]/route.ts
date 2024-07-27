@@ -18,8 +18,8 @@ export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
     return NextResponse.json({message:'成功', data: latestPosts})
     //jsonレスポンス
   } catch (err) {
-    console.log(err);
-    return NextResponse.json({message:'失敗'})
+    // console.log({});
+    return NextResponse.json({message:'失敗', ERROR:err})
   }
 };
 

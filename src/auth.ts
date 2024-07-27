@@ -10,7 +10,6 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prismadb } from "./globals/db";
 
 export const config: NextAuthConfig = {
-  basePath: "/api/auth",
   adapter: PrismaAdapter(prismadb),
   session: { strategy: "jwt" }, //JWT利用によりサーバーメモリ節約
   callbacks: {
