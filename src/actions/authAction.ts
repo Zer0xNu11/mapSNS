@@ -1,81 +1,50 @@
-"use server";
-import { z } from "zod";
-import { AuthError } from "next-auth";
-import bcrypt from "bcrypt";
+'use server'
 
-import { signIn, signOut } from "@/auth";
-import { DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
-import { LoginSchema, RegisterSchema } from "@/lib/schemas";
-import { getUserByEmail } from "@/app/db/user";
-import { prismadb } from "@/globals/db";
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
-//Login==================================================================
-export const login = async (values: z.infer<typeof LoginSchema> ) => {
-  const validatedFields = LoginSchema.safeParse(values);
+import { createClient } from '@/utils/supabase/server'
 
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+export async function login(formData: FormData) {
+  const supabase = createClient()
+
+  // type-casting here for convenience
+  // in practice, you should validate your inputs
+  const data = {
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
   }
 
-  const { email, password } = validatedFields.data;
+  const { error } = await supabase.auth.signInWithPassword(data)
 
-  try {
-    await signIn("credentials", {
-      email: email,
-      password: password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case "CredentialsSignin":
-          return { error: "Invalid credentials." };
-        default:
-          return { error: "Something went wrong." };
-      }
-    }
-    throw error;
+  if (error) {
+    redirect('/error')
   }
-  return {success: 'Email sent!'};
-};
 
-//Logout==================================================================
-
-export async function logout() {
-  try {
-    console.log('================signout=================')
-    await signOut();
-  } catch (error) {
-    throw error;
-  }
+  revalidatePath('/home', 'layout')
+  redirect('/home')
 }
 
-//Register==================================================================
+export async function signup(formData: FormData) {
+  const supabase = createClient()
+  console.log('try signup')
+ 
 
-export const register = async (values: z.infer<typeof RegisterSchema>) => {
-  const validatedFields = RegisterSchema.safeParse(values);
+  // type-casting here for convenience
+  // in practice, you should validate your inputs
+  const data = {
+    // name : formData.get('name') as string,
+    email: formData.get('email') as string,
+    password: formData.get('password') as string,
+  }
+  console.log({data: data})
+  const { error } = await supabase.auth.signUp(data)
 
-  if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+  if (error) {
+    console.log(error)
+    redirect('/error')
   }
 
-  const { email, password, name } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const existingUser = await getUserByEmail(email);
-
-  if (existingUser) {
-    return { error: "このメールアドレスはすでに使われています" };
-  }
-
-  await prismadb.user.create({
-    data: {
-      name: name,
-      email: email,
-      password: hashedPassword,
-      imageUrl: ''
-    },
-  });
-
-  return { success: "User created" };
-};
+  revalidatePath('/', 'layout')
+  redirect('/')
+}

@@ -1,4 +1,3 @@
-import { logout } from "@/actions/authAction";
 import { auth } from "@/auth";
 import Timeline from "@/components/Timeline";
 import {Button} from "@/components/ui/button"
@@ -12,7 +11,7 @@ export default async function Home() {
   return (
     <>    
     <div>
-      <Timeline />
+      {/* <Timeline /> */}
     </div>
     </>
     

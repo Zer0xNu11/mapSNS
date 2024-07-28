@@ -19,7 +19,7 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { useState, useTransition } from "react";
 import { RegisterSchema } from "@/lib/schemas";
-import { register } from "@/actions/authAction";
+import { signup } from "@/actions/authAction";
 import { useRouter } from "next/navigation";
 
 export const RegisterForm = () => {
@@ -52,12 +52,8 @@ export const RegisterForm = () => {
 
     //startTransition内のステート更新は優先度が低いとみなされる=>ユーザー操作の妨げにならないようにする
     startTransition(() => {
-      register(values)
-      .then((data)=>{
-        setError(data.error);
-        setSuccess(data.success)
-        router.push('/login');
-      });
+      signup(values as any)
+      router.push('/login');
     });
   };
 
@@ -69,7 +65,7 @@ export const RegisterForm = () => {
       showSocial
     >
       <Form {...form}> {/*useFormのプロパティを分割代入 */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6">
           <div className="sapce-y-4">
             <FormField
               control={form.control}
@@ -123,7 +119,7 @@ export const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type="submit" className="w-full">
+          <Button formAction={signup} className="w-full">
             Create an account
           </Button>
         </form>
