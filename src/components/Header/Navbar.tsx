@@ -1,8 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import { Button } from "../ui/button";
-import { logout } from "@/actions/authAction";
-import { signOut } from "@/auth";
 import UserButton from "./UserButton";
 import SortButton from "./SortButton";
 
