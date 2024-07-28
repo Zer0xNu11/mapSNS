@@ -5,6 +5,7 @@ import { useFormState } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import { useMarkerStore } from '@/store'
 import PostLocation from '../map/PostLocation'
+import type { PutBlobResult } from '@vercel/blob';
 
 
 
@@ -12,6 +13,7 @@ const PostForm = () => {
   const [text, setText] = useState('');
   const initialState: FormState = {error: ''};
   const [state, formAction] = useFormState(createPost, initialState);
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const limitLength = 60;  //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
   
@@ -47,7 +49,7 @@ const PostForm = () => {
             onChange={(e)=>{setText(e.target.value)}}
           ></textarea>
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
-          <input type="file" name='file' />
+          <input type="file" name='image' />
           {/* <input type="file" name='file' ref={fileSelectRef}/> */}
 
           <button

@@ -34,7 +34,7 @@ const Map: React.FC<MapProps> = ({posts, polylineCoordinates}) => {
 
   // 初期マップズームレベル
   const zoom = 18;
-  const mapStyle = mapStyles.monochro;
+  const mapStyle = mapStyles.google;
 
   if (!position) {
     return <div>Loading map...</div>;
