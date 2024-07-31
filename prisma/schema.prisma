@@ -24,6 +24,8 @@ model User{
   password String
   imageUrl String?
   posts Post[]
+  notes Note[]
+  books Book[]
   comments Comment[]
 }
 
@@ -36,14 +38,51 @@ model Post{
   imageUrl String?
   likedIds String[]
   open Boolean[]
+  noteId String
+  note Note @relation(fields: [noteId], references:[id], onDelete:Cascade)
+  books PostBooks[]
+
   comments Comment[]
   
   location  Unsupported("geometry(Point, 4326)")?  // SRID 4326はWGS84座標系を表す null許容
 
   @@index([location], name: "location_idx", type: Gist)
+}
 
+model Note{
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  title String
+  content String
+  authorId String
+  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
+  imageUrl String?
+  likedIds String[]
+  open Boolean[]
+  book String[]
+  posts Post[]
+}
 
+model Book{
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  authorId String
+  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
+  imageUrl String?
+  likedIds String[]
+  open Boolean[]
+  book String[]
+  posts PostBooks[]
+}
 
+model PostBooks{
+  postId String
+  post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
+  bookId String
+  book Book @relation(fields: [bookId], references:[id], onDelete:Cascade)
+  assignedAt DateTime @default(now())
+
+  @@id([postId, bookId])
 }
 
 model Comment{
@@ -56,13 +95,4 @@ model Comment{
 
   author User @relation(fields: [userId], references:[id], onDelete:Cascade)
   post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
-}
-
-model Record{
-  id String @id @default(cuid())
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  userId Int
-  postsId String[]
- 
 }

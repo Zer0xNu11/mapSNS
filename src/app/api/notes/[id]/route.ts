@@ -5,18 +5,16 @@ export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
   console.log('======APIconect========')
   try {
     console.log({params:params})
-    const latestPosts = await prismadb.post.findMany({
+    const latestNotes = await prismadb.note.findMany({
       where:{
         authorId: params.id
       },
-      take: 10,
       orderBy: { createdAt: "desc" },
       include: {
         author:true,
-        note: true
       }
     });
-    return NextResponse.json({message:'成功', data: latestPosts})
+    return NextResponse.json({message:'成功', data: latestNotes})
     //jsonレスポンス
   } catch (err) {
     // console.log({});

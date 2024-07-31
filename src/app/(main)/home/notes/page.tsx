@@ -1,16 +1,18 @@
 import { auth } from "@/auth";
-import Timeline from "@/components/Timeline";
+import Notes from "@/components/note/Notes";
 import { Button } from "@/components/ui/button";
-import { Link1Icon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function NotesPage() {
   const session = await auth();
   // console.log({sessionhome: session})
   return (
     <>
+      <Link href="../create/note">
+        <Button>新規ノート</Button>
+      </Link>
       <div>
-        <Timeline />
+        <Notes />
       </div>
     </>
   );

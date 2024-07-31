@@ -1,22 +1,21 @@
 import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
+export const GET =  async (_: NextRequest, {params}:{params:{noteId: string}}) => {
   console.log('======APIconect========')
   try {
     console.log({params:params})
-    const latestPosts = await prismadb.post.findMany({
+    const notePosts = await prismadb.post.findMany({
       where:{
-        authorId: params.id
+        noteId: params.noteId
       },
-      take: 10,
       orderBy: { createdAt: "desc" },
       include: {
         author:true,
         note: true
       }
     });
-    return NextResponse.json({message:'成功', data: latestPosts})
+    return NextResponse.json({message:'成功', data: notePosts})
     //jsonレスポンス
   } catch (err) {
     // console.log({});

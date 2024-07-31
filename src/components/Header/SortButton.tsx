@@ -22,7 +22,7 @@ export default async function SortButton() {
           <Button variant="ghost" className="relative w-8 h-8 rounded-full">
             <Avatar className="w-8 h-8 bg-white">
                <AvatarImage 
-                src={'images/funnel-light.svg'} 
+                src={'/images/funnel-light.svg'} 
                 alt={"SortButton"}
                 className="p-1"
                 />

@@ -7,10 +7,21 @@ export interface UserType{
 }
 
 export interface PostType{
-    id: string ;
-    content: string ;
+    id: string;
+    content: string;
     createdAt: string; 
     authorId: string;  
     author: UserType;
     imageUrl? : string;
   }
+
+export interface NoteType{
+  id: string;
+  title: string;
+  content?: string;
+  createdAt: string; 
+  authorId: string;  
+  author: UserType;
+  imageUrl? : string;
+}
+

@@ -18,7 +18,7 @@ const CreatePost = () => {
   return (
     <>
       <div>
-        <PostForm />
+        {/* <PostForm /> */}
       </div>
     </>
   );

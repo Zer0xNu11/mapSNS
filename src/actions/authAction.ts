@@ -41,14 +41,14 @@ export const login = async (values: z.infer<typeof LoginSchema> ) => {
 
 //Logout==================================================================
 
-export async function logout() {
-  try {
-    console.log('================signout=================')
-    await signOut();
-  } catch (error) {
-    throw error;
-  }
-}
+// export async function logout() {
+//   try {
+//     console.log('================signout=================')
+//     await signOut();
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 //Register==================================================================
 

@@ -23,7 +23,7 @@ export default async function UserButton() {
           <Button variant="ghost" className="relative w-8 h-8 rounded-full">
             <Avatar className="w-8 h-8">
                <AvatarImage 
-                src={session.user.image ?? 'images/placeholder.png'} 
+                src={session.user.image ?? '/images/placeholder.png'} 
                 alt={session.user.name ?? ""}/>
               <AvatarFallback>{session.user.email}</AvatarFallback> 
             </Avatar>
