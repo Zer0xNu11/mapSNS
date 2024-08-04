@@ -3,12 +3,14 @@
 import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 //サーバーアクションズ内でbindした値の型を定義
 export interface PostFormState {
   error: string;
   noteId : string;
+  path: string;
   positionLat?: number | null;
   positionLng?: number | null;
   // position? : {lat:number | null, lng:number | null};
@@ -17,6 +19,8 @@ export interface PostFormState {
 export async function createPost(state: PostFormState, formData: FormData) {
   const session = await auth();
   const content: string = formData.get("post") as string;
+  const path = state.path;
+  console.log({path:path});
 
   //vercelbrob 画像保存
   const uploadFileToVercelBlob = async () => {
@@ -65,7 +69,7 @@ export async function createPost(state: PostFormState, formData: FormData) {
     state.error = "投稿エラー";
     return state;
   }
-  redirect("/home");
+  redirect(path);
 }
 
 /*

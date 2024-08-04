@@ -4,40 +4,25 @@ import { createPost, PostFormState } from "@/actions/createPost";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { useMarkerStore } from "@/store";
-import PostLocation from "../map/PostLocation";
 import type { PutBlobResult } from "@vercel/blob";
-import { NoteFormState } from "@/actions/createNote";
-import { NoteType } from "@/types";
-import { Button } from "../ui/button";
-import { redirect, usePathname } from "next/navigation";
 import Loading from "@/app/loading";
 
-import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
-import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
+import PostLocation from "@/components/map/PostLocation";
+import { Button } from "@/components/ui/button";
 
-interface PostFormProps {
-  note: NoteType;
+interface Params{
+  params: { noteId: string };
 }
 
-const PostForm = ({ note }: PostFormProps) => {
-  const [isOpen, setIsOpen] = useState(0);
-  const openPostForm = () => {
-    setIsOpen(1);
-  };
-  const noteId = note.id;
-
-  const currentPath = usePathname();
-  console.log({ currentPath: currentPath });
-  const closeButton = () => {
-    setIsOpen(0);
-  };
+const PostForm = ({ params }: Params) => {
+  const noteId = params.noteId;
+  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/home/notes/${noteId}`;
 
   const [text, setText] = useState("");
   const initialState: PostFormState = {
     error: "",
-    noteId: note.id,
+    noteId: noteId,
     path: currentPath,
   };
   const [state, formAction] = useFormState(createPost, initialState);
@@ -48,7 +33,6 @@ const PostForm = ({ note }: PostFormProps) => {
 
   const PendLoading = () => {
     const { pending } = useFormStatus();
-    console.log({ pending: pending });
     return pending ? <Loading /> : "";
   };
 
@@ -61,7 +45,7 @@ const PostForm = ({ note }: PostFormProps) => {
           className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}
         >
-          投稿!!
+          投稿
         </button>
         <PendLoading />
       </>
@@ -79,38 +63,20 @@ const PostForm = ({ note }: PostFormProps) => {
   useEffect(() => {
     state.positionLat = marker?.lat || null;
     state.positionLng = marker?.lng || null;
-    console.log({ zustandmarker: marker });
-    console.log({ state: state.positionLng });
-    console.log({ state: state });
-    console.log(`../home/notes`)
+    // console.log({ zustandmarker: marker });
+    // console.log({ state: state.positionLng });
+    // console.log({ state: state });
+    // console.log(`../home/notes`)
   }, [marker]);
 
-  if (isOpen === 0) {
-    return (
-      <>
-        <button
-          className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-          onClick={openPostForm}
-        >
-          <MapPinPlus size={32} color="#050505" weight="duotone" />
-        </button>
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/map/${noteId}`}>
-          <button className=" bg-red-400 rounded-full p-2 m-2 border-black border-2">
-            <LineSegments size={32} color="#050505" weight="duotone" />
-          </button>
-        </Link>
-      </>
-    );
-  }
+
 
   {
     return (
       <div
-        className={`min-h-screen right-0 left-0 bg-gray-100 ${
-          isOpen ? "absolute" : "hidden"
-        }`}
+        className={'min-h-screen right-0 left-0 bg-gray-100 '}
       >
-        <button onClick={closeButton}>X</button>
+        <Link href={currentPath}><Button>戻る</Button></Link>
         <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
           <form action={formAction}>
             <textarea

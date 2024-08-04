@@ -10,7 +10,17 @@ export default async function Home() {
   return (
     <>
       <div>
-        <Timeline />
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
+        <Button>プラン</Button>
+        </Link>
+
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
+        <Button>レコード</Button>
+        </Link>
+
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
+        <Button>シェア</Button>
+        </Link>
       </div>
     </>
   );

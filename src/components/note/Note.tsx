@@ -3,6 +3,7 @@ import { prismadb } from "@/globals/db";
 import { NoteType } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 export interface NoteProps {
   note: NoteType;
@@ -75,7 +76,7 @@ const Note: React.FC<NoteProps> = async ({note}) => {
 
   return (
     <>
-    <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-row justify-between h-[20vh]">
+    <div className="bg-yellow-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
       <div className="mb-4 w-1/2 h-full">
         <div className="flex items-center mb-2">
           <Image
@@ -101,7 +102,9 @@ const Note: React.FC<NoteProps> = async ({note}) => {
             alt="User Avatar"
           />
       </div>
-      <Button><a href={`/home/notes/${note.id}`}>書く</a></Button>
+      <Link href={`/home/notes/${note.id}`}>
+      <Button>書く</Button>
+      </Link>
     </div>
     </>
   );
