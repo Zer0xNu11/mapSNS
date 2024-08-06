@@ -5,7 +5,6 @@ import Link from "next/link";
 
 export default async function BooksPage() {
   const session = await auth();
-  // console.log({sessionhome: session})
   return (
     <>
       <Link href="../create/note">
