@@ -12,51 +12,63 @@ export interface PostProps {
 }
 
 interface dataModel{
-  userExists : boolean,
-  countLikes : number,
+  userExists : object | null,
+  countLikes : number | undefined,
 }
 
 const getIsLiked = async (postId: string) => {
   console.log({postId : postId})
   const session = await auth();
   const userId = session?.user?.id
+  
+
   try {
-    if (userId) { 
-      if (!postId) {
-        console.log('無効な投稿')
-        return ''
-      }
-      const post = await prismadb.post.findUnique({
-        where:{
-          id: postId
-        }
-      });
+    if (!userId) {
+      throw new Error("ユーザーの値が異常です");
+    }
+
+    const existingLike = await prismadb.like.findUnique({
+      where: {
+        userId_postId: {
+          userId: userId,
+          postId: postId,
+        },
+      },
+    })
+
+    const post = await prismadb.post.findUnique({
+      where: {
+          id: postId,
+        },
+    })
 
 
-      if(!post){
-        throw new Error('invalid ID')
-      }
 
-      const userExists = post?.likedIds.includes(userId) ?? false;
-      const countLikes = post?.likedIds.length
+  //     if(!post){
+  //       throw new Error('invalid ID')
+  //     }
+
+  //     const userExists = post?.likedIds.includes(userId) ?? false;
+  //     const countLikes = post?.likedIds.length
 
       const data : dataModel = {
-        userExists : userExists,
-        countLikes : countLikes,
+        userExists : existingLike,
+        countLikes : post?.totalLikes,
       }
 
-      console.log({
-        postId : post.id,
-        userExists : userExists,
-        countLikes : countLikes,
-      })
+  //     console.log({
+  //       postId : post.id,
+  //       userExists : userExists,
+  //       countLikes : countLikes,
+  //     })
 
       return data;
       
       
-    }
+  //   }
   } catch (err) {
     console.log("いいねできない");
+    console.log(err)
     return err;
   }
 
@@ -66,9 +78,9 @@ const getIsLiked = async (postId: string) => {
 
 const Post: React.FC<PostProps> = async ({post}) => {
   // const isLiked = await getIsLiked(post.id);
-  const data : dataModel = await getIsLiked(post.id) as dataModel;
-  const {userExists, countLikes} = data
-  const isLiked = userExists;
+  const data = await getIsLiked(post.id);
+  const {userExists, countLikes} = data as dataModel
+  const isLiked = userExists? true : false;
   
 
   console.log({ isLiked: isLiked });
@@ -93,7 +105,7 @@ const Post: React.FC<PostProps> = async ({post}) => {
           </div>
         </div>
         <p className="text-gray-700 break-all">{post.content}</p>
-        <PostLikeIcon post={post} isLiked={!!isLiked} countLikes={countLikes}/>
+        <PostLikeIcon post={post} isLiked={isLiked} countLikes={countLikes}/>
       </div>
       <div className="w-1/2 h-full items-center">
         <img

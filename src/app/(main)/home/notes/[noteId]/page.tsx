@@ -28,14 +28,16 @@ const getNoteData = async (noteId: string): Promise<NoteType> => {
 
 const NotePage = async ({ params }: Params) => {
   const noteId = params.noteId;
+  
   try {
     const note = await getNoteData(noteId);
+    console.log(note)
     if (!note) {
       return <Loading />;
     }
     return (
       <>
-        <div>NotePage{` ${note.title}`}</div>
+        <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div>
         <Timeline noteId={noteId} />
         {/* <PostForm note = {note}/>  */}
         <div className="fixed bottom-0 right-0 h-16 my-4 mr-8">

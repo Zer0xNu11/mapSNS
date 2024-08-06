@@ -12,68 +12,8 @@ export interface NoteProps {
   imageUrl? : string;
 }
 
-interface dataModel{
-  userExists : boolean,
-  countLikes : number,
-}
-
-const getIsLiked = async (noteId: string) => {
-  console.log({noteId : noteId})
-  const session = await auth();
-  const userId = session?.user?.id
-  try {
-    if (userId) { 
-      if (!noteId) {
-        console.log('無効な投稿')
-        return ''
-      }
-      const note = await prismadb.note.findUnique({
-        where:{
-          id: noteId
-        }
-      });
-
-
-      if(!note){
-        throw new Error('invalid ID')
-      }
-
-      const userExists = note?.likedIds.includes(userId) ?? false;
-      const countLikes = note?.likedIds.length
-
-      const data : dataModel = {
-        userExists : userExists,
-        countLikes : countLikes,
-      }
-
-      console.log({
-        noteId : note.id,
-        userExists : userExists,
-        countLikes : countLikes,
-      })
-
-      return data;
-      
-      
-    }
-  } catch (err) {
-    console.log("いいねできない");
-    return err;
-  }
-
-}
-
-
 
 const Note: React.FC<NoteProps> = async ({note}) => {
-  // const isLiked = await getIsLiked(note.id);
-  const data : dataModel = await getIsLiked(note.id) as dataModel;
-  const {userExists, countLikes} = data
-  const isLiked = userExists;
-  
-
-  console.log({ isLiked: isLiked });
-
   return (
     <>
     <div className="bg-yellow-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">

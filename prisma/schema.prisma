@@ -4,95 +4,189 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-
 //chema.prismaファイルの内容を元にデータベースの操作に利用するPrisma Clientを作成するために利用
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   extensions = [postgis]
 }
 
-model User{
-  id String @id @default(cuid())
-  name String
-  email String @unique
+model User {
+  id       String    @id @default(cuid())
+  name     String
+  email    String    @unique
   password String
   imageUrl String?
-  posts Post[]
-  notes Note[]
-  books Book[]
+  role     String    @default("USER")
+
+
+  posts    Post[]
+  notes    Note[]
+  books    Book[]
   comments Comment[]
+  likes    Like[]
+  plan     Plan[]
+  plans    Plans[]
 }
 
-model Post{
-  id String @id @default(cuid())
-  content String 
-  createdAt DateTime @default(now())
-  authorId String
-  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
-  imageUrl String?
-  likedIds String[]
-  open Boolean[]
-  noteId String
-  note Note @relation(fields: [noteId], references:[id], onDelete:Cascade)
-  books PostBooks[]
+model Post {
+  id         String      @id @default(cuid())
+  content    String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  authorId   String
+  author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  imageUrl   String?
+  open       Boolean[]
+  noteId     String
+  note       Note        @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  books      PostBooks[]
+  category   String      @default("other")
+  tag        String[]
+  totalLikes Int         @default(0)
 
   comments Comment[]
-  
-  location  Unsupported("geometry(Point, 4326)")?  // SRID 4326はWGS84座標系を表す null許容
+
+  location Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
+  likes    Like[]
+  plans    Plan[]
+  likeSum  LikeSum?
 
   @@index([location], name: "location_idx", type: Gist)
 }
 
-model Note{
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  title String
-  content String
-  authorId String
-  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
-  imageUrl String?
-  likedIds String[]
-  open Boolean[]
-  book String[]
-  posts Post[]
+model Note {
+  id         String      @id @default(cuid())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  title      String
+  content    String?
+  authorId   String
+  author     User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  imageUrl   String?
+  open       Boolean[]
+  books      NoteBooks[]
+  tag        String[]
+  totalLikes Int         @default(0)
+
+  posts   Post[]
+  plans   Plans?
+  likeSum LikeSum?
 }
 
-model Book{
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  authorId String
-  author User @relation(fields: [authorId], references:[id], onDelete:Cascade)
-  imageUrl String?
-  likedIds String[]
-  open Boolean[]
-  book String[]
-  posts PostBooks[]
+model Plan {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  content   String?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  imageUrl  String?
+  open      Boolean[]
+  plansId   String
+  plans     Plans     @relation(fields: [plansId], references: [id], onDelete: Cascade)
+  tag       String[]
 }
 
-model PostBooks{
-  postId String
-  post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
-  bookId String
-  book Book @relation(fields: [bookId], references:[id], onDelete:Cascade)
+model Plans {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  title     String
+  content   String?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  imageUrl  String?
+  open      Boolean[]
+  noteId    String    @unique
+  note      Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  tag       String[]
+
+  plans Plan[]
+}
+
+model Book {
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  authorId   String
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  imageUrl   String?
+  open       Boolean[]
+  book       String[]
+  tag        String[]
+  totalLikes Int       @default(0)
+
+  likeSum LikeSum?
+  posts   PostBooks[]
+  notes   NoteBooks[]
+}
+
+model PostBooks {
+  postId     String
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  bookId     String
+  book       Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
   assignedAt DateTime @default(now())
 
   @@id([postId, bookId])
 }
 
-model Comment{
-  id String @id @default(cuid())
-  body String
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @updatedAt
-  userId String
-  postId String
+model NoteBooks {
+  noteId     String
+  note       Note     @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  bookId     String
+  book       Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
 
-  author User @relation(fields: [userId], references:[id], onDelete:Cascade)
-  post Post @relation(fields: [postId], references:[id], onDelete:Cascade)
+  @@id([noteId, bookId])
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model LikeSum {
+  id String @id @default(cuid())
+
+  postId         String? @unique
+  post           Post?   @relation(fields: [postId], references: [id])
+  totalPostLikes Int     @default(0)
+
+  noteId         String? @unique
+  note           Note?   @relation(fields: [noteId], references: [id])
+  totalNoteLikes Int     @default(0)
+
+  bookId         String? @unique
+  book           Book?   @relation(fields: [bookId], references: [id])
+  totalBookLikes Int     @default(0)
+
+  updatedAt DateTime @updatedAt
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  postId    String
+
+  author User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

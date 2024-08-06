@@ -13,6 +13,7 @@ export interface PostType{
     authorId: string;  
     author: UserType;
     imageUrl? : string;
+    totalLikes : number
   }
 
 export interface NoteType{
@@ -23,5 +24,18 @@ export interface NoteType{
   authorId: string;  
   author: UserType;
   imageUrl? : string;
+  totalLikes : number
 }
+
+export interface BookType{
+  id: string;
+  title: string;
+  content?: string;
+  createdAt: string; 
+  authorId: string;  
+  author: UserType;
+  imageUrl? : string;
+  totalLikes : number
+}
+
 

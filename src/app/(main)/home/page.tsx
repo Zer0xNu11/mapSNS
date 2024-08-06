@@ -10,7 +10,7 @@ export default async function Home() {
   return (
     <>
       <div>
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
+        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/plan`}>
         <Button>プラン</Button>
         </Link>
 

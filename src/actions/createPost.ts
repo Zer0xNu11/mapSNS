@@ -45,7 +45,6 @@ export async function createPost(state: PostFormState, formData: FormData) {
           content: content,
           authorId: session?.user?.id,
           imageUrl: imageUrl || null,
-          likedIds: [],
           noteId: state.noteId
         },
         include: {

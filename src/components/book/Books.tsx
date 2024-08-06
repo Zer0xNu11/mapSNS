@@ -1,11 +1,11 @@
 import React from 'react'
-import { NoteType} from '@/types'
+import { BookType} from '@/types'
 import { auth } from '@/auth'
-import Note from './Note';
+import Book from './Book';
 
 
-const getLatestnotes = async (id : string) : Promise<NoteType[]> => {
-  const response = await fetch(`${process.env.API_URL}/notes/${id}`,{
+const getLatestBooks = async (id : string) : Promise<BookType[]> => {
+  const response = await fetch(`${process.env.API_URL}/books/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);
@@ -16,17 +16,17 @@ const getLatestnotes = async (id : string) : Promise<NoteType[]> => {
 
   const data = await response.json();
   console.log({data: data})
-  return data.data as NoteType[];
+  return data.data as BookType[];
 }
 
-export default async function Notes(){
+export default async function Books(){
   const session = await auth();
   const userId = session?.user?.id
-  const notes = userId? await getLatestnotes(userId) : null;
+  const books = userId? await getLatestBooks(userId) : null;
 
   return (
     <>
-      {notes ? notes.map((note)=><Note key={note.id} note={note}/>) : 'No note'}
+      {books ? books.map((book)=><Book key={book.id} book={book}/>) : 'No Books'}
     </>
   )
 }
