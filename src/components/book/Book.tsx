@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import { prismadb } from "@/globals/db";
 import { BookType } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
@@ -17,66 +15,13 @@ interface dataModel{
   countLikes : number,
 }
 
-const getIsLiked = async (bookId: string) => {
-  console.log({bookId : bookId})
-  const session = await auth();
-  const userId = session?.user?.id
-  try {
-    if (userId) { 
-      if (!bookId) {
-        console.log('無効な投稿')
-        return ''
-      }
-      const book = await prismadb.book.findUnique({
-        where:{
-          id: bookId
-        }
-      });
-
-
-      if(!book){
-        throw new Error('invalid ID')
-      }
-
-      // const userExists = book?.likedIds.includes(userId) ?? false;
-      // const countLikes = book?.likedIds.length
-
-      // const data : dataModel = {
-      //   userExists : userExists,
-      //   countLikes : countLikes,
-      // }
-
-      // console.log({
-      //   bookId : book.id,
-      //   userExists : userExists,
-      //   countLikes : countLikes,
-      // })
-
-      // return data;
-      
-      
-    }
-  } catch (err) {
-    console.log("いいねできない");
-    return err;
-  }
-
-}
-
 
 
 const Book: React.FC<BookProps> = async ({book}) => {
-  // const isLiked = await getIsLiked(book.id);
-  const data : dataModel = await getIsLiked(book.id) as dataModel;
-  const {userExists, countLikes} = data
-  const isLiked = userExists;
-  
-
-  console.log({ isLiked: isLiked });
 
   return (
     <>
-    <div className="bg-yellow-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
+    <div className="bg-green-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
       <div className="mb-4 w-1/2 h-full">
         <div className="flex items-center mb-2">
           <Image

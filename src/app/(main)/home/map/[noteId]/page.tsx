@@ -23,7 +23,7 @@ const NoteMap = async ({params}:Params) => {
 
   const { posts, polylineCoordinates } = await getNotePoints(noteId);
 
-
+if(posts){
   return (
     <div className="w-full h-[100vh]">
       <div className="w-[80%] h-[80vh]">
@@ -31,6 +31,7 @@ const NoteMap = async ({params}:Params) => {
       </div>
     </div>
   );
+}
 };
 
 export default NoteMap;

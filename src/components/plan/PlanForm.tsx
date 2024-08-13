@@ -3,15 +3,15 @@
 import { useFormState } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 import type { PutBlobResult } from '@vercel/blob';
-import {BookFormState, createBook} from '@/actions/createBook'
+import { createPlan, PlanFormState } from '@/actions/createPlan'
 
 
 
-const BookForm = () => {
+const PlanForm = () => {
   const [titleText, setTitleText] = useState('');
-  const initialState: BookFormState = {error: ''};
-  const [state, formAction] = useFormState(createBook, initialState);
-  const [blob, setBlob] = useState<PutBlobResult | null>(null);
+  // const [text, setText] = useState('');
+  const initialState: PlanFormState = {error: ''};
+  const [state, formAction] = useFormState(createPlan, initialState);
   const limitLength = 16;  //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
   
@@ -27,13 +27,14 @@ const BookForm = () => {
     <div className="min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
         <form action={formAction}>
-          <input type='text' name='title' placeholder="ブックのタイトル" className='w-full p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400'
+          <input type='text' name='title' placeholder="プランのタイトル" className='w-full p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400'
           onChange={(e)=>{setTitleText(e.target.value)}}
           />
           <textarea
             name='post'
             className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="ノートの紹介文(省略可)"
+            placeholder="メモ(省略可)"
+            // onChange={(e)=>{setText(e.target.value)}}
           ></textarea>
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
 
@@ -50,4 +51,4 @@ const BookForm = () => {
   )
 }
 
-export default BookForm
+export default PlanForm

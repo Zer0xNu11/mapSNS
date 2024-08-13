@@ -22,6 +22,7 @@ export async function createBook(state: BookFormState, formData: FormData) {
       const createdBook = await prismadb.book.create({
         data: {
           title: title,
+          content: content,
           authorId: session?.user?.id,
         },
         include: {

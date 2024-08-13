@@ -1,10 +1,7 @@
 'use client'
 
-import { createPost} from '@/actions/createPost'
 import { useFormState } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
-import { useMarkerStore } from '@/store'
-import PostLocation from '../map/PostLocation'
 import type { PutBlobResult } from '@vercel/blob';
 import { createNote, NoteFormState } from '@/actions/createNote'
 
@@ -12,7 +9,7 @@ import { createNote, NoteFormState } from '@/actions/createNote'
 
 const NoteForm = () => {
   const [titleText, setTitleText] = useState('');
-  const [text, setText] = useState('');
+  // const [text, setText] = useState('');
   const initialState: NoteFormState = {error: ''};
   const [state, formAction] = useFormState(createNote, initialState);
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
@@ -29,8 +26,8 @@ const NoteForm = () => {
   // };
 
   useEffect(()=>{
-    setRemLength(limitLength-text.length)
-  }, [text])
+    setRemLength(limitLength-titleText.length)
+  }, [titleText])
 
 
   return (
@@ -44,7 +41,7 @@ const NoteForm = () => {
             name='post'
             className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="ノートの紹介文(省略可)"
-            onChange={(e)=>{setText(e.target.value)}}
+            // onChange={(e)=>{setText(e.target.value)}}
           ></textarea>
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
           {/* <input type="file" name='image' /> */}

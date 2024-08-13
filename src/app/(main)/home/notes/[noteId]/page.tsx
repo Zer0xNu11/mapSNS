@@ -31,7 +31,7 @@ const NotePage = async ({ params }: Params) => {
   
   try {
     const note = await getNoteData(noteId);
-    console.log(note)
+    console.log({note:note})
     if (!note) {
       return <Loading />;
     }
@@ -39,7 +39,6 @@ const NotePage = async ({ params }: Params) => {
       <>
         <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div>
         <Timeline noteId={noteId} />
-        {/* <PostForm note = {note}/>  */}
         <div className="fixed bottom-0 right-0 h-16 my-4 mr-8">
           <Link
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${noteId}`}

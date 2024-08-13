@@ -1,4 +1,4 @@
-import NoteForm from "@/components/note/NoteForm";
+import BookForm from "@/components/book/BookForm";
 import React from "react";
 
 
@@ -9,7 +9,7 @@ const CreateNote = () => {
   return (
     <>
       <div>
-        <NoteForm />
+        <BookForm />
       </div>
     </>
   );

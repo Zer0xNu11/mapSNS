@@ -6,11 +6,14 @@ import { redirect } from "next/navigation";
 
 
 //サーバーアクションズ内でbindした値の型を定義
-export interface NoteFormState {
+export interface PlanFormState {
   error: string;
+  planId: string;
+  positionLat?: number | null;
+  positionLng?: number | null;
 }
 
-export async function createNote(state: NoteFormState, formData: FormData) {
+export async function createPlan(state: PlanFormState, formData: FormData) {
   const session = await auth();
   const title: string = formData.get("title") as string
   const content: string = formData.get("content") as string;
@@ -18,15 +21,14 @@ export async function createNote(state: NoteFormState, formData: FormData) {
   try {
     if (session?.user?.id) {
       console.log('======into Try =========')
-      const createdNote = await prismadb.note.create({
+      const createdPlan = await prismadb.plan.create({
         data: {
           title: title,
           content: content || '',
-          authorId: session?.user?.id,
+          userId: session?.user?.id,
         },
         include: {
-          author: true,
-          posts: true
+          user: true,
         },
       });
 
@@ -35,10 +37,10 @@ export async function createNote(state: NoteFormState, formData: FormData) {
       return state;
     }
   } catch (error) {
-    console.log("投稿失敗");
+    console.log("Plan失敗");
     console.log(error)
     state.error = "投稿エラー";
     return state;
   }
-  redirect("/home/notes");
+  redirect("/home/plans");
 }

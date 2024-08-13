@@ -7,8 +7,8 @@ export default async function BooksPage() {
   const session = await auth();
   return (
     <>
-      <Link href="../create/note">
-        <Button>新規ノート</Button>
+      <Link href="../create/book">
+        <Button>新規ブック</Button>
       </Link>
       <div>
         <Books />

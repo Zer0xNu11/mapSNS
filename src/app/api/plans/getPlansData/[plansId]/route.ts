@@ -1,16 +1,16 @@
 import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET =  async (_: NextRequest, {params}:{params:{noteId: string}}) => {
-  console.log('======APIconect GetNoteData========')
+export const GET =  async (_: NextRequest, {params}:{params:{planId: string}}) => {
+  console.log('======APIconect========')
   try {
     console.log({params:params})
-    const noteData = await prismadb.note.findUnique({
+    const planData = await prismadb.plan.findUnique({
       where:{
-        id: params.noteId
+        id: params.planId
       },
     });
-    return NextResponse.json({message:'成功', data: noteData})
+    return NextResponse.json({message:'成功', data: planData})
     //jsonレスポンス
   } catch (err) {
     // console.log({});

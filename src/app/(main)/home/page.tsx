@@ -9,19 +9,7 @@ export default async function Home() {
   // console.log({sessionhome: session})
   return (
     <>
-      <div>
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/books`}>
-          <Button>プラン</Button>
-        </Link>
-
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
-          <Button>レコード</Button>
-        </Link>
-
-        <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
-          <Button>シェア</Button>
-        </Link>
-      </div>
+    ダッシュボード
     </>
   );
 }

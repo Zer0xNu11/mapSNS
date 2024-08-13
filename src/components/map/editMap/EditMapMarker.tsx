@@ -3,10 +3,13 @@ import { GOOGLEMAPSETTING} from "@/lib/mapSetting";
 import { useMarkerStore } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
-import { Marker, Popup, useMapEvent } from "react-leaflet";
+import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
+import MakePlanOnMarker from "./MakePlanOnMarker";
 
-export interface MakingMarkerProps {
+export interface EditMapMarkerProps {
+  planId: string
   position: LatLng;
+  polylineCoordinates: [number, number][]
 }
 
 const ICON = icon({
@@ -16,7 +19,9 @@ const ICON = icon({
   popupAnchor: [0, -30],
 });
 
-export const MakingMarker : React.FC<MakingMarkerProps> = ({position}) => {
+const limeOptions = { color: 'lime' }
+
+export const EditMapMarker : React.FC<EditMapMarkerProps> = ({planId, position, polylineCoordinates}) => {
 const {marker, addMarker} = useMarkerStore();
 
 useEffect(()=>{
@@ -37,8 +42,12 @@ useEffect(()=>{
   return (
     <>
         <Marker key={marker.toString()} position={marker} icon={ICON}>
-        <Popup><a href={GOOGLEMAPSETTING(marker.lat,marker.lng)} target="_blank" rel="noopener noreferrer">googleMapで付近を探索</a></Popup>
+        <Popup className="w-[300px] h-[200px]">
+          <MakePlanOnMarker planId={planId} position={marker}/>
+          <a href={GOOGLEMAPSETTING(marker.lat,marker.lng)} target="_blank" rel="noopener noreferrer">googleMapで付近を探索</a>
+        </Popup>
         </Marker>
+        <Polyline pathOptions={limeOptions} positions={polylineCoordinates}/>
     </>
   );
 };

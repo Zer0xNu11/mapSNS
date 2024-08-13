@@ -17,21 +17,20 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
+  id       String  @id @default(cuid())
   name     String
-  email    String    @unique
+  email    String  @unique
   password String
   imageUrl String?
-  role     String    @default("USER")
+  role     String  @default("USER")
 
-
-  posts    Post[]
-  notes    Note[]
-  books    Book[]
-  comments Comment[]
-  likes    Like[]
-  plan     Plan[]
-  plans    Plans[]
+  posts     Post[]
+  notes     Note[]
+  books     Book[]
+  comments  Comment[]
+  likes     Like[]
+  planPoint PlanPoint[]
+  plans     Plan[]
 }
 
 model Post {
@@ -52,10 +51,10 @@ model Post {
 
   comments Comment[]
 
-  location Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
-  likes    Like[]
-  plans    Plan[]
-  likeSum  LikeSum?
+  location   Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
+  likes      Like[]
+  planPoints PlanPoint[]
+  likeSum    LikeSum?
 
   @@index([location], name: "location_idx", type: Gist)
 }
@@ -75,11 +74,11 @@ model Note {
   totalLikes Int         @default(0)
 
   posts   Post[]
-  plans   Plans?
+  plan    Plan?
   likeSum LikeSum?
 }
 
-model Plan {
+model PlanPoint {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -90,12 +89,13 @@ model Plan {
   post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   imageUrl  String?
   open      Boolean[]
-  plansId   String
-  plans     Plans     @relation(fields: [plansId], references: [id], onDelete: Cascade)
+  planId    String
+  plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
   tag       String[]
+  location   Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
 }
 
-model Plans {
+model Plan {
   id        String    @id @default(cuid())
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -105,11 +105,11 @@ model Plans {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   imageUrl  String?
   open      Boolean[]
-  noteId    String    @unique
-  note      Note      @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  noteId    String?   @unique
+  note      Note?     @relation(fields: [noteId], references: [id], onDelete: Cascade)
   tag       String[]
 
-  plans Plan[]
+  planPoints PlanPoint[]
 }
 
 model Book {
@@ -117,6 +117,7 @@ model Book {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   title      String
+  content    String?
   authorId   String
   author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   imageUrl   String?

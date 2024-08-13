@@ -1,5 +1,3 @@
-import { auth } from "@/auth";
-import { prismadb } from "@/globals/db";
 import { NoteType } from "@/types";
 import Image from "next/image";
 import { Button } from "../ui/button";
