@@ -66,7 +66,7 @@ export const RegisterForm = () => {
       headerLabel="Create an account"
       backButtonLabel="Already have an account?"
       backButtonHref="/login"
-      showSocial
+      // showSocial
     >
       <Form {...form}> {/*useFormのプロパティを分割代入 */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

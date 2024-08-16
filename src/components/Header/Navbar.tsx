@@ -9,7 +9,7 @@ const Navbar = () => {
     <header className="bg-gray-700 p-4 text-white">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="font-semibold text-xl">
-          <Link href="/">📍RyoCoder</Link>
+          <Link href="/home">📍RyoCoder</Link>
         </h1>
         <nav>
           <ul className="flex space-x-4">
@@ -22,7 +22,7 @@ const Navbar = () => {
                 <Button>レコード</Button>
               </Link>
 
-              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
+              <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/share`}>
                 <Button>シェア</Button>
               </Link>
             </div>

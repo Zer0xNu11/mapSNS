@@ -1,13 +1,19 @@
 import { prismadb } from "@/globals/db";
+import { PostLeafletType } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest) => {
   console.log('======APIconect GetPostPoints========')
   try {
     const posts = await prismadb.$queryRaw<
-    Array<{ id: string; content: string; coordinates: [number, number] }>
+    PostLeafletType[]
   >`
-    SELECT id, content, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
+    SELECT
+     id, 
+     content, 
+     "totalLikes", 
+     "noteId",
+     ST_AsGeoJSON(location)::json->'coordinates' as coordinates
     FROM "Post"
     WHERE location IS NOT NULL
     ORDER BY "createdAt" ASC

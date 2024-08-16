@@ -96,7 +96,7 @@ const Post: React.FC<PostProps> = async ({ post }) => {
           <img
             className="mr-2 object-contain h-full"
             src={post.imageUrl || "/images/blank.png"}
-            alt="Post Image"
+            alt="User Avatar"
           />
         </div>
       </div>

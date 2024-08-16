@@ -12,16 +12,24 @@ import { SearchResultMarkers } from "../SearchResultMarkers";
 import { Button } from "@/components/ui/button";
 import { PostType } from "@/types";
 import { getPostPointsCreatedAt } from "@/lib/getPostPoints";
+import ListMode from "./ListMode";
 
 export interface EditMapProps {
-planId : string
-posts: Array<{ id: string, content: string, coordinates: [number, number] }>
-polylineCoordinates: [number, number][]
+  planId: string;
+  posts: Array<{ id: string; content: string; coordinates: [number, number] }>;
+  polylineCoordinates: [number, number][];
 }
 
-const EditMap: React.FC<EditMapProps> = ({planId, posts, polylineCoordinates}) => {
+const EditMap: React.FC<EditMapProps> = ({
+  planId,
+  posts,
+  polylineCoordinates,
+}) => {
   const [position, setPosition] = useState<LatLng | null>(null);
-  const [searchPosts, setSearchPosts] = useState<Array<{ id: string, content: string, coordinates: [number, number] }>>();
+  const [searchPosts, setSearchPosts] =
+    useState<
+      Array<{ id: string; content: string; coordinates: [number, number] }>
+    >();
 
   useEffect(() => {
     async function initializeMap() {
@@ -36,13 +44,13 @@ const EditMap: React.FC<EditMapProps> = ({planId, posts, polylineCoordinates}) =
     }
 
     initializeMap();
-    console.log({position: position})
+    console.log({ position: position });
   }, []);
 
-  const onClickCreatedAt = async() =>{
-    const postPoints = await getPostPointsCreatedAt()
+  const onClickCreatedAt = async () => {
+    const postPoints = await getPostPointsCreatedAt();
     setSearchPosts(postPoints);
-  }
+  };
 
   // 初期マップズームレベル
   const zoom = 15;
@@ -53,21 +61,26 @@ const EditMap: React.FC<EditMapProps> = ({planId, posts, polylineCoordinates}) =
   }
 
   return (
+    <>
     <div className="w-full h-[100vh]">
       <Button>いいね順</Button>
       <Button onClick={onClickCreatedAt}>投稿日時順</Button>
-    <MapContainer center={position} zoom={zoom}>
-      <TileLayer
-        attribution={mapStyle.attribution}
-        url={mapStyle.style}
-        maxZoom={20}
-        minZoom={2}
-      />
-      <EditMapMarker planId={planId}  position={position} polylineCoordinates={polylineCoordinates}/>
-      {searchPosts? <SearchResultMarkers  posts={searchPosts} /> : '' }
-
-    </MapContainer>
+      <MapContainer center={position} zoom={zoom}>
+        <TileLayer
+          attribution={mapStyle.attribution}
+          url={mapStyle.style}
+          maxZoom={20}
+          minZoom={2}
+        />
+        <EditMapMarker
+          planId={planId}
+          position={position}
+          polylineCoordinates={polylineCoordinates}
+        />
+        {searchPosts ? <SearchResultMarkers posts={searchPosts} /> : ""}
+      </MapContainer>
     </div>
+    </>
   );
 };
 

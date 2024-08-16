@@ -16,8 +16,18 @@ export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
   return data.data as PostType[];
 }
 
-export const getNotePost = async (noteId: string): Promise<PostType[]> => {
-  const response = await fetch(`${process.env.API_URL}/posts/notePost/${noteId}`, {
+
+export const getNotePosts = async (noteId: string): Promise<PostType[]> => {
+  const response = await fetch(`${process.env.API_URL}/posts/getNotePosts/${noteId}`, {
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+  return data.data as PostType[];
+};
+
+export const getPostsCreatedAt = async (): Promise<PostType[]> => {
+  const response = await fetch(`${process.env.API_URL}/posts/getPosts/createdAt`, {
     cache: "no-store",
   });
 

@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import Timeline from "@/components/Timeline";
+import ListFromNoteId from "@/components/ListFromNoteId";
 import { NoteType } from "@/types";
 import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
 import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
@@ -38,7 +38,7 @@ const NotePage = async ({ params }: Params) => {
     return (
       <>
         <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div>
-        <Timeline noteId={noteId} />
+        <ListFromNoteId noteId={noteId} />
         <div className="fixed bottom-0 right-0 h-16 my-4 mr-8">
           <Link
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${noteId}`}

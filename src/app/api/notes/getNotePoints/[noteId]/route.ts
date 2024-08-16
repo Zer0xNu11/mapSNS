@@ -1,4 +1,5 @@
 import { prismadb } from "@/globals/db";
+import { PostLeafletType } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest, {params}:{params:{noteId: string}}) => {
@@ -6,9 +7,16 @@ export const GET =  async (_: NextRequest, {params}:{params:{noteId: string}}) =
   const noteId = params.noteId
   try {
     const posts = await prismadb.$queryRaw<
-    Array<{ id: string; content: string; coordinates: [number, number] }>
+    PostLeafletType[]
   >`
-    SELECT id, content, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
+    SELECT 
+    id, 
+    content,
+    "totalLikes", 
+    "imageUrl",
+    "noteId",
+    ST_AsGeoJSON(location)::json->'coordinates' as coordinates
+
     FROM "Post"
     WHERE location IS NOT NULL
     AND "noteId" = ${noteId}
