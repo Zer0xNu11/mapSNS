@@ -4,19 +4,17 @@ import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../map.css";
 import { useEffect, useState } from "react";
-import { LocationMarkers } from "../LocationMarkers";
 import { getPosition } from "@/lib/getPostion";
 import { mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
 import { Button } from "@/components/ui/button";
-import { PostType } from "@/types";
 import { getPostPointsCreatedAt } from "@/lib/getPostPoints";
-import ListMode from "./ListMode";
+import { PostLeafletType } from "@/types";
 
 export interface EditMapProps {
   planId: string;
-  posts: Array<{ id: string; content: string; coordinates: [number, number] }>;
+  posts: PostLeafletType[]
   polylineCoordinates: [number, number][];
 }
 
@@ -28,7 +26,7 @@ const EditMap: React.FC<EditMapProps> = ({
   const [position, setPosition] = useState<LatLng | null>(null);
   const [searchPosts, setSearchPosts] =
     useState<
-      Array<{ id: string; content: string; coordinates: [number, number] }>
+      PostLeafletType[]
     >();
 
   useEffect(() => {
@@ -54,7 +52,7 @@ const EditMap: React.FC<EditMapProps> = ({
 
   // 初期マップズームレベル
   const zoom = 15;
-  const mapStyle = mapStyles.google;
+  const mapStyle = mapStyles.blackWhite;
 
   if (!position) {
     return <div>Loading map...</div>;

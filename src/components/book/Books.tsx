@@ -5,7 +5,7 @@ import Book from './Book';
 
 
 const getLatestBooks = async (id : string) : Promise<BookType[]> => {
-  const response = await fetch(`${process.env.API_URL}/books/${id}`,{
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);

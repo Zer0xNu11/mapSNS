@@ -56,18 +56,18 @@ const PostForm = ({ params }: Params) => {
 
   const fileSelectRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    setRemLength(limitLength - text.length);
-  }, [text]);
+  // useEffect(() => {
+  //   setRemLength(limitLength - text.length);
+  // }, [text]);
 
-  useEffect(() => {
-    state.positionLat = marker?.lat || null;
-    state.positionLng = marker?.lng || null;
-    // console.log({ zustandmarker: marker });
-    // console.log({ state: state.positionLng });
-    // console.log({ state: state });
-    // console.log(`../home/notes`)
-  }, [marker]);
+  // useEffect(() => {
+  //   state.positionLat = marker?.lat || null;
+  //   state.positionLng = marker?.lng || null;
+  //   // console.log({ zustandmarker: marker });
+  //   // console.log({ state: state.positionLng });
+  //   // console.log({ state: state });
+  //   // console.log(`../home/notes`)
+  // }, [marker]);
 
 
 

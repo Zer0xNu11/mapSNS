@@ -1,14 +1,14 @@
+'use client'
 import React from 'react'
 import Post from './Post'
-import { NoteType, PostLeafletType, PostType } from '@/types'
-import { auth } from '@/auth'
-import { getNotePosts } from '@/lib/getPosts';
+import {PostType } from '@/types'
+import { SessionProvider } from 'next-auth/react';
 
 export interface PostsProps{
   posts: PostType[];
 }
 
-export default async function Posts({posts}:PostsProps){
+export default function Posts({posts}:PostsProps){
 
   return (
     <>

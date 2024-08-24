@@ -1,8 +1,11 @@
+'use client'
+
+import {useSession} from 'next-auth/react';
 import { PostType } from "@/types";
-import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
+import { getIsLiked } from '@/lib/getlikes';
 
 export interface PostProps {
   post: PostType;
@@ -11,64 +14,9 @@ export interface PostProps {
   imageUrl?: string;
 }
 
-interface dataModel {
-  userExists: object | null;
-  countLikes: number | undefined;
-}
 
-const getIsLiked = async (postId: string) => {
-  console.log({ postId: postId });
-  const session = await auth();
-  const userId = session?.user?.id;
+const Post: React.FC<PostProps> = ({ post }) => {
 
-  try {
-    if (!userId) {
-      throw new Error("ユーザーの値が異常です");
-    }
-
-    const datatx = await prismadb.$transaction(async (tx) => {
-      const existingLike = await tx.like.findUnique({
-        where: {
-          userId_postId: {
-            userId: userId,
-            postId: postId,
-          },
-        },
-      });
-
-      const post = await tx.post.findUnique({
-        where: {
-          id: postId,
-        },
-      });
-
-      if (!post) {
-        throw new Error("invalid ID");
-      }
-
-      const data: dataModel = {
-        userExists: existingLike,
-        countLikes: post?.totalLikes,
-      };
-
-      return data;
-    });
-    return datatx;
-  } catch (err) {
-    console.log("いいねできない");
-    console.log(err);
-    return err;
-  }
-};
-
-const Post: React.FC<PostProps> = async ({ post }) => {
-  // const isLiked = await getIsLiked(post.id);
-  const data = await getIsLiked(post.id);
-  console.log({ data: data });
-  const { userExists, countLikes } = data as dataModel;
-  const isLiked = userExists ? true : false;
-
-  console.log({ isLiked: isLiked });
 
   return (
     <>
@@ -90,7 +38,7 @@ const Post: React.FC<PostProps> = async ({ post }) => {
             </div>
           </div>
           <p className="text-gray-700 break-all">{post.content}</p>
-          <PostLikeIcon post={post} isLiked={isLiked} countLikes={countLikes} />
+          <PostLikeIcon post={post}/>
         </div>
         <div className="w-1/2 h-full items-center">
           <img

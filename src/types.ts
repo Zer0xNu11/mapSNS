@@ -13,7 +13,8 @@ export interface PostType{
     authorId: string;  
     author: UserType;
     imageUrl? : string;
-    totalLikes : number
+    totalLikes : number;
+    noteId: string;
   }
 
 export interface PostLeafletType{
@@ -21,7 +22,7 @@ export interface PostLeafletType{
     content: string;
     imageUrl? : string;
     totalLikes : number
-    noteId:     String
+    noteId:     string
     coordinates: [number, number] 
   }
 

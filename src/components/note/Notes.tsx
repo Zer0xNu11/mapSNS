@@ -5,7 +5,7 @@ import Note from './Note';
 
 
 const getLatestnotes = async (id : string) : Promise<NoteType[]> => {
-  const response = await fetch(`${process.env.API_URL}/notes/${id}`,{
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);

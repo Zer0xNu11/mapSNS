@@ -12,7 +12,7 @@ interface Params {
 
 const getNoteData = async (noteId: string): Promise<NoteType> => {
   const response = await fetch(
-    `${process.env.API_URL}/notes/getNoteData/${noteId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/notes/getNoteData/${noteId}`,
     {
       cache: "no-store", //キャッシュ無効化のオプション
     }

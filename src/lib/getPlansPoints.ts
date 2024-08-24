@@ -1,12 +1,13 @@
 import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
+import { PostLeafletType } from "@/types";
 
 export async function getPlanPoints(planId : string) {
   //生SQLで時系列順にpostを取得 ->json配列 ->>json文字列
   const session = await auth();
   const userId = session?.user?.id || 'empty'
   const posts = await prismadb.$queryRaw<
-    Array<{ id: string; content: string; coordinates: [number, number] }>
+    PostLeafletType[]
   >`
     SELECT id, content, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
     FROM "PlanPoint"

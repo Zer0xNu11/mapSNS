@@ -5,7 +5,7 @@ import Plan from './Plan';
 
 
 const getLatestplan = async (id : string) : Promise<PlanType[]> => {
-  const response = await fetch(`${process.env.API_URL}/plans/${id}`,{
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);

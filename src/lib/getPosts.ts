@@ -2,7 +2,7 @@ import { NoteType, PostType } from '../types'
 
 
 export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
-  const response = await fetch(`${process.env.API_URL}/posts/${id}`,{
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);
@@ -18,7 +18,7 @@ export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
 
 
 export const getNotePosts = async (noteId: string): Promise<PostType[]> => {
-  const response = await fetch(`${process.env.API_URL}/posts/getNotePosts/${noteId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/getNotePosts/${noteId}`, {
     cache: "no-store",
   });
 
@@ -27,7 +27,7 @@ export const getNotePosts = async (noteId: string): Promise<PostType[]> => {
 };
 
 export const getPostsCreatedAt = async (): Promise<PostType[]> => {
-  const response = await fetch(`${process.env.API_URL}/posts/getPosts/createdAt`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/getPosts/createdAt`, {
     cache: "no-store",
   });
 

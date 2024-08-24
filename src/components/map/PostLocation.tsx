@@ -29,7 +29,7 @@ const PostLocation: React.FC = () => {
 
   // 初期マップズームレベル
   const zoom = 18;
-  const mapStyle = mapStyles.google;
+  const mapStyle = mapStyles.blackWhite;
 
   if (!position) {
     return <div>Loading map...</div>;

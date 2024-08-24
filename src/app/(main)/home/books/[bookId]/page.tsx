@@ -8,7 +8,7 @@ interface Params {
 
 const getBookData = async (bookId: string): Promise<BookType> => {
   const response = await fetch(
-    `${process.env.API_URL}/books/getBookData/${bookId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/books/getBookData/${bookId}`,
     {
       cache: "no-store", //キャッシュ無効化のオプション
     }

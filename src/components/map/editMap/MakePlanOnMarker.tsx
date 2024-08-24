@@ -46,7 +46,7 @@ const MakePlanOnMarker: React.FC<MakePlanOnMarkerProps> = ({planId}) => {
           className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}
         >
-          追加
+          プランへ追加
         </button>
         <PendLoading />
       </>
