@@ -1,15 +1,15 @@
-// import ListMode from '@/components/map/editMap/ListMode'
-// import React from 'react'
+import ListMode from '@/components/map/editMap/ListMode'
+import React from 'react'
 
-// const SharePage = () => {
-//   return (
-//     <>
-//     <div>SharePage</div>
-//     <ListMode/>
-//     </>
-//   )
-// }
+const SharePage = () => {
+  return (
+    <>
+    <div>SharePage</div>
+    <ListMode/>
+    </>
+  )
+}
 
-// export default SharePage
+export default SharePage
 
 
