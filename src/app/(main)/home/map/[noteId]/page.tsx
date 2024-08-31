@@ -1,8 +1,6 @@
 import { getNotePoints } from "@/lib/getNotePoints";
 import dynamic from "next/dynamic";
-import React, { useState } from "react";
-import { usePathname } from "next/navigation";
-import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
+import React from "react";
 
 interface Params {
   params: { noteId: string };

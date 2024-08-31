@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-    <div className="w-full h-[100vh]">
+    <div className="bg-red-300 w-[100-vh] h-[100vh]">
       <Navbar /> 
       <main>
         {children}
