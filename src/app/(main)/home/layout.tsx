@@ -7,10 +7,12 @@ export default function RootLayout({
 }>) {
   return (
     <>
+    <div className="w-full h-[100vh]">
       <Navbar /> 
       <main>
         {children}
       </main>
+    </div>
     </>
   );
 }
