@@ -1,4 +1,7 @@
-import { LatLng } from "leaflet"
+import { divIcon, icon, LatLng } from "leaflet"
+import L from 'leaflet';
+import { Circle } from "@phosphor-icons/react/dist/ssr/Circle";
+import { renderToString } from 'react-dom/server';
 
 export const GOOGLEMAPSETTING : any = (lat : any, lng : any) => `https://www.google.co.jp/maps/@${lat},${lng},${20}z`
 
@@ -20,3 +23,20 @@ export const mapStyles = {
   },
   template: { attribution: "", style: "" },
 };
+
+
+//Marker Icon
+export const ICON_Marker = icon({
+  iconUrl: "/images/circleRed.svg",
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+  popupAnchor: [0, -30],
+  className: 'text-blue-400'
+});
+
+export const ICON_HIGHLIGHTED = icon({
+  iconUrl: "/images/map-pin-fill.svg",
+  iconSize: [32, 32],
+  iconAnchor: [16, 24],
+  popupAnchor: [0, -35],
+});

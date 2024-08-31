@@ -18,6 +18,7 @@ const config = {
       },
     },
     extend: {
+      backfaceVisibility: ['hidden'],
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -74,7 +75,12 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  variants: {
+    extend: {
+      backfaceVisibility: ['responsive']
+    }
+  },
+  plugins: [require("tailwindcss-animate"),require('@tailwindcss/aspect-ratio'),],
 } satisfies Config
 
 export default config

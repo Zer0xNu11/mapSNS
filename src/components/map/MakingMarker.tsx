@@ -29,7 +29,7 @@ useEffect(()=>{
     const { lat, lng } = e.latlng;
     addMarker(latLng(lat, lng));
     console.log({lat:marker?.lat,lng:marker?.lng})
-    console.log({pointlat:lat, pointlng:lng})
+    // console.log({pointlat:lat, pointlng:lng})
   });
 
   if (!marker) return null;
