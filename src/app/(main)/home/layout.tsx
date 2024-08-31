@@ -7,9 +7,9 @@ export default function RootLayout({
 }>) {
   return (
     <>
-    <div className="bg-red-300 w-[100-vh] h-[100vh]">
+    <div className="relative bg-red-300 w-[100vw] h-screen overflow-hidden">
       <Navbar /> 
-      <main>
+      <main className="pt-[72px]">
         {children}
       </main>
     </div>

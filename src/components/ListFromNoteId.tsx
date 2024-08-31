@@ -32,7 +32,7 @@ const ListFromNoteId = ({ noteId }: NoteIdProps) => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-100 rounded-xl relative">
+      <div className="bg-gray-100 rounded-xl relative">
         <div className="fixed bottom-0 h-12 my-4 z-[1000]">
           <button
             className="bg-gray-100 rounded-tr-full p-4"

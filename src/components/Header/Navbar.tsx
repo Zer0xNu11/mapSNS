@@ -9,7 +9,7 @@ import { Triangle } from "@phosphor-icons/react/dist/ssr/Triangle";
 
 const Navbar = () => {
   return (
-    <header className="bg-gray-700 p-4 text-white">
+    <header className="fixed bg-gray-700 p-4 text-white w-[100vw] z-[2000]">
       <div className="container mx-auto flex justify-between items-center">
         <div className="font-semibold text-xl">
           <Link href="/home" className="hidden xs:block">📍RyoCoder</Link>

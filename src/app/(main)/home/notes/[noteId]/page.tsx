@@ -38,7 +38,7 @@ const NotePage = async ({ params }: Params) => {
     }
     return (
       <>
-        <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div>
+        {/* <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div> */}
         <NoteMain noteId={noteId}/>
       </>
     );

@@ -14,6 +14,7 @@ import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
 import { useListDisplayMode } from "@/store";
+import { navHeight } from "@/lib/commonSetting";
 
 export interface MapProps {
   posts: Array<{ id: string; content: string; coordinates: [number, number] }>;
@@ -23,16 +24,16 @@ export interface MapProps {
 
 const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
-  const {listDisplayMode, setListDisplayMode} = useListDisplayMode()
+  const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const [mode, setMode] = useState<string>("list");
   const menuVariants = {
     closed: {
       x: "100%",
-      pointerEvents: 'none' as 'none',      
+      pointerEvents: "none" as "none",
     },
     open: {
       x: 0,
-      pointerEvents: 'auto' as 'auto',
+      pointerEvents: "auto" as "auto",
       transition: {
         type: "spring",
         stiffness: 400,
@@ -55,8 +56,24 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
     },
   };
 
+  const menuButtonVariantsSmall = {
+    closed: {
+      x: 0,
+    },
+    open: {
+      x: "calc(-83vw)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
+    },
+  };
+
   const modeChangeButton = () => {
-    listDisplayMode === "list" ? setListDisplayMode("map") : setListDisplayMode("list");
+    listDisplayMode === "list"
+      ? setListDisplayMode("map")
+      : setListDisplayMode("list");
   };
 
   useEffect(() => {
@@ -85,15 +102,15 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
 
   return (
     <>
-      <div className="">
+      <div className="overflow-hidden">
         <motion.div
-          className="fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          className="xs:hidden fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
-          variants={menuButtonVariants}
+          variants={menuButtonVariantsSmall}
         >
           <button
-          className="fixed right-0 top-0 bottom-0  z-[1000]"
+            className="fixed right-0 top-0 bottom-0  z-[1000]"
             onClick={modeChangeButton}
           >
             {listDisplayMode === "list" ? (
@@ -104,7 +121,24 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
           </button>
         </motion.div>
         <motion.div
-          className={`absolute overflow-y-scroll right-0 z-[500] w-[400px] h-[100vh] `}
+          className=" xs:fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          initial="closed"
+          animate={listDisplayMode === "list" ? "open" : "closed"}
+          variants={menuButtonVariants}
+        >
+          <button
+            className="fixed right-0 top-0 bottom-0  z-[1000]"
+            onClick={modeChangeButton}
+          >
+            {listDisplayMode === "list" ? (
+              <CaretRight size={32} color="#6b6b6b" weight="light" />
+            ) : (
+              <CaretLeft size={32} color="#3d3d3d" weight="light" />
+            )}
+          </button>
+        </motion.div>
+        <motion.div
+          className={`absolute top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] right-0 z-[500] xs:w-[400px] h-[100vh]`}
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuVariants}
@@ -112,7 +146,7 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
         >
           {noteId ? <ListFromNoteId noteId={noteId} /> : ""}
         </motion.div>
-        <div className={`w-full h-[100vh]`}>
+        <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom}>
             <TileLayer
               attribution={mapStyle.attribution}
