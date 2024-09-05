@@ -11,21 +11,6 @@ interface NoteLogMarkerProps {
   position: LatLng;
 }
 
-// interface Post {
-//   id: string;
-//   content: string;
-//   location: {
-//     type: 'Point';
-//     coordinates: [number, number]; // [longitude, latitude]
-//   };
-// }
-
-
-
-
-
-
-
 const limeOptions = { color: "lime" };
 
 export const NoteLogMarker: React.FC<NoteLogMarkerProps & MapProps> = ({

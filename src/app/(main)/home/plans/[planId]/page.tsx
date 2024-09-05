@@ -1,4 +1,4 @@
-import ListMode from "@/components/map/editMap/ListMode";
+import ListFromSort from "@/components/map/editMap/ListFromSort";
 import { getPlanPoints } from "@/lib/getPlansPoints";
 import dynamic from "next/dynamic";
 import React from "react";
@@ -25,11 +25,8 @@ const PlanMap = async ({params}:Params) => {
 
   return (
     <div className="w-full h-[100vh] flex flex-row">
-      <div className="w-[80%] h-[80vh]">
+      <div className="w-[100%] h-[80vh]">
         <EditMap planId={planId} posts={posts} polylineCoordinates={polylineCoordinates} />
-      </div>
-      <div>
-        <ListMode/>
       </div>
     </div>
   );

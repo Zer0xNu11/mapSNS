@@ -3,12 +3,13 @@
 import { createPost, PostFormState } from "@/actions/createPost";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
-import { useMarkerStore } from "@/store";
+import { useMarkerStore, useSelectedPostStore } from "@/store";
 import type { PutBlobResult } from "@vercel/blob";
 import Loading from "@/app/loading";
 
 import { createPlan, PlanFormState } from "@/actions/createPlan";
 import { LatLng } from "leaflet";
+import { tracePost } from "@/lib/createPlan";
 
 interface Plan{
   Plan: object
@@ -28,6 +29,8 @@ const MakePlanOnMarker: React.FC<MakePlanOnMarkerProps> = ({planId}) => {
     planId: planId,
   };
   const [state, formAction] = useFormState(createPlan, initialState);
+  const { selectedPostId } = useSelectedPostStore();
+
   const limitLength = 60; //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
   const [loading, setLoading] = useState(false);
@@ -37,11 +40,18 @@ const MakePlanOnMarker: React.FC<MakePlanOnMarkerProps> = ({planId}) => {
     return pending ? <Loading /> : "";
   };
 
+  const onClick = async() =>{
+    if(planId && selectedPostId){
+      await tracePost(planId, selectedPostId) 
+    }
+  }
+
   const SubmitButton = () => {
     const { pending } = useFormStatus();
     return (
       <>
         <button
+          onClick = {onClick}
           type="submit"
           className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}

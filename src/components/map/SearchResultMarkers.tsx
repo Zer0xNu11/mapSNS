@@ -2,30 +2,30 @@
 import { useEffect, useState } from "react";
 import { LatLng, latLng, icon, LatLngExpression } from "leaflet";
 import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
-import { GOOGLEMAPSETTING } from "@/lib/mapSetting";
+import {
+  GOOGLEMAPSETTING,
+  ICON_HIGHLIGHTED,
+  ICON_Marker,
+} from "@/lib/mapSetting";
 import { Button } from "../ui/button";
-import { useSerachDataStore } from "@/store";
+import { useSelectedPostStore, useSerachDataStore } from "@/store";
 import { getNotePoints } from "@/lib/getNotePoints";
 import { PostLeafletType } from "@/types";
+import { tracePost } from "@/lib/createPlan";
 
 interface SearchResultMarkersProps {
   posts: PostLeafletType[];
+  planId: string
 }
-
-const ICON = icon({
-  iconUrl: "/images/circleRed.svg",
-  iconSize: [25, 25],
-  iconAnchor: [12.5, 12.5],
-  popupAnchor: [0, -30],
-});
 
 const limeOptions = { color: "lime" };
 
 export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
-  posts,
+  posts, planId
 }) => {
   // const [posts, setPosts] = useState<Post[]>([]);
   const [points, setPoint] = useState([]);
+  const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
   const { searchedPostId, searchedNoteId, addData } = useSerachDataStore();
   const searchNoteId = async (noteId: string) => {
@@ -34,6 +34,12 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
     setPolylineCoordinates(polylineCoordinates);
   };
   console.log({ posts: posts });
+
+  const onClick = async() =>{
+    if(planId && selectedPostId){
+      await tracePost(planId, selectedPostId) 
+    }
+  }
 
   // console.log(console.log({posts:latLng(posts[1].coordinates[1], posts[1].coordinates[0]), position:position}))
 
@@ -46,15 +52,25 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
           <Marker
             key={post.id}
             position={latLng(post.coordinates[0], post.coordinates[1])}
-            icon={ICON}
+            icon={selectedPostId === post.id ? ICON_HIGHLIGHTED : ICON_Marker}
+            eventHandlers={{
+              click: () => setSelectedPostId(post.id),
+            }}
           >
             <Popup>
               {`${post.content}`}
               <br />
-                <Button onClick={() => searchNoteId(post.noteId)}>
-                  作成者のノートを表示
-                </Button>
+              <Button onClick={() => searchNoteId(post.noteId)}>
+                作成者のノートを表示
+              </Button>
               <br />
+              <button
+                onClick={onClick}
+                type="submit"
+                className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+              >
+                プランへ追加
+              </button>
               <a
                 href={GOOGLEMAPSETTING(
                   post.coordinates[0],

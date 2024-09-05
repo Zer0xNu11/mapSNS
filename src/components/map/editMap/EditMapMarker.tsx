@@ -1,6 +1,6 @@
 "use client";
 import { GOOGLEMAPSETTING } from "@/lib/mapSetting";
-import { useMarkerStore } from "@/store";
+import { useMarkerStore, useSelectedPostStore } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
 import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
@@ -27,6 +27,7 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   polylineCoordinates,
 }) => {
   const { marker, addMarker } = useMarkerStore();
+  const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
 
   useEffect(() => {
     if (!marker) {
@@ -45,7 +46,8 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
 
   return (
     <>
-      <Marker key={marker.toString()} position={marker} icon={ICON}>
+      <Marker key={marker.toString()} position={marker} icon={ICON}    eventHandlers={{
+          }}>
         <Popup className="w-[300px] h-[200px]">
           <MakePlanOnMarker planId={planId} position={marker} />
           <a

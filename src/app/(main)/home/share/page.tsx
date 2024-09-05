@@ -1,11 +1,11 @@
-import ListMode from '@/components/map/editMap/ListMode'
+import ListFromSort from '@/components/map/editMap/ListFromSort'
 import React from 'react'
 
 const SharePage = () => {
   return (
     <>
     <div>SharePage</div>
-    <ListMode/>
+    <ListFromSort/>
     </>
   )
 }

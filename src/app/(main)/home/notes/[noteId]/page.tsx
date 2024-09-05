@@ -1,10 +1,6 @@
 import Loading from "@/app/loading";
-import ListFromNoteId from "@/components/ListFromNoteId";
 import NoteMain from "@/components/map/noteMap/noteMain";
 import { NoteType } from "@/types";
-import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
-import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
-import Link from "next/link";
 import React from "react";
 
 interface Params {

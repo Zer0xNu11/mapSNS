@@ -110,7 +110,7 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
           variants={menuButtonVariantsSmall}
         >
           <button
-            className="fixed right-0 top-0 bottom-0  z-[1000]"
+            className="h-20 z-[1000]"
             onClick={modeChangeButton}
           >
             {listDisplayMode === "list" ? (
@@ -121,13 +121,13 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
           </button>
         </motion.div>
         <motion.div
-          className=" xs:fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          className="xs:fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuButtonVariants}
         >
           <button
-            className="fixed right-0 top-0 bottom-0  z-[1000]"
+            className="h-20  z-[1000]"
             onClick={modeChangeButton}
           >
             {listDisplayMode === "list" ? (
@@ -138,7 +138,7 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
           </button>
         </motion.div>
         <motion.div
-          className={`absolute top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] right-0 z-[500] xs:w-[400px] h-[100vh]`}
+          className={`absolute bg-gray-100  top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] right-0 z-[500] xs:w-[400px] h-[100vh]`}
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuVariants}

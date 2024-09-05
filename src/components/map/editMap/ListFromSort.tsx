@@ -1,17 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Posts from "./Post/Posts";
-import { getNotePosts } from "@/lib/getPosts";
+import { getNotePosts, getPostsCreatedAt } from "@/lib/getPosts";
 import { PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";
 import { usePostDisplayMode } from "@/store";
+import Posts from "@/components/Post/Posts";
 
-export interface NoteIdProps {
-  noteId: string;
-}
 
-const ListFromNoteId = ({ noteId }: NoteIdProps) => {
+const ListFromSort = () => {
   const [posts, setPosts] = useState<PostType[]>();
   const { postDisplayMode, setPostDisplayMode } = usePostDisplayMode();
 
@@ -23,7 +20,7 @@ const ListFromNoteId = ({ noteId }: NoteIdProps) => {
 
   useEffect(() => {
     const initialize = async () => {
-      const data = await getNotePosts(noteId);
+      const data = await getPostsCreatedAt();
       setPosts(data);
     };
 
@@ -63,4 +60,5 @@ const ListFromNoteId = ({ noteId }: NoteIdProps) => {
   );
 };
 
-export default ListFromNoteId;
+export default ListFromSort;
+

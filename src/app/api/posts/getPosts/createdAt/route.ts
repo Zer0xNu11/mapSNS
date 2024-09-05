@@ -5,7 +5,7 @@ export const GET =  async (_: NextRequest) => {
   console.log('======APIconect========')
   try {
     const latestPosts = await prismadb.post.findMany({
-      take: 10,
+      take: 100,
       orderBy: { createdAt: "desc" },
       include: {
         author:true,
