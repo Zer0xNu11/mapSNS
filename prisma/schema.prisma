@@ -93,6 +93,7 @@ model PlanPoint {
   plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
   tag       String[]
   location   Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
+  order      Int
 }
 
 model Plan {

@@ -7,6 +7,12 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
   console.log('======APIconect tracePost========')
   const session = await auth();
 
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ message: '認証エラー' }, { status: 401 });
+  }
+
+  try {
   const post = await prismadb.post.findUnique({
     where:{
       id: params.postId
@@ -17,10 +23,17 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
     }
   });
 
-  try {
-    if (!post) {
-      return new Error("Post is required");
-    }
+  if (!post) {
+    return NextResponse.json({ message: 'Post not found' }, { status: 404 });
+  }
+  
+  const maxOrder = await prismadb.planPoint.findFirst({
+    where: { planId: params.planId },
+    orderBy: { order: 'desc' },
+    select: { order: true }
+  });
+  const newOrder = (maxOrder?.order ?? 0) + 1;
+
     if (session?.user?.id) {
     const createdPlan = await prismadb.planPoint.create({
       data: {
@@ -29,6 +42,7 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
         imageUrl: post.imageUrl || null,
         postId: post.id,
         planId: params.planId,
+        order: newOrder,
       },
       include: {
         user: true,

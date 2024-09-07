@@ -40,3 +40,24 @@ export const ICON_HIGHLIGHTED = icon({
   iconAnchor: [16, 24],
   popupAnchor: [0, -35],
 });
+
+export const ICON_PlanMarker = icon({
+  iconUrl: "/images/circleBlue.svg",
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+  popupAnchor: [0, -30],
+  className: 'text-blue-400'
+});
+
+export const ICON_PLAN_HIGHLIGHTED = icon({
+  iconUrl: "/images/map-pin-fill-Blue.svg",
+  iconSize: [32, 32],
+  iconAnchor: [16, 24],
+  popupAnchor: [0, -35],
+});
+
+// LineColor
+export const LINE_COLOR = {
+red : { color: "#ee445e" },
+blue : { color: "#6ba7f5" },
+}

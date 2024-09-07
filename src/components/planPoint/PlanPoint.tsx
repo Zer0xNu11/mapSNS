@@ -1,31 +1,32 @@
 "use client";
 
-import { PostType } from "@/types";
+import { PlanPointType } from "@/types";
 import Image from "next/image";
-import { useListDisplayMode, usePostDisplayMode, useSelectedPostStore } from "@/store";
+import { useListDisplayMode, usePostDisplayMode, useSelectedPlanPointStore } from "@/store";
 import { motion } from "framer-motion";
 
 export interface PlanPointProps {
-  post: PostType;
+  planpoint: PlanPointType;
+  id: string;
   imageUrl?: string;
 }
 
-const Post: React.FC<PlanPointProps> = ({ post }) => {
-  const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
+const PlanPoint: React.FC<PlanPointProps> = ({ planpoint }) => {
+  const { selectedPlanPointId, setSelectedPlanPointId } = useSelectedPlanPointStore();
   const { postDisplayMode } = usePostDisplayMode();
 
   const clickHandler = () => {
-    setSelectedPostId(post.id);
+    setSelectedPlanPointId(planpoint.id);
   };
 
   return (
     <>
       <div
         className={`relative shadow-md rounded-2xl  mb-4 h-44 [perspective:1000px]  ${
-          selectedPostId === post.id ? "border-2 border-blue-500" : ""
+          selectedPlanPointId === planpoint.id ? "border-2 border-blue-500" : ""
         }`}
         onClick={clickHandler}
-        data-post-id={post.id}
+        data-planpoint-id={planpoint.id}
       >
         <motion.div
           className={`bg-white mb-4 h-full flex flex-col [backface-visibility:hidden] rounded-2xl p-4`}
@@ -34,7 +35,7 @@ const Post: React.FC<PlanPointProps> = ({ post }) => {
           // }
           initial={false}
           animate={{
-            rotateY: post.imageUrl && postDisplayMode === "pict" ? 180 : 0,
+            rotateY: planpoint.imageUrl && postDisplayMode === "pict" ? 180 : 0,
           }}
           transition={{ duration: 0.6 }}
           style={{
@@ -42,23 +43,13 @@ const Post: React.FC<PlanPointProps> = ({ post }) => {
           }}
         >
           <div className="flex items-center mb-2 w-[280px]">
-            <Image
-              className="w-10 h-10 rounded-full mr-2"
-              src="/images/placeholder.png"
-              width="100"
-              height="100"
-              alt="User Avatar"
-            />
             <div className="flex flex-col w-full">
-              <h2 className="font-semibold text-md">{post.author?.name}</h2>
-              <p className="text-gray-500 text-sm ">
-                {new Date(post.createdAt).toLocaleString()}
-              </p>
+              {/* <h2 className="font-semibold text-md">{planpoint.user?.name || '名無し'}</h2> */}
             </div>
           </div>
           <div className="w-full">
             <p className="text-gray-700 break-word whitespace-pre-line line-clamp-4">
-              {post.content}
+              {planpoint.content}
             </p>
           </div>
         </motion.div>
@@ -69,7 +60,7 @@ const Post: React.FC<PlanPointProps> = ({ post }) => {
           // }
           initial={false}
           animate={{
-            rotateY: post.imageUrl && postDisplayMode === "pict" ? 0 : 180,
+            rotateY: planpoint.imageUrl && postDisplayMode === "pict" ? 0 : 180,
           }}
           transition={{ duration: 0.6 }}
           style={{
@@ -78,7 +69,7 @@ const Post: React.FC<PlanPointProps> = ({ post }) => {
         >
           <img
             className="object-cover w-full h-full rounded-2xl"
-            src={post.imageUrl || "/images/blank.png"}
+            src={planpoint.imageUrl || "/images/blank.png"}
             alt="Post Image"
           />
         </motion.div>
@@ -87,4 +78,4 @@ const Post: React.FC<PlanPointProps> = ({ post }) => {
   );
 };
 
-export default Post;
+export default PlanPoint;

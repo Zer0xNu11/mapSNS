@@ -1,37 +1,37 @@
 "use client"
 import React, { useEffect, useRef } from "react";
-import Post from "./Post";
-import { PostType } from "@/types";
-import {useListDisplayMode, useSelectedPostStore } from "@/store";
+import PlanPoint from "./PlanPoint";
+import { PlanPointType } from "@/types";
+import {usePlanListDisplayMode, useSelectedPlanPointStore } from "@/store";
 
-export interface PostsProps {
-  posts: PostType[];
+export interface PlanPointsProps {
+  planPoints: PlanPointType[];
 }
 
-export default function Posts({ posts }: PostsProps) {
-  const { selectedPostId } = useSelectedPostStore();
-  const {listDisplayMode, setListDisplayMode} = useListDisplayMode();
+export default function PlanPoints({ planPoints }: PlanPointsProps) {
+  const { selectedPlanPointId } = useSelectedPlanPointStore();
+  const {planListDisplayMode, setPlanListDisplayMode} = usePlanListDisplayMode();
 
 
-  const postsRef = useRef<HTMLDivElement>(null);
+  const planPointsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (selectedPostId && postsRef.current) {
-      const selectedPost = postsRef.current.querySelector(
-        `[data-post-id="${selectedPostId}"]`
+    if (selectedPlanPointId && planPointsRef.current) {
+      const selectedPlanPoint = planPointsRef.current.querySelector(
+        `[data-planpoint-id="${selectedPlanPointId}"]`
       );
-      if (selectedPost && listDisplayMode ==='list') {
-        selectedPost.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (selectedPlanPoint && planListDisplayMode ==='list') {
+        selectedPlanPoint.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
-  }, [selectedPostId]);
+  }, [selectedPlanPointId, planListDisplayMode]);
 
   return (
     <>
-      <div ref={postsRef}>
-        {posts
-          ? posts.map((post) => <Post key={post.id} post={post} />)
-          : "No post"}
+      <div ref={planPointsRef}>
+        {planPoints
+          ? planPoints.map((planpoint) => <PlanPoint key={planpoint.id} id={planpoint.id} planpoint={planpoint} />)
+          : "No planpoint"}
       </div>
     </>
   );

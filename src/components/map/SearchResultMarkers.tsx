@@ -6,6 +6,7 @@ import {
   GOOGLEMAPSETTING,
   ICON_HIGHLIGHTED,
   ICON_Marker,
+  LINE_COLOR,
 } from "@/lib/mapSetting";
 import { Button } from "../ui/button";
 import { useSelectedPostStore, useSerachDataStore } from "@/store";
@@ -17,8 +18,6 @@ interface SearchResultMarkersProps {
   posts: PostLeafletType[];
   planId: string
 }
-
-const limeOptions = { color: "lime" };
 
 export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   posts, planId
@@ -85,7 +84,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
           </Marker>
         ))}
         {polylineCoordinates ? (
-          <Polyline pathOptions={limeOptions} positions={polylineCoordinates} />
+          <Polyline pathOptions={LINE_COLOR.red} positions={polylineCoordinates} />
         ) : (
           ""
         )}

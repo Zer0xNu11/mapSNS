@@ -24,7 +24,7 @@ export default function Posts({ posts }: PostsProps) {
         selectedPost.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
-  }, [selectedPostId]);
+  }, [selectedPostId, listDisplayMode]);
 
   return (
     <>

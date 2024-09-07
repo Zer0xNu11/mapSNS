@@ -1,5 +1,5 @@
 import ListFromSort from "@/components/map/editMap/ListFromSort";
-import { getPlanPoints } from "@/lib/getPlansPoints";
+import { getPlanData } from "@/lib/getPlanData";
 import dynamic from "next/dynamic";
 import React from "react";
 
@@ -20,13 +20,13 @@ const PlanMap = async ({params}:Params) => {
     []
   );
 
-  const { posts, polylineCoordinates } = await getPlanPoints(planId);
+  const { planPoints, polylineCoordinates } = await getPlanData(planId);
 
 
   return (
     <div className="w-full h-[100vh] flex flex-row">
       <div className="w-[100%] h-[80vh]">
-        <EditMap planId={planId} posts={posts} polylineCoordinates={polylineCoordinates} />
+        <EditMap planId={planId}  polylineCoordinates={polylineCoordinates} planPoints={planPoints} />
       </div>
     </div>
   );

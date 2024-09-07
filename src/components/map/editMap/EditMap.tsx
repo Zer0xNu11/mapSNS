@@ -10,35 +10,43 @@ import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
 import { Button } from "@/components/ui/button";
 import { getPostPointsCreatedAt } from "@/lib/getPostPoints";
-import { PostLeafletType } from "@/types";
+import { PlanLeafletType, PostLeafletType } from "@/types";
 
 import "leaflet/dist/leaflet.css";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
 import { navHeight } from "@/lib/commonSetting";
-import { useListDisplayMode } from "@/store";
+import { useListDisplayMode, usePlanListDisplayMode } from "@/store";
 import ListFromSort from "./ListFromSort";
+import ListFromPlan from "./ListFromPlan";
 
 export interface EditMapProps {
   planId: string;
-  posts: PostLeafletType[];
   polylineCoordinates: [number, number][];
+  planPoints: PlanLeafletType[];
 }
 
 const EditMap: React.FC<EditMapProps> = ({
   planId,
-  posts,
   polylineCoordinates,
+  planPoints,
 }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const [searchPosts, setSearchPosts] = useState<PostLeafletType[]>();
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
+  const { planListDisplayMode, setPlanListDisplayMode } = usePlanListDisplayMode();
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
       ? setListDisplayMode("map")
       : setListDisplayMode("list");
+  };
+
+  const planModeChangeButton = () => {
+    planListDisplayMode === "list"
+      ? setPlanListDisplayMode("map")
+      : setPlanListDisplayMode("list");
   };
 
   useEffect(() => {
@@ -114,13 +122,57 @@ const EditMap: React.FC<EditMapProps> = ({
     },
   };
 
+  const planMenuVariants = {
+    closed: {
+      x: "-100%",
+      pointerEvents: "none" as "none",
+    },
+    open: {
+      x: 0,
+      pointerEvents: "auto" as "auto",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
+    },
+  };
+
+  const planMenuButtonVariants = {
+    closed: {
+      x: 0,
+    },
+    open: {
+      x: 374,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
+    },
+  };
+
+  const planMenuButtonVariantsSmall = {
+    closed: {
+      x: 0,
+    },
+    open: {
+      x: "calc(83vw)",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
+    },
+  };
+
   return (
     <>
       <div className="w-full h-[100vh]">
         <Button>いいね順</Button>
         <Button className="absolute z-[2000]" onClick={onClickCreatedAt}>投稿日時順</Button>
         <motion.div
-          className="xs:hidden bg-red-400 fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          className="xs:hidden  fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuButtonVariantsSmall}
@@ -162,6 +214,51 @@ const EditMap: React.FC<EditMapProps> = ({
         >
           <ListFromSort /> 
         </motion.div>
+        <div>
+        <motion.div
+          className="xs:hidden  fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          initial="closed"
+          animate={planListDisplayMode === "list" ? "open" : "closed"}
+          variants={planMenuButtonVariantsSmall}
+        >
+          <button
+            className=" h-20 z-[1000]"
+            onClick={planModeChangeButton}
+          >
+            {planListDisplayMode === "list" ? (
+              <CaretLeft size={32} color="#6b6b6b" weight="light" />
+            ) : (
+              <CaretRight size={32} color="#3d3d3d" weight="light" />
+            )}
+          </button>
+        </motion.div>
+        <motion.div
+          className="xs:fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+          initial="closed"
+          animate={planListDisplayMode === "list" ? "open" : "closed"}
+          variants={planMenuButtonVariants}
+        >
+          <button
+            className=" h-20 z-[1000]"
+            onClick={planModeChangeButton}
+          >
+            {planListDisplayMode === "list" ? (
+              <CaretLeft size={32} color="#6b6b6b" weight="light" />
+            ) : (
+              <CaretRight size={32} color="#3d3d3d" weight="light" />
+            )}
+          </button>
+        </motion.div>
+        <motion.div
+          className={`absolute bg-blue-100  top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] left-0 z-[500] xs:w-[400px] h-[100vh]`}
+          initial="closed"
+          animate={planListDisplayMode === "list" ? "open" : "closed"}
+          variants={planMenuVariants}
+          aria-hidden={planListDisplayMode !== "list"}
+        >
+          <ListFromPlan planId={planId} />
+        </motion.div>
+        </div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom}>
             <TileLayer
@@ -174,10 +271,12 @@ const EditMap: React.FC<EditMapProps> = ({
               planId={planId}
               position={position}
               polylineCoordinates={polylineCoordinates}
+              planPoints={planPoints}
             />
             {searchPosts ? <SearchResultMarkers planId={planId} posts={searchPosts} /> : ""}
           </MapContainer>
         </div>
+        
       </div>
     </>
   );

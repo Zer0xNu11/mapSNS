@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { LatLng, latLng } from "leaflet";
+import { PlanPointType } from './types';
 
 interface MarkerState {
   marker: LatLng | null;
@@ -17,9 +18,9 @@ interface selectedNoteIdStore{
   addData: (postId: string, noteId:string) => void;
 }
 
-interface selectedPlanState{
-  selectedPlanId: string | null
-  setSelectedPlanId: (planId: string | null) => void;
+interface selectedPlanPointState{
+  selectedPlanPointId: string | null
+  setSelectedPlanPointId: (planPointId: string | null) => void;
 }
 
 interface postDisplayModeState{
@@ -32,6 +33,16 @@ interface listDisplayModeState{
   setListDisplayMode: (listMode: string ) => void;
 }
 
+interface planListDisplayModeState{
+  planListDisplayMode: string
+  setPlanListDisplayMode: (listMode: string ) => void;
+}
+
+interface planSlotState{
+  planSlot: PlanPointType[]
+  setPlanSlot: (slot: PlanPointType[] ) => void;
+}
+
 export  const useMarkerStore = create<MarkerState>((set) => ({
   marker: null,
   addMarker: (latlng) => set(() => ({ marker: latlng })),
@@ -42,9 +53,9 @@ export  const useSelectedPostStore = create<selectedPostState>((set) => ({
 setSelectedPostId: (postId) => set(() => ({ selectedPostId: postId })),
 }));
 
-export  const useSelectedPlanStore = create<selectedPlanState>((set) => ({
-  selectedPlanId: null,
-setSelectedPlanId: (planId) => set(() => ({ selectedPlanId: planId })),
+export  const useSelectedPlanPointStore = create<selectedPlanPointState>((set) => ({
+  selectedPlanPointId: null,
+setSelectedPlanPointId: (planPointId) => set(() => ({ selectedPlanPointId: planPointId })),
 }));
 
 export const useSerachDataStore = create<selectedNoteIdStore>((set) => ({
@@ -61,4 +72,14 @@ export  const usePostDisplayMode = create<postDisplayModeState>((set) => ({
 export  const useListDisplayMode = create<listDisplayModeState>((set) => ({
   listDisplayMode: 'list',
   setListDisplayMode:  (mode) => set(() => ( { listDisplayMode: `${mode}` }))
+}));
+
+export  const usePlanListDisplayMode = create<planListDisplayModeState>((set) => ({
+  planListDisplayMode: 'list',
+  setPlanListDisplayMode:  (mode) => set(() => ( { planListDisplayMode: `${mode}` }))
+}));
+
+export  const usePlanSlot = create<planSlotState>((set) => ({
+  planSlot: [],
+  setPlanSlot:  (slot) => set(() => ( { planSlot: slot }))
 }));
