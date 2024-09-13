@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getNotePosts, getPostsCreatedAt } from "@/lib/getPosts";
+import { getPostsCreatedAt } from "@/lib/getPosts";
 import { PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";

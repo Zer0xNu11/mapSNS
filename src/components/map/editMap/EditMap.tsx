@@ -56,7 +56,7 @@ const EditMap: React.FC<EditMapProps> = ({
         setPosition(latLng([point.lat, point.lng]));
       } else {
         // デフォルトの位置
-        setPosition(latLng([35.3607411, 138.727262]));
+        setPosition(latLng([35.680522, 139.766566]));
       }
     }
 
@@ -67,6 +67,7 @@ const EditMap: React.FC<EditMapProps> = ({
   useEffect(() => {
     async function slotInitializing() {
       setPlanSlot([]);
+      setPostsSlot([]);
       const data = await getPlanData(planId);
       setPlanSlot(data);
     }
