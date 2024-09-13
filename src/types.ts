@@ -28,10 +28,8 @@ export interface PostLeafletType{
 
   export interface PlanLeafletType{
     id: string;
-    content: string;
+    content?: string;
     imageUrl? : string;
-    totalLikes : number
-    planId:     string
     coordinates: [number, number] 
   }
 
@@ -67,6 +65,20 @@ export interface PlanPointType{
   imageUrl? : string;
   postId? : string;
   planId: string;
+}
+
+
+export interface PlanSlotType{
+  id: string;
+  title: string;
+  content?: string;
+  createdAt: string; 
+  userId: string;  
+  user: UserType;
+  imageUrl? : string;
+  postId? : string;
+  planId: string;
+  coordinates: [number, number] 
 }
 
 export interface BookType{

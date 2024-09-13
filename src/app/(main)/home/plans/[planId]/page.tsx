@@ -20,13 +20,13 @@ const PlanMap = async ({params}:Params) => {
     []
   );
 
-  const { planPoints, polylineCoordinates } = await getPlanData(planId);
+  // const { planPoints, polylineCoordinates } = await getPlanData(planId);
 
 
   return (
     <div className="w-full h-[100vh] flex flex-row">
       <div className="w-[100%] h-[80vh]">
-        <EditMap planId={planId}  polylineCoordinates={polylineCoordinates} planPoints={planPoints} />
+        <EditMap planId={planId} />
       </div>
     </div>
   );

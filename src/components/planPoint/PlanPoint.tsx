@@ -4,6 +4,8 @@ import { PlanPointType } from "@/types";
 import Image from "next/image";
 import { useListDisplayMode, usePostDisplayMode, useSelectedPlanPointStore } from "@/store";
 import { motion } from "framer-motion";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export interface PlanPointProps {
   planpoint: PlanPointType;
@@ -11,9 +13,16 @@ export interface PlanPointProps {
   imageUrl?: string;
 }
 
-const PlanPoint: React.FC<PlanPointProps> = ({ planpoint }) => {
+const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
   const { selectedPlanPointId, setSelectedPlanPointId } = useSelectedPlanPointStore();
   const { postDisplayMode } = usePostDisplayMode();
+
+  const {attributes, listeners, setNodeRef, transform} = useSortable({
+    id: id,
+  });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+  };
 
   const clickHandler = () => {
     setSelectedPlanPointId(planpoint.id);
@@ -21,7 +30,9 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint }) => {
 
   return (
     <>
+    <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
       <div
+        id={id}
         className={`relative shadow-md rounded-2xl  mb-4 h-44 [perspective:1000px]  ${
           selectedPlanPointId === planpoint.id ? "border-2 border-blue-500" : ""
         }`}
@@ -73,6 +84,7 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint }) => {
             alt="Post Image"
           />
         </motion.div>
+      </div>
       </div>
     </>
   );

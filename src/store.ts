@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { LatLng, latLng } from "leaflet";
-import { PlanPointType } from './types';
+import { PlanLeafletType, PlanPointType, PlanSlotType } from './types';
 
 interface MarkerState {
   marker: LatLng | null;
@@ -39,8 +39,8 @@ interface planListDisplayModeState{
 }
 
 interface planSlotState{
-  planSlot: PlanPointType[]
-  setPlanSlot: (slot: PlanPointType[] ) => void;
+  planSlot: PlanSlotType[]
+  setPlanSlot: (data:PlanSlotType[]) => void;
 }
 
 export  const useMarkerStore = create<MarkerState>((set) => ({
@@ -81,5 +81,5 @@ export  const usePlanListDisplayMode = create<planListDisplayModeState>((set) =>
 
 export  const usePlanSlot = create<planSlotState>((set) => ({
   planSlot: [],
-  setPlanSlot:  (slot) => set(() => ( { planSlot: slot }))
+  setPlanSlot:  (data:PlanSlotType[]) => set(() => ({ planSlot: data }))
 }));

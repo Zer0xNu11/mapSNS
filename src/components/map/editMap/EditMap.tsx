@@ -17,25 +17,23 @@ import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
 import { navHeight } from "@/lib/commonSetting";
-import { useListDisplayMode, usePlanListDisplayMode } from "@/store";
+import { useListDisplayMode, usePlanListDisplayMode, usePlanSlot } from "@/store";
 import ListFromSort from "./ListFromSort";
 import ListFromPlan from "./ListFromPlan";
+import { getPlanData, getPlanList } from "@/lib/getPlanData";
 
 export interface EditMapProps {
   planId: string;
-  polylineCoordinates: [number, number][];
-  planPoints: PlanLeafletType[];
 }
 
 const EditMap: React.FC<EditMapProps> = ({
   planId,
-  polylineCoordinates,
-  planPoints,
 }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const [searchPosts, setSearchPosts] = useState<PostLeafletType[]>();
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } = usePlanListDisplayMode();
+  const { planSlot, setPlanSlot } = usePlanSlot();
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
@@ -64,6 +62,36 @@ const EditMap: React.FC<EditMapProps> = ({
     initializeMap();
     console.log({ position: position });
   }, []);
+
+  useEffect(() => {
+    async function slotInitializing() {
+      setPlanSlot([]);
+      const data = await getPlanData(planId);
+      setPlanSlot(data);
+    }
+
+    slotInitializing();
+  }, []);
+
+  // useEffect(() => {
+  //   async function slotInitializing() {
+  //     setPlanSlot([],[]);
+  //     const data = await getPlanList(planId);
+  //     setPlanSlot(data, planPoints);
+  //   }
+
+  //   slotInitializing();
+  // }, []);
+
+  // useEffect(() => {
+  //   async function polylineUpdate() {
+  //     const { planPoints, polylineCoordinates } = await getPlanData(planId);
+  //     setPlanPointsState(planPoints);
+  //     setPolylineCoordinatesState(polylineCoordinates);
+  //   }
+
+  //   polylineUpdate();
+  // }, [planSlot]);
 
   const onClickCreatedAt = async () => {
     const postPoints = await getPostPointsCreatedAt();
@@ -270,8 +298,8 @@ const EditMap: React.FC<EditMapProps> = ({
             <EditMapMarker
               planId={planId}
               position={position}
-              polylineCoordinates={polylineCoordinates}
-              planPoints={planPoints}
+              polylineCoordinates={planSlot.map(item => item.coordinates)}
+              planPoints={planSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl}))}
             />
             {searchPosts ? <SearchResultMarkers planId={planId} posts={searchPosts} /> : ""}
           </MapContainer>
