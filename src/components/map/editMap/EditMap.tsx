@@ -17,7 +17,7 @@ import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
 import { navHeight } from "@/lib/commonSetting";
-import { useListDisplayMode, usePlanListDisplayMode, usePlanSlot } from "@/store";
+import { useListDisplayMode, usePlanListDisplayMode, usePlanSlot, usePostsSlot } from "@/store";
 import ListFromSort from "./ListFromSort";
 import ListFromPlan from "./ListFromPlan";
 import { getPlanData, getPlanList } from "@/lib/getPlanData";
@@ -34,6 +34,7 @@ const EditMap: React.FC<EditMapProps> = ({
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } = usePlanListDisplayMode();
   const { planSlot, setPlanSlot } = usePlanSlot();
+  const { postsSlot, setPostsSlot } = usePostsSlot();
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
