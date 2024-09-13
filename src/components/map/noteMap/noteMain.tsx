@@ -17,19 +17,15 @@ const NoteMain:React.FC<NoteMainProps>  = async ({noteId}) => {
     []
   );
 
-  const { posts, polylineCoordinates } = await getNotePoints(noteId);
-
-if(posts){
   return (
     <>
     <div className="w-full h-[100vh]">
       <div className="w-[100%] h-[80vh]">
-        <Map noteId={noteId} posts={posts} polylineCoordinates={polylineCoordinates} />
+        <Map noteId={noteId} />
       </div>
     </div>
     </>
   );
-}
 };
 
 export default NoteMain;

@@ -36,6 +36,14 @@ export async function createPost(state: PostFormState, formData: FormData) {
 
 
   try {
+
+    const maxOrder = await prismadb.post.findFirst({
+      where: { noteId: state.noteId },
+      orderBy: { order: 'desc' },
+      select: { order: true }
+    });
+    const newOrder = (maxOrder?.order ?? 0) + 1;
+
     if (session?.user?.id) {
       console.log("======into Try =========");
       const imageUrl = await uploadFileToVercelBlob();
@@ -45,7 +53,8 @@ export async function createPost(state: PostFormState, formData: FormData) {
           content: content,
           authorId: session?.user?.id,
           imageUrl: imageUrl || null,
-          noteId: state.noteId
+          noteId: state.noteId,
+          order: newOrder,
         },
         include: {
           author: true,

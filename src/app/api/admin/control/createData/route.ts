@@ -37,7 +37,7 @@ export const GET = async (_: NextRequest) => {
           },
         });
 
-        loop(5).map(async () => {
+        loop(5).map(async (_, index) => {
           if (!session?.user?.id) {
             throw new Error();
           }
@@ -47,6 +47,7 @@ export const GET = async (_: NextRequest) => {
               authorId: session?.user?.id,
               imageUrl: faker.image.url() || null,
               noteId: createdNote.id,
+              order: index,
             },
             include: {
               author: true,

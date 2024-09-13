@@ -1,18 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Posts from "./Post/Posts";
-import { getNotePosts } from "@/lib/getPosts";
 import { PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";
 import { usePostDisplayMode } from "@/store";
 
 export interface NoteIdProps {
-  noteId: string;
+  postsData: PostType[];
 }
 
-const ListFromNoteId = ({ noteId }: NoteIdProps) => {
-  const [posts, setPosts] = useState<PostType[]>();
+const ListFromNoteId = ({ postsData }: NoteIdProps) => {
   const { postDisplayMode, setPostDisplayMode } = usePostDisplayMode();
 
   const togglePostDisplayMode = () => {
@@ -21,14 +19,16 @@ const ListFromNoteId = ({ noteId }: NoteIdProps) => {
       : setPostDisplayMode("pict");
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      const data = await getNotePosts(noteId);
-      setPosts(data);
-    };
+  console.log({postsData:postsData})
 
-    initialize();
-  }, []);
+  // useEffect(() => {
+  //   const initialize = async () => {
+  //     const data = await getNotePosts(noteId);
+  //     setPosts(data);
+  //   };
+
+  //   initialize();
+  // }, []);
 
   return (
     <>
@@ -56,7 +56,7 @@ const ListFromNoteId = ({ noteId }: NoteIdProps) => {
           </button>
         </div>
         <main className="container mx-auto py-4">
-          {posts ? <Posts posts={posts} /> : ""}
+          <Posts posts={postsData} />
         </main>
       </div>
     </>

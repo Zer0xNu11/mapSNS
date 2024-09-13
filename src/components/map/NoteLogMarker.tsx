@@ -5,13 +5,16 @@ import { Marker, Polyline, Popup } from "react-leaflet";
 import { GOOGLEMAPSETTING, ICON_HIGHLIGHTED, ICON_Marker, LINE_COLOR} from "@/lib/mapSetting";
 import { MapProps } from "./Map";
 import { useSelectedPostStore } from "@/store";
+import { PostLeafletType } from "@/types";
 
 
 interface NoteLogMarkerProps {
   position: LatLng;
+  posts: PostLeafletType[];
+  polylineCoordinates: [number, number][];
 }
 
-export const NoteLogMarker: React.FC<NoteLogMarkerProps & MapProps> = ({
+export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
   position,
   posts,
   polylineCoordinates,

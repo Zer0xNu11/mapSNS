@@ -1,4 +1,4 @@
-import { NoteType, PostType } from '../types'
+import { NoteSlotType, PostType } from '../types'
 
 
 export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
@@ -17,13 +17,13 @@ export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
 }
 
 
-export const getNotePosts = async (noteId: string): Promise<PostType[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/getNotePosts/${noteId}`, {
+export const getNoteData = async (noteId: string): Promise<NoteSlotType[]> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/getNoteData/${noteId}`, {
     cache: "no-store",
   });
 
   const data = await response.json();
-  return data.data as PostType[];
+  return data.data as NoteSlotType[];
 };
 
 export const getPostsCreatedAt = async (): Promise<PostType[]> => {

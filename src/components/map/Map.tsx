@@ -13,19 +13,21 @@ import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
-import { useListDisplayMode } from "@/store";
+import { useListDisplayMode, useNoteSlot } from "@/store";
 import { navHeight } from "@/lib/commonSetting";
+import { getNoteData } from "@/lib/getPosts";
 
 export interface MapProps {
-  posts: Array<{ id: string; content: string; coordinates: [number, number] }>;
-  polylineCoordinates: [number, number][];
-  noteId?: string;
+  noteId: string;
 }
 
-const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
+const Map: React.FC<MapProps> = ({ noteId }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
+  const {noteSlot, setNoteSlot} = useNoteSlot();
   const [mode, setMode] = useState<string>("list");
+
+
   const menuVariants = {
     closed: {
       x: "100%",
@@ -92,6 +94,17 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
     console.log({ position: position });
   }, []);
 
+
+  useEffect(() => {
+    async function slotInitializing() {
+      setNoteSlot([]);
+      const data = await getNoteData(noteId);
+      setNoteSlot(data);
+    }
+
+    slotInitializing();
+  }, []);
+
   // 初期マップズームレベル
   const zoom = 18;
   const mapStyle = mapStyles.blackWhite;
@@ -144,7 +157,7 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          {noteId ? <ListFromNoteId noteId={noteId} /> : ""}
+          {noteId ? <ListFromNoteId postsData={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId, createdAt: item.createdAt, authorId: item.authorId, author: item.author}))} /> : ""}
         </motion.div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom}>
@@ -156,8 +169,8 @@ const Map: React.FC<MapProps> = ({ posts, polylineCoordinates, noteId }) => {
             />
             <NoteLogMarker
               position={position}
-              posts={posts}
-              polylineCoordinates={polylineCoordinates}
+              posts={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId}))}
+              polylineCoordinates={noteSlot.map(item => item.coordinates)}
             />
           </MapContainer>
         </div>

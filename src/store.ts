@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { LatLng, latLng } from "leaflet";
-import { PlanLeafletType, PlanPointType, PlanSlotType } from './types';
+import { LatLng } from "leaflet";
+import { NoteSlotType, PlanSlotType } from './types';
 
 interface MarkerState {
   marker: LatLng | null;
@@ -38,9 +38,20 @@ interface planListDisplayModeState{
   setPlanListDisplayMode: (listMode: string ) => void;
 }
 
+interface noteSlotState{
+  noteSlot: NoteSlotType[]
+  setNoteSlot: (data:NoteSlotType[]) => void;
+}
+
+
 interface planSlotState{
   planSlot: PlanSlotType[]
   setPlanSlot: (data:PlanSlotType[]) => void;
+}
+
+interface postsSlotState{
+  postsSlot: NoteSlotType[]
+  setPostsSlot: (data:NoteSlotType[]) => void;
 }
 
 export  const useMarkerStore = create<MarkerState>((set) => ({
@@ -79,7 +90,17 @@ export  const usePlanListDisplayMode = create<planListDisplayModeState>((set) =>
   setPlanListDisplayMode:  (mode) => set(() => ( { planListDisplayMode: `${mode}` }))
 }));
 
+export  const useNoteSlot = create<noteSlotState>((set) => ({
+  noteSlot: [],
+  setNoteSlot:  (data:NoteSlotType[]) => set(() => ({ noteSlot: data }))
+}));
+
 export  const usePlanSlot = create<planSlotState>((set) => ({
   planSlot: [],
   setPlanSlot:  (data:PlanSlotType[]) => set(() => ({ planSlot: data }))
+}));
+
+export const usePostsSlot = create<postsSlotState>((set) => ({
+  postsSlot: [],
+  setPostsSlot: (data: NoteSlotType[]) => set(() => ({ postsSlot: data }))
 }));

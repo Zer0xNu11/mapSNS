@@ -48,6 +48,7 @@ model Post {
   category   String      @default("other")
   tag        String[]
   totalLikes Int         @default(0)
+  order      Int
 
   comments Comment[]
 
@@ -92,6 +93,7 @@ model PlanPoint {
   planId    String
   plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
   tag       String[]
+  category  String  @default("other")
   location   Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
   order      Int
 }

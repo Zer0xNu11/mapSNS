@@ -73,26 +73,6 @@ const EditMap: React.FC<EditMapProps> = ({
     slotInitializing();
   }, []);
 
-  // useEffect(() => {
-  //   async function slotInitializing() {
-  //     setPlanSlot([],[]);
-  //     const data = await getPlanList(planId);
-  //     setPlanSlot(data, planPoints);
-  //   }
-
-  //   slotInitializing();
-  // }, []);
-
-  // useEffect(() => {
-  //   async function polylineUpdate() {
-  //     const { planPoints, polylineCoordinates } = await getPlanData(planId);
-  //     setPlanPointsState(planPoints);
-  //     setPolylineCoordinatesState(polylineCoordinates);
-  //   }
-
-  //   polylineUpdate();
-  // }, [planSlot]);
-
   const onClickCreatedAt = async () => {
     const postPoints = await getPostPointsCreatedAt();
     setSearchPosts(postPoints);
