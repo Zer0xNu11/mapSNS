@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <>
-    <div className="relative bg-red-300 w-[100vw] h-screen overflow-hidden">
+    <div className="relative bg-gray-500 w-[100vw] h-screen overflow-hidden">
       <Navbar /> 
       <main className="pt-[72px]">
         {children}

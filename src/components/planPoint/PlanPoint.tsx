@@ -17,15 +17,19 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
   const { selectedPlanPointId, setSelectedPlanPointId } = useSelectedPlanPointStore();
   const { postDisplayMode } = usePostDisplayMode();
 
-  const {attributes, listeners, setNodeRef, transform} = useSortable({
+  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
     id: id,
   });
   const style = {
     transform: CSS.Transform.toString(transform),
+    transition: transition,
+    opacity: isDragging ? 0.8 : 1,
   };
 
   const clickHandler = () => {
-    setSelectedPlanPointId(planpoint.id);
+    if (!isDragging) {
+      setSelectedPlanPointId(planpoint.id);
+    }
   };
 
   return (

@@ -13,9 +13,12 @@ import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
 import { motion } from "framer-motion";
-import { useListDisplayMode, useNoteSlot } from "@/store";
+import { useListDisplayMode, useMapStyle, useNoteSlot } from "@/store";
 import { navHeight } from "@/lib/commonSetting";
 import { getNoteData } from "@/lib/getPosts";
+import UserMarker from "./UserMarker";
+import { useUserMarkerStore } from "@/store";
+
 
 export interface MapProps {
   noteId: string;
@@ -26,6 +29,8 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const {noteSlot, setNoteSlot} = useNoteSlot();
   const [mode, setMode] = useState<string>("list");
+  const {setUserMarker} = useUserMarkerStore();
+  const {mapStyle, setMapStyle} = useMapStyle();
 
 
   const menuVariants = {
@@ -84,9 +89,11 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
 
       if (point) {
         setPosition(latLng([point.lat, point.lng]));
+        setUserMarker(latLng([point.lat, point.lng]));
       } else {
         // デフォルトの位置
         setPosition(latLng([35.680522, 139.766566]));
+        setUserMarker(latLng([35.680522, 139.766566]));
       }
     }
 
@@ -107,7 +114,6 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
 
   // 初期マップズームレベル
   const zoom = 18;
-  const mapStyle = mapStyles.blackWhite;
 
   if (!position) {
     return <div>Loading map...</div>;
@@ -172,6 +178,7 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
               posts={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId}))}
               polylineCoordinates={noteSlot.map(item => item.coordinates)}
             />
+            <UserMarker/>
           </MapContainer>
         </div>
       </div>

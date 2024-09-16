@@ -25,14 +25,21 @@ const ListFromPlan = ({ planId }: { planId: string }) => {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     
+    if (!active.id || !over || !over.id) return;
     if (active.id !== over?.id) {
       const newPlanSlot = [...planSlot];
       const oldIndex = newPlanSlot.findIndex((item) => item.id === active.id);
       const newIndex = newPlanSlot.findIndex((item) => item.id === over?.id);
   
+      if(oldIndex === -1 || newIndex === -1){
+        return console.log('-1 detected')
+      }
       const reorderedPlanSlot = arrayMove(newPlanSlot, oldIndex, newIndex);
-      setPlanSlot(reorderedPlanSlot);
+      console.log({activeId:active.id, newIndex:newIndex})
+      console.log({oldIndex:oldIndex, newIndex:newIndex})
+      console.log({planSlot:planSlot})
       try{
+        setPlanSlot(reorderedPlanSlot);
         await updatePlanOrderData(reorderedPlanSlot)
       }catch(error){
         console.log(error)
@@ -61,16 +68,6 @@ const ListFromPlan = ({ planId }: { planId: string }) => {
 
   console.log({ planSlot: planSlot });
 
-  // useEffect(() => {
-  //   const initialize = async () => {
-  //     const data = await getPlanList(planId);
-  //     // setPlanPoints(data);
-  //     setPlanSlot(data);
-  //     console.log({ Data: data });
-  //   };
-
-  //   initialize();
-  // }, []);
 
   return (
     <>

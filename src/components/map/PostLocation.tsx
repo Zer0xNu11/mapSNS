@@ -3,15 +3,16 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { getPosition } from "@/lib/getPostion";
 import { MakingMarker } from "./MakingMarker";
 import { mapStyles } from "@/lib/mapSetting";
-import { useMarkerStore } from "@/store";
+import { useMarkerStore, useUserMarkerStore } from "@/store";
+import UserMarker from "./UserMarker";
 
 const PostLocation: React.FC = () => {
-  const [position, setPosition] = useState<LatLng | null>(null);
-  const {marker, addMarker} = useMarkerStore();
+  const {marker, setMarker} = useMarkerStore();
+  const {userMarker, setUserMarker} = useUserMarkerStore();
 
   useEffect(() => {
     async function initializeMap() {
@@ -19,11 +20,13 @@ const PostLocation: React.FC = () => {
       console.log({point:point})
 
       if (point != null) {
-        addMarker(latLng([point.lat, point.lng]));
+        setMarker(latLng([point.lat, point.lng]));
+        setUserMarker(latLng([point.lat, point.lng]));
         console.log({position: marker})
       } else {
         // デフォルトの位置
-        addMarker(latLng([35.680522, 139.766566]));
+        setMarker(latLng([35.680522, 139.766566]));
+        setUserMarker(latLng([35.680522, 139.766566]));
         console.log({position: 'デフォルト'})
       }
     }
@@ -49,6 +52,7 @@ const PostLocation: React.FC = () => {
         minZoom={2}
       />
       <MakingMarker position={marker} />
+      <UserMarker />
     </MapContainer>
   );
 };

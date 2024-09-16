@@ -26,6 +26,20 @@ export const mapStyles = {
 
 
 //Marker Icon
+export const ICON_USER = icon({
+  iconUrl: "/images/crosshair-fill.svg",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [0, -30],
+});
+
+export const ICON_PIN = icon({
+  iconUrl: "/images/pinsmall.svg",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [0, -30],
+});
+
 export const ICON_Marker = icon({
   iconUrl: "/images/circleRed.svg",
   iconSize: [16, 16],

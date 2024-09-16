@@ -1,10 +1,16 @@
 import { create } from 'zustand'
 import { LatLng } from "leaflet";
 import { NoteSlotType, PlanSlotType } from './types';
+import { mapStyles } from './lib/mapSetting';
 
 interface MarkerState {
   marker: LatLng | null;
-  addMarker: (latlng: LatLng) => void;
+  setMarker: (latlng: LatLng) => void;
+}
+
+interface UserMarkerState {
+  userMarker: LatLng | null;
+  setUserMarker: (latlng: LatLng) => void;
 }
 
 interface selectedPostState{
@@ -54,10 +60,21 @@ interface postsSlotState{
   setPostsSlot: (data:NoteSlotType[]) => void;
 }
 
+interface mapStyleState{
+  mapStyle: {attribution: string, style: string}
+  setMapStyle: (style: {attribution: string, style: string}) => void;
+}
+
 export  const useMarkerStore = create<MarkerState>((set) => ({
   marker: null,
-  addMarker: (latlng) => set(() => ({ marker: latlng })),
+  setMarker: (latlng) => set(() => ({ marker: latlng })),
 }));
+
+export  const useUserMarkerStore = create<UserMarkerState>((set) => ({
+  userMarker: null,
+  setUserMarker: (latlng) => set(() => ({ userMarker: latlng })),
+}));
+
 
 export  const useSelectedPostStore = create<selectedPostState>((set) => ({
   selectedPostId: null,
@@ -103,4 +120,9 @@ export  const usePlanSlot = create<planSlotState>((set) => ({
 export const usePostsSlot = create<postsSlotState>((set) => ({
   postsSlot: [],
   setPostsSlot: (data: NoteSlotType[]) => set(() => ({ postsSlot: data }))
+}));
+
+export const useMapStyle = create<mapStyleState>((set) => ({
+  mapStyle: mapStyles.blackWhite,
+  setMapStyle: (style) => set(() => ({ mapStyle: style }))
 }));

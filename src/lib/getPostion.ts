@@ -3,6 +3,7 @@ export async function getPosition(): Promise<{ lat: number; lng: number } | null
     console.log("位置情報を取得できません");
   }
 
+
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {

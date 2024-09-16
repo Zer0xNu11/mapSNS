@@ -27,18 +27,18 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   polylineCoordinates,
   planPoints,
 }) => {
-  const { marker, addMarker } = useMarkerStore();
+  const { marker, setMarker } = useMarkerStore();
   const { selectedPlanPointId, setSelectedPlanPointId } = useSelectedPlanPointStore();
 
   useEffect(() => {
     if (!marker) {
-      addMarker(position);
+      setMarker(position);
     }
   }, [position]);
 
   const map = useMapEvent("click", (e) => {
     const { lat, lng } = e.latlng;
-    addMarker(latLng(lat, lng));
+    setMarker(latLng(lat, lng));
     console.log({ lat: marker?.lat, lng: marker?.lng });
     console.log({ pointlat: lat, pointlng: lng });
   });

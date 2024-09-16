@@ -18,7 +18,7 @@ export default async function RootLayout({
 
   return (
     <html lang="ja">
-      <body className={noto_Sans_JP.className}>
+      <body className={`${noto_Sans_JP.className} bg-gray-500`}>
         {children}
       </body>
     </html>

@@ -28,7 +28,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   const [polylineCoordinates, setPolylineCoordinates] = useState();
   const { searchedPostId, searchedNoteId, addData } = useSerachDataStore();
   const searchNoteId = async (noteId: string) => {
-    const { posts, polylineCoordinates } = await getNotePoints(noteId);
+    const { polylineCoordinates } = await getNotePoints(noteId);
     console.log({ polylineCoordinates: polylineCoordinates });
     setPolylineCoordinates(polylineCoordinates);
   };

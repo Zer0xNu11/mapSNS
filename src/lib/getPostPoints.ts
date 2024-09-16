@@ -11,3 +11,5 @@ export const getPostPointsCreatedAt = async () => {
   console.log({data: data})
   return data.posts;
 }
+
+//削除予定
