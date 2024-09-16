@@ -14,8 +14,12 @@ export async function searchPost(formData: FormData) {
   const lng = lngString ? parseFloat(lngString) : null;
 
   const keyword: string | null = formData.get("keyword") as string;
-  const startDate: string | null = formData.get("startDate") as string;
-  const endDate: string | null = formData.get("endDate") as string;
+
+  const startDateInput: string | null = formData.get("startDate") as string;
+  const endDateInput: string | null = formData.get("endDate") as string;
+  const startDate = startDateInput ? new Date(startDateInput) : new Date('2024-01-01');
+  const endDate = endDateInput ? new Date(endDateInput) : new Date('2500-12-31');
+
   const category = ["food", "base", "other"].filter(
     (key) => formData.get(`category.${key}`) === "on"
   );
@@ -39,7 +43,7 @@ export async function searchPost(formData: FormData) {
   const conditions: Prisma.Sql[] = [
     Prisma.sql`location IS NOT NULL`,
     startDate && endDate
-      ? Prisma.sql`"createdAt" BETWEEN ${startDate} AND ${endDate}`
+      ? Prisma.sql`"createdAt" BETWEEN ${startDate.toISOString()}::timestamp AND ${endDate.toISOString()}::timestamp`
       : Prisma.empty,
     category.length > 0
       ? Prisma.sql`"category" && ${category}::text[]`

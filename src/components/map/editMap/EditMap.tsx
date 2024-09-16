@@ -41,7 +41,10 @@ export interface EditMapProps {
 const EditMap: React.FC<EditMapProps> = ({ planId }) => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const [isSearchModal, setIsSearchModal] = useState(false);
-  // const [searchPosts, setSearchPosts] = useState<PostLeafletType[]>();
+  // const closeModal = () => {
+  //   setIsSearchModal(false);
+  // }
+
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } =
     usePlanListDisplayMode();
@@ -49,6 +52,7 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
   const { postsSlot, setPostsSlot } = usePostsSlot();
   const { mapStyle, setMapStyle } = useMapStyle();
   const { setUserMarker } = useUserMarkerStore();
+
   const modeChangeButton = () => {
     listDisplayMode === "list"
       ? setListDisplayMode("map")
@@ -204,7 +208,7 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
       {isSearchModal && (<div className="fixed top-4 right-4 z-[9999]"><button
       onClick={() => setIsSearchModal(false)}
       ><XSquare size={48} color="#f1f1f3" weight="fill" /></button></div>)}
-      {isSearchModal && <SearchMordal/>}
+      {isSearchModal && <SearchMordal closeModal={() => setIsSearchModal(false)}/>}
       <div className="w-full h-[100vh]">
         <Button>いいね順</Button>
         <Button className="absolute z-[2000]" onClick={onClickCreatedAt}>

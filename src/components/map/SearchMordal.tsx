@@ -11,8 +11,9 @@ import { searchPost } from "@/actions/searchPost";
 import { useMarkerStore, usePostsSlot } from "@/store";
 import SearchMordalRadiusSelector from "./SearchMordalRadiusSelector";
 
-const SearchMordal = () => {
+const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
   const [isDetailSort, setIsDetailSort] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
@@ -29,12 +30,20 @@ const SearchMordal = () => {
   const { marker } = useMarkerStore();
   const { postsSlot, setPostsSlot } = usePostsSlot();
   const getData = async (formData: FormData) => {
+    setIsLoading(true);
+    try{
     const data = await searchPost(formData);
     if (data) {
       console.log("Data exits");
       setPostsSlot(data);
+
     }
-    console.log({ data: data });
+  }catch(error){
+    console.log(error);
+  }finally{
+    setIsLoading(false);
+    closeModal();
+  }
   };
 
   const PendLoading = () => {
