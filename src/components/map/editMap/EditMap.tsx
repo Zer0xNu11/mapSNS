@@ -86,7 +86,7 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
   useEffect(() => {
     async function slotInitializing() {
       setPlanSlot([]);
-      // setPostsSlot([]);
+      setPostsSlot([]);
       const data = await getPlanData(planId);
       setPlanSlot(data);
     }
@@ -245,7 +245,7 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          <ListFromSort />
+          <ListFromSort postsData={postsSlot} />
         </motion.div>
         <div>
           <motion.div

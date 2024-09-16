@@ -25,9 +25,9 @@ export async function searchPost(formData: FormData) {
   const radius = formData.get("radius") as string | null;
 
   const searchRadius = () => {
-    if (radius === null) return 100;
-    if (radius === "small") return 50;
-    if (radius === "medium") return 500;
+    if (radius === null) return 200;
+    if (radius === "small") return 200;
+    if (radius === "medium") return 1000;
     if (radius === "large") return 5000;
   };
   console.log({ searchRadius: searchRadius() });
@@ -86,38 +86,6 @@ export async function searchPost(formData: FormData) {
       ORDER BY p."createdAt" DESC
     `;
 
-      // if (session?.user?.id) {
-      //   const postData = await prismadb.$queryRaw<NoteSlotType[]>`
-      //   SELECT id, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
-      //   FROM "Post"
-      //   WHERE ${Prisma.join(conditions," AND ")}
-      //   ORDER BY "createdAt" DESC
-      // `;
-
-      //   const postPoint = await prismadb.$queryRaw<
-      //   PostLeafletType[]
-      //   >`
-      //   SELECT id, ST_AsGeoJSON(location)::json->'coordinates' as coordinates
-      //   FROM "Post"
-      //   WHERE location IS NOT NULL
-      //   AND "createdAt" BETWEEN ${startDate} AND ${endDate}
-      //   AND "category" IN (${category})
-      //   ${likes ? `AND "totalLikes" >= ${likes}` : ''}
-      //   ${radius ? `AND "radius" = ${searchRadius()}` : ''}
-      //   ORDER BY "createdAt" DESC
-      // `;
-
-      // await prismadb.post.create({
-      //   data:{
-      //     content: content || '',
-      //     authorId: session?.user?.id,
-      //   },
-      //   include:{
-      //     author: true,
-      //   },
-      // });
-
-      // console.log({ postData: postData });
       return postData;
     }
   } catch (error) {

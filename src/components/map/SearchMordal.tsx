@@ -5,22 +5,13 @@ import { useEffect, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { createPlan, PlanFormState } from "@/actions/createPlan";
 import ja from "date-fns/locale/ja";
-import { Button } from "../ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { searchPost } from "@/actions/searchPost";
 import { useMarkerStore, usePostsSlot } from "@/store";
-import { NoteSlotType, PostLeafletType } from "@/types";
-
-// interface SearchFormState {
-//   error: string;
-//   latlng: string[];
-// }
+import SearchMordalRadiusSelector from "./SearchMordalRadiusSelector";
 
 const SearchMordal = () => {
-  // const initialState: SearchFormState = { error: "", latlng: [] };
-  // const [state, formAction] = useFormState(searchPost, initialState);
   const [isDetailSort, setIsDetailSort] = useState(false);
   const [text, setText] = useState("");
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
@@ -36,16 +27,15 @@ const SearchMordal = () => {
     setCategory({ ...category, [e.target.name]: e.target.checked });
   };
   const { marker } = useMarkerStore();
-  const {postsSlot, setPostsSlot} = usePostsSlot();
+  const { postsSlot, setPostsSlot } = usePostsSlot();
   const getData = async (formData: FormData) => {
     const data = await searchPost(formData);
     if (data) {
-      console.log('Data exits')
+      console.log("Data exits");
       setPostsSlot(data);
     }
     console.log({ data: data });
   };
-
 
   const PendLoading = () => {
     const { pending } = useFormStatus();
@@ -83,6 +73,10 @@ const SearchMordal = () => {
                 setText(e.target.value);
               }}
             ></input>
+
+            {/* エリア半径 */}
+            <SearchMordalRadiusSelector />
+
             <div className="mb-4">
               <button
                 type="button"
@@ -96,8 +90,9 @@ const SearchMordal = () => {
                   <ChevronDown size={20} />
                 )}
               </button>
-              {isDetailSort && (
-                <div className="mt-4 space-y-4">
+
+              {/* {isDetailSort && ( */}
+                <div className={`mt-4 space-y-4 ${isDetailSort ? "block" : "hidden"}`}>
                   {/* 日付範囲 */}
                   <label className="block my-2">日付範囲:</label>
                   <div className="mb-4 flex flex-wrap gap-2">
@@ -181,46 +176,6 @@ const SearchMordal = () => {
                     />
                   </div>
 
-                  {/* エリア半径 */}
-                  <div className="mb-4">
-                    <label className="block mb-2">エリア半径:</label>
-                    <div className="flex flex-wrap gap-4">
-                      <label className="inline-flex items-center mr-4">
-                        <input
-                          type="radio"
-                          name="radius"
-                          value="small"
-                          checked={radius === "small"}
-                          onChange={(e) => setRadius(e.target.value)}
-                          className="form-radio"
-                        />
-                        <span className="ml-2">小</span>
-                      </label>
-                      <label className="inline-flex items-center mr-4">
-                        <input
-                          type="radio"
-                          name="radius"
-                          value="medium"
-                          checked={radius === "medium"}
-                          onChange={(e) => setRadius(e.target.value)}
-                          className="form-radio"
-                        />
-                        <span className="ml-2">中</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="radius"
-                          value="large"
-                          checked={radius === "large"}
-                          onChange={(e) => setRadius(e.target.value)}
-                          className="form-radio"
-                        />
-                        <span className="ml-2">大</span>
-                      </label>
-                    </div>
-                  </div>
-
                   {/* lat */}
                   <div className="mb-4 flex flex-wrap gap-4 items-center">
                     <label className="block mb-2">座標:</label>
@@ -240,7 +195,7 @@ const SearchMordal = () => {
                     />
                   </div>
                 </div>
-              )}
+              {/* )} */}
             </div>
             <SubmitButton />
           </form>

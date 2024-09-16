@@ -8,8 +8,8 @@ import { usePostDisplayMode } from "@/store";
 import Posts from "@/components/Post/Posts";
 
 
-const ListFromSort = () => {
-  const [posts, setPosts] = useState<PostType[]>();
+const ListFromSort = ({ postsData }: { postsData: PostType[] }) => {
+  // const [posts, setPosts] = useState<PostType[]>();
   const { postDisplayMode, setPostDisplayMode } = usePostDisplayMode();
 
   const togglePostDisplayMode = () => {
@@ -18,14 +18,14 @@ const ListFromSort = () => {
       : setPostDisplayMode("pict");
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      const data = await getPostsCreatedAt();
-      setPosts(data);
-    };
+  // useEffect(() => {
+  //   const initialize = async () => {
+  //     const data = await getPostsCreatedAt();
+  //     setPosts(data);
+  //   };
 
-    initialize();
-  }, []);
+  //   initialize();
+  // }, []);
 
   return (
     <>
@@ -53,7 +53,7 @@ const ListFromSort = () => {
           </button>
         </div>
         <main className="container mx-auto py-4">
-          {posts ? <Posts posts={posts} /> : ""}
+          <Posts posts={postsData} />
         </main>
       </div>
     </>
