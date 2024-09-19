@@ -12,7 +12,14 @@ export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
       take: 10,
       orderBy: { createdAt: "desc" },
       include: {
-        author:true,
+        author:{
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            imageUrl: true,
+          }
+        },
         note: true
       }
     });

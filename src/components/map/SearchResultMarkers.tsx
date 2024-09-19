@@ -9,42 +9,45 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { Button } from "../ui/button";
-import { useSelectedPostStore, useSerachDataStore } from "@/store";
-import { getNotePoints } from "@/lib/getNotePoints";
+import { useNoteSlot, usePlanSlot, useSelectedPostStore } from "@/store";
 import { PostLeafletType } from "@/types";
 import { tracePost } from "@/lib/createPlan";
+import { getNoteData } from "@/lib/getPosts";
 
 interface SearchResultMarkersProps {
   posts: PostLeafletType[];
-  planId: string
+  planId: string;
 }
 
 export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
-  posts, planId
+  posts,
+  planId,
 }) => {
   // const [posts, setPosts] = useState<Post[]>([]);
   const [points, setPoint] = useState([]);
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
+  const { planSlot, setPlanSlot } = usePlanSlot();
+  const { noteSlot, setNoteSlot } = useNoteSlot();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
-  const { searchedPostId, searchedNoteId, addData } = useSerachDataStore();
+
   const searchNoteId = async (noteId: string) => {
-    const { polylineCoordinates } = await getNotePoints(noteId);
-    console.log({ polylineCoordinates: polylineCoordinates });
-    setPolylineCoordinates(polylineCoordinates);
+    const data = await getNoteData(noteId);
+    setNoteSlot(data);
   };
-  console.log({ posts: posts });
 
-  const onClick = async() =>{
-    if(planId && selectedPostId){
-      await tracePost(planId, selectedPostId) 
+  const addPlan = async (lat:number,lng:number) => {
+    if (planId && selectedPostId) {
+      const data = await tracePost(planId, selectedPostId);
+      const newPlan = {
+        ...data,
+        coordinates: [lat,lng] as [number,number],
+      }
+      setPlanSlot(planSlot.concat(newPlan));
+      setSelectedPostId("");
     }
-  }
-
-  // console.log(console.log({posts:latLng(posts[1].coordinates[1], posts[1].coordinates[0]), position:position}))
+  };
 
   if (posts) {
-    console.log(posts);
-
     return (
       <>
         {posts.map((post) => (
@@ -57,19 +60,32 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
             }}
           >
             <Popup>
-              {`${post.content}`}
+              <div>
+                {post.imageUrl ? <img
+                  className="object-cover w-full h-full rounded-2xl mb-2"
+                  src={post.imageUrl}
+                  alt="Post Image"
+                /> : ""}
+                {`${post.content}`}
+              </div>
               <br />
-              <Button onClick={() => searchNoteId(post.noteId)}>
-                作成者のノートを表示
-              </Button>
+              <div className="flex flex-row gap-2">
+                <button
+                  onClick={() => searchNoteId(post.noteId)}
+                  className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+                >
+                  レコード表示
+                </button>
+                <br />
+                <button
+                  onClick={() => addPlan(post.coordinates[0], post.coordinates[1])}
+                  type="submit"
+                  className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+                >
+                  プランへ追加
+                </button>
+              </div>
               <br />
-              <button
-                onClick={onClick}
-                type="submit"
-                className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
-              >
-                プランへ追加
-              </button>
               <a
                 href={GOOGLEMAPSETTING(
                   post.coordinates[0],
@@ -84,7 +100,10 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
           </Marker>
         ))}
         {polylineCoordinates ? (
-          <Polyline pathOptions={LINE_COLOR.red} positions={polylineCoordinates} />
+          <Polyline
+            pathOptions={LINE_COLOR.red}
+            positions={polylineCoordinates}
+          />
         ) : (
           ""
         )}

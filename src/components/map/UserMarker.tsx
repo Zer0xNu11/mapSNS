@@ -1,9 +1,7 @@
 'use client'
-import { GOOGLEMAPSETTING, ICON_PIN, ICON_USER} from "@/lib/mapSetting";
-import { useMarkerStore, useUserMarkerStore } from "@/store";
-import { LatLng, latLng, icon } from "leaflet";
-import React, { useEffect } from "react";
-import { Marker, Popup, useMapEvent } from "react-leaflet";
+import {  ICON_USER} from "@/lib/mapSetting";
+import { useUserMarkerStore } from "@/store";
+import { Marker } from "react-leaflet";
 
 const UserMarker = () => {
 

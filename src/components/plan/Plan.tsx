@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export interface PlanProps {
   plan: PlanType;
-  isLiked?: boolean;
   countLikes? : number;
   imageUrl? : string;
 }

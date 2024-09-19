@@ -18,7 +18,14 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
       id: params.postId
     },
     include: {
-      author:true,
+      author:{
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageUrl: true,
+        }
+      },
       note: true
     }
   });
@@ -59,7 +66,8 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
     )
     WHERE id = ${createdPlan.id};
   `;
-    
+
+    console.log({data:createdPlan})
     return NextResponse.json({message:'成功', data: createdPlan})
     //jsonレスポンス
   }
@@ -70,48 +78,3 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
 };
 
 export const dynamic = 'force-dynamic' //キャッシュを無視する設定
-
-
-
-
-
-
-//サーバーアクションズ内でbindした値の型を定義
-// export interface PlanFormState {
-//   error: string;
-//   planId: string;
-//   positionLat?: number | null;
-//   positionLng?: number | null;
-// }
-
-// export async function createPlan(state: PlanFormState, formData: FormData) {
-//   const session = await auth();
-//   const title: string = formData.get("title") as string
-//   const content: string = formData.get("content") as string;
-
-//   try {
-//     if (session?.user?.id) {
-//       console.log('======into Try =========')
-//       const createdPlan = await prismadb.plan.create({
-//         data: {
-//           title: title,
-//           content: content || '',
-//           userId: session?.user?.id,
-//         },
-//         include: {
-//           user: true,
-//         },
-//       });
-
-//     }else {
-//       state.error = "ログインしてください";
-//       return state;
-//     }
-//   } catch (error) {
-//     console.log("Plan失敗");
-//     console.log(error)
-//     state.error = "投稿エラー";
-//     return state;
-//   }
-//   redirect("/home/plans");
-// }

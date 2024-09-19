@@ -7,20 +7,21 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 //サーバーアクションズ内でbindした値の型を定義
-export interface PostFormState {
+export interface PlanFormState {
   error: string;
-  noteId : string;
+  planId : string;
   path: string;
   positionLat?: number | null;
   positionLng?: number | null;
   // position? : {lat:number | null, lng:number | null};
 }
 
-export async function createPost(state: PostFormState, formData: FormData) {
+export async function createPlanPoint(state: PlanFormState, formData: FormData) {
   const session = await auth();
-  const content: string = formData.get("post") as string;
+  const content: string = formData.get("planContent") as string;
   const path = state.path;
   console.log({path:path});
+  console.log('create PlanPoint');
 
   //vercelbrob 画像保存
   const uploadFileToVercelBlob = async () => {
@@ -37,51 +38,40 @@ export async function createPost(state: PostFormState, formData: FormData) {
 
   try {
 
-    const maxOrder = await prismadb.post.findFirst({
-      where: { noteId: state.noteId },
+    const maxOrder = await prismadb.planPoint.findFirst({
+      where: { planId: state.planId },
       orderBy: { order: 'desc' },
       select: { order: true }
     });
     const newOrder = (maxOrder?.order ?? 0) + 1;
 
     if (session?.user?.id) {
-      console.log("======into Try =========");
+      console.log("======   createPlanPoint =========");
       const imageUrl = await uploadFileToVercelBlob();
-      console.log({ imageUrl: imageUrl });
-      const createdPost = await prismadb.post.create({
+      const createdPlanPoint = await prismadb.planPoint.create({
         data: {
           content: content,
-          authorId: session?.user?.id,
+          userId: session?.user?.id,
           imageUrl: imageUrl || null,
-          noteId: state.noteId,
+          planId: state.planId,
           order: newOrder,
-        },
-        include: {
-          author:{
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              imageUrl: true,
-            }
-          },
-        },
+        }
       });
 
       //位置情報 SQL
       await prismadb.$executeRaw`
-        UPDATE "Post"
+        UPDATE "PlanPoint"
         SET location = ST_SetSRID(ST_MakePoint(${state.positionLng}, ${state.positionLat}), 4326)
-        WHERE id = ${createdPost.id}
+        WHERE id = ${createdPlanPoint.id}
       `;
     } else {
       state.error = "ログインしてください";
       return state;
     }
   } catch (error) {
-    console.log("投稿失敗");
+    console.log("PlanPoint作成失敗");
     console.log(error)
-    state.error = "投稿エラー";
+    state.error = "PlanPoint作成エラー";
     return state;
   }
   redirect(path);

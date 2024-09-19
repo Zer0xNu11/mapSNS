@@ -8,9 +8,9 @@ export default async function PlanPage() {
   // console.log({sessionhome: session})
   return (
     <>
-      <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/books`}>
+      {/* <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/books`}>
         <Button>Bookの編集</Button>
-      </Link>
+      </Link> */}
       <Link href="../create/plan">
         <Button>新規プラン</Button>
       </Link>

@@ -28,7 +28,7 @@ const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
     setCategory({ ...category, [e.target.name]: e.target.checked });
   };
   const { marker } = useMarkerStore();
-  const { postsSlot, setPostsSlot } = usePostsSlot();
+  const { setPostsSlot } = usePostsSlot();
   const getData = async (formData: FormData) => {
     setIsLoading(true);
     try{
@@ -36,7 +36,6 @@ const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
     if (data) {
       console.log("Data exits");
       setPostsSlot(data);
-
     }
   }catch(error){
     console.log(error);
@@ -185,7 +184,7 @@ const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
                     />
                   </div>
 
-                  {/* lat */}
+                  {/* lat lng */}
                   <div className="mb-4 flex flex-wrap gap-4 items-center">
                     <label className="block mb-2">座標:</label>
                     <input

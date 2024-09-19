@@ -1,11 +1,13 @@
 "use client";
-import { GOOGLEMAPSETTING, ICON_HIGHLIGHTED, ICON_Marker, ICON_PLAN_HIGHLIGHTED, ICON_PlanMarker, LINE_COLOR } from "@/lib/mapSetting";
+import { GOOGLEMAPSETTING, ICON_HIGHLIGHTED, ICON_Marker, ICON_PIN, ICON_PLAN_HIGHLIGHTED, ICON_PlanMarker, LINE_COLOR } from "@/lib/mapSetting";
 import { useMarkerStore, useSelectedPlanPointStore, useSelectedPostStore } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
 import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
-import MakePlanOnMarker from "./MakePlanOnMarker";
 import { PlanLeafletType } from "@/types";
+import { useFormStatus } from "react-dom";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export interface EditMapMarkerProps {
   planId: string;
@@ -13,13 +15,6 @@ export interface EditMapMarkerProps {
   polylineCoordinates: [number, number][];
   planPoints: PlanLeafletType[];
 }
-
-const ICON = icon({
-  iconUrl: "/images/pinsmall.svg",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [0, -30],
-});
 
 export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   planId,
@@ -43,14 +38,21 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
     console.log({ pointlat: lat, pointlng: lng });
   });
 
+
   if (!marker) return null;
 
   return (
     <>
-      <Marker key={marker.toString()} position={marker} icon={ICON}    eventHandlers={{
+      <Marker key={marker.toString()} position={marker} icon={ICON_PIN} eventHandlers={{
           }}>
-        <Popup className="w-[300px] h-[200px]">
-          <MakePlanOnMarker planId={planId} position={marker} />
+        <Popup>
+          <div className="flex flex-row gap-4">
+          <Button>周囲を検索</Button>
+          <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/planPoint/${planId}`}>
+            <Button >プラン追加</Button>
+          </Link>
+          </div>
+          <br />
           <a
             href={GOOGLEMAPSETTING(marker.lat, marker.lng)}
             target="_blank"
@@ -69,7 +71,7 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
             click: () => setSelectedPlanPointId(planPoint.id),
           }}
         >
-          <Popup>
+          {selectedPlanPointId === planPoint.id ? <Popup>
             {`${planPoint.content}`}
             <br />
             <a
@@ -79,7 +81,7 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
             >
               googleMapで付近を探索
             </a>
-          </Popup>
+          </Popup> : ''}
         </Marker>
       ))}
       <Polyline pathOptions={LINE_COLOR.blue} positions={polylineCoordinates} />

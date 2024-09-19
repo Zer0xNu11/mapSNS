@@ -1,15 +1,13 @@
 "use client";
 
-import { PostType } from "@/types";
+import { NoteSlotType, PostType } from "@/types";
 import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
 import { useListDisplayMode, usePostDisplayMode, useSelectedPostStore } from "@/store";
 import { motion } from "framer-motion";
 
 export interface PostProps {
-  post: PostType;
-  isLiked?: boolean;
-  countLikes?: number;
+  post: NoteSlotType;
   imageUrl?: string;
 }
 

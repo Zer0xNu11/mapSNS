@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 export interface PlanFormState {
   error: string;
   planId: string;
+  path: string;
   positionLat?: number | null;
   positionLng?: number | null;
 }
@@ -37,9 +38,9 @@ export async function createPlan(state: PlanFormState, formData: FormData) {
       return state;
     }
   } catch (error) {
-    console.log("Plan失敗");
+    console.log("Plan作成失敗");
     console.log(error)
-    state.error = "投稿エラー";
+    state.error = "Plan作成失敗";
     return state;
   }
   redirect("/home/plans");

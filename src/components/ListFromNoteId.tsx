@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Posts from "./Post/Posts";
-import { PostType } from "@/types";
+import { NoteSlotType, PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";
 import { usePostDisplayMode } from "@/store";
 
 export interface NoteIdProps {
-  postsData: PostType[];
+  postsData: NoteSlotType[];
 }
 
 const ListFromNoteId = ({ postsData }: NoteIdProps) => {
@@ -56,7 +56,7 @@ const ListFromNoteId = ({ postsData }: NoteIdProps) => {
           </button>
         </div>
         <main className="container mx-auto py-4">
-          <Posts posts={postsData} />
+          <Posts postsData={postsData} />
         </main>
       </div>
     </>

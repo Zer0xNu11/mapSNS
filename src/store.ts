@@ -98,12 +98,12 @@ export  const usePostDisplayMode = create<postDisplayModeState>((set) => ({
 }));
 
 export  const useListDisplayMode = create<listDisplayModeState>((set) => ({
-  listDisplayMode: 'list',
+  listDisplayMode: 'map',
   setListDisplayMode:  (mode) => set(() => ( { listDisplayMode: `${mode}` }))
 }));
 
 export  const usePlanListDisplayMode = create<planListDisplayModeState>((set) => ({
-  planListDisplayMode: 'list',
+  planListDisplayMode: 'map',
   setPlanListDisplayMode:  (mode) => set(() => ( { planListDisplayMode: `${mode}` }))
 }));
 

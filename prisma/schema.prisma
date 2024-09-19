@@ -86,8 +86,8 @@ model PlanPoint {
   content   String?
   userId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId    String
-  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String?
+  post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
   imageUrl  String?
   open      Boolean[]
   planId    String
@@ -163,6 +163,8 @@ model Like {
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 model LikeSum {

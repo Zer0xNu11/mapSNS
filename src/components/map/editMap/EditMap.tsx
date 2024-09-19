@@ -8,8 +8,6 @@ import { getPosition } from "@/lib/getPostion";
 import { mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
-import { Button } from "@/components/ui/button";
-import { getPostPointsCreatedAt } from "@/lib/getPostPoints";
 
 import "leaflet/dist/leaflet.css";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
@@ -33,6 +31,9 @@ import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass"
 import { MapTrifold } from "@phosphor-icons/react/dist/ssr/MapTrifold";
 import { XSquare } from "@phosphor-icons/react/dist/ssr/XSquare";
 import SearchMordal from "../SearchMordal";
+import { useNoteSlot} from "@/store";
+import ListFromNoteId from "@/components/ListFromNoteId";
+import { NoteLogMarker } from "../NoteLogMarker";
 
 export interface EditMapProps {
   planId: string;
@@ -50,6 +51,7 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
     usePlanListDisplayMode();
   const { planSlot, setPlanSlot } = usePlanSlot();
   const { postsSlot, setPostsSlot } = usePostsSlot();
+  const { noteSlot, setNoteSlot } = useNoteSlot();
   const { mapStyle, setMapStyle } = useMapStyle();
   const { setUserMarker } = useUserMarkerStore();
 
@@ -66,7 +68,9 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
   };
 
   const changeMapStyle = () => {
-    setMapStyle(mapStyle === mapStyles.google ? mapStyles.blackWhite : mapStyles.google);
+    setMapStyle(
+      mapStyle === mapStyles.google ? mapStyles.blackWhite : mapStyles.google
+    );
   };
 
   useEffect(() => {
@@ -89,8 +93,8 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
 
   useEffect(() => {
     async function slotInitializing() {
-      setPlanSlot([]);
       setPostsSlot([]);
+      setNoteSlot([]);
       const data = await getPlanData(planId);
       setPlanSlot(data);
     }
@@ -98,15 +102,14 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
     slotInitializing();
   }, []);
 
-  useEffect(() => {
-  console.log('postsSlot changed')
+  // useEffect(() => {
+  //   console.log("postsSlot changed");
+  // }, [postsSlot]);
 
-  }, [postsSlot]);
-
-  const onClickCreatedAt = async () => {
-    const postPoints = await getPostPointsCreatedAt();
-    setPostsSlot(postPoints);
-  };
+  // const onClickCreatedAt = async () => {
+  //   const postPoints = await getPostPointsCreatedAt();
+  //   setPostsSlot(postPoints);
+  // };
 
   // 初期マップズームレベル
   const zoom = 15;
@@ -205,15 +208,17 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
 
   return (
     <>
-      {isSearchModal && (<div className="fixed top-4 right-4 z-[9999]"><button
-      onClick={() => setIsSearchModal(false)}
-      ><XSquare size={48} color="#f1f1f3" weight="fill" /></button></div>)}
-      {isSearchModal && <SearchMordal closeModal={() => setIsSearchModal(false)}/>}
+      {isSearchModal && (
+        <div className="fixed top-4 right-4 z-[9999]">
+          <button onClick={() => setIsSearchModal(false)}>
+            <XSquare size={48} color="#f1f1f3" weight="fill" />
+          </button>
+        </div>
+      )}
+      {isSearchModal && (
+        <SearchMordal closeModal={() => setIsSearchModal(false)} />
+      )}
       <div className="w-full h-[100vh]">
-        <Button>いいね順</Button>
-        <Button className="absolute z-[2000]" onClick={onClickCreatedAt}>
-          投稿日時順
-        </Button>
         <motion.div
           className="xs:hidden  fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
           initial="closed"
@@ -250,6 +255,19 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
           aria-hidden={listDisplayMode !== "list"}
         >
           <ListFromSort postsData={postsSlot} />
+          {noteSlot.length > 0 ? 
+          <div>
+          <div className="flex justify-center items-center">
+            <div className="text-xl inline-block mb-2 mr-4">Users Note</div>
+            <div>
+              <button onClick={() => setNoteSlot([])}>
+                <XSquare size={32} color="#080707" weight="fill" />
+              </button>
+            </div>
+          </div>
+          <ListFromNoteId postsData={noteSlot} />
+          </div>
+           : ""}
         </motion.div>
         <div>
           <motion.div
@@ -314,6 +332,10 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
             ) : (
               ""
             )}
+            <NoteLogMarker
+              posts={noteSlot}
+              polylineCoordinates={noteSlot.map((item) => item.coordinates)}
+            />
             <UserMarker />
           </MapContainer>
         </div>
@@ -321,21 +343,20 @@ const EditMap: React.FC<EditMapProps> = ({ planId }) => {
           <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
             <MapPinSimpleArea size={32} color="#050505" weight="duotone" />
           </button>
-          <button 
-          className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-          onClick={() => setIsSearchModal(true)}
+          <button
+            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+            onClick={() => setIsSearchModal(true)}
           >
-            <MagnifyingGlass size={32} color="#050505"/>
+            <MagnifyingGlass size={32} color="#050505" />
           </button>
-          <button 
-          className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-          onClick={() => changeMapStyle()}
+          <button
+            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+            onClick={() => changeMapStyle()}
           >
             <MapTrifold size={32} color="#080707" weight="fill" />
           </button>
         </div>
       </div>
-      
     </>
   );
 };

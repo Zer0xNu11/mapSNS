@@ -50,7 +50,14 @@ export const GET = async (_: NextRequest) => {
               order: index,
             },
             include: {
-              author: true,
+              author:{
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  imageUrl: true,
+                }
+              },
             },
           });
 

@@ -9,13 +9,11 @@ import { PostLeafletType } from "@/types";
 
 
 interface NoteLogMarkerProps {
-  position: LatLng;
   posts: PostLeafletType[];
   polylineCoordinates: [number, number][];
 }
 
 export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
-  position,
   posts,
   polylineCoordinates,
 }) => {

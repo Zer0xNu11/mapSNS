@@ -56,6 +56,7 @@ export interface NoteSlotType{
   coordinates: [number, number] 
   totalLikes: number;
   noteId: string;
+  isLiked: boolean;
 }
 
 export interface PlanType{

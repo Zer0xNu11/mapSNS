@@ -3,10 +3,9 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { NoteLogMarker } from "./NoteLogMarker";
 import { getPosition } from "@/lib/getPostion";
-import { mapStyles } from "@/lib/mapSetting";
 import ListFromNoteId from "../ListFromNoteId";
 import Link from "next/link";
 import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
@@ -163,7 +162,10 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          {noteId ? <ListFromNoteId postsData={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId, createdAt: item.createdAt, authorId: item.authorId, author: item.author}))} /> : ""}
+          {noteId ? <ListFromNoteId postsData={noteSlot} /> : ""}
+
+          {/* {noteId ? <ListFromNoteId postsData={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId, createdAt: item.createdAt, authorId: item.authorId, author: item.author}))} /> : ""} */}
+
         </motion.div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom}>
@@ -174,10 +176,13 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
               minZoom={2}
             />
             <NoteLogMarker
-              position={position}
-              posts={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId}))}
+              posts={noteSlot}
               polylineCoordinates={noteSlot.map(item => item.coordinates)}
             />
+                        {/* <NoteLogMarker
+              posts={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId}))}
+              polylineCoordinates={noteSlot.map(item => item.coordinates)}
+            /> */}
             <UserMarker/>
           </MapContainer>
         </div>

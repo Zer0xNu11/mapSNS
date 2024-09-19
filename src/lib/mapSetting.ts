@@ -28,15 +28,15 @@ export const mapStyles = {
 //Marker Icon
 export const ICON_USER = icon({
   iconUrl: "/images/crosshair-fill.svg",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
+  iconSize: [25, 40],
+  iconAnchor: [12, 20],
   popupAnchor: [0, -30],
 });
 
 export const ICON_PIN = icon({
   iconUrl: "/images/pinsmall.svg",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
+  iconSize: [25, 40],
+  iconAnchor: [12, 30],
   popupAnchor: [0, -30],
 });
 

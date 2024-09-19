@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { getPostsCreatedAt } from "@/lib/getPosts";
-import { PostType } from "@/types";
+import { NoteSlotType, PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";
-import { usePostDisplayMode } from "@/store";
+import { useNoteSlot, usePostDisplayMode } from "@/store";
 import Posts from "@/components/Post/Posts";
+import Notes from "@/components/note/Notes";
 
 
-const ListFromSort = ({ postsData }: { postsData: PostType[] }) => {
-  // const [posts, setPosts] = useState<PostType[]>();
+const ListFromSort = ({ postsData }: { postsData: NoteSlotType[] }) => {
   const { postDisplayMode, setPostDisplayMode } = usePostDisplayMode();
 
   const togglePostDisplayMode = () => {
@@ -17,19 +17,13 @@ const ListFromSort = ({ postsData }: { postsData: PostType[] }) => {
       ? setPostDisplayMode("text")
       : setPostDisplayMode("pict");
   };
+  const {noteSlot} = useNoteSlot();
 
-  // useEffect(() => {
-  //   const initialize = async () => {
-  //     const data = await getPostsCreatedAt();
-  //     setPosts(data);
-  //   };
-
-  //   initialize();
-  // }, []);
 
   return (
     <>
-      <div className="bg-gray-100 rounded-xl relative pb-[400px]">
+      <div className={`bg-gray-100 rounded-xl relative ${noteSlot.length > 0 ? 'pb-4' : 'pb-[400px]'}`}>
+        {noteSlot.length > 0 ? "" :
         <div className="fixed bottom-0 h-12 my-4 z-[1000]">
           <button
             className="bg-gray-100 rounded-tr-full p-4"
@@ -51,9 +45,9 @@ const ListFromSort = ({ postsData }: { postsData: PostType[] }) => {
               />
             )}
           </button>
-        </div>
+        </div> }
         <main className="container mx-auto py-4">
-          <Posts posts={postsData} />
+          <Posts postsData={postsData} />
         </main>
       </div>
     </>

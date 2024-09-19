@@ -1,14 +1,14 @@
 "use client"
 import React, { useEffect, useRef } from "react";
 import Post from "./Post";
-import { PostType } from "@/types";
+import { NoteSlotType, PostType } from "@/types";
 import {useListDisplayMode, useSelectedPostStore } from "@/store";
 
 export interface PostsProps {
-  posts: PostType[];
+  postsData: NoteSlotType[];
 }
 
-export default function Posts({ posts }: PostsProps) {
+export default function Posts({postsData}: PostsProps) {
   const { selectedPostId } = useSelectedPostStore();
   const {listDisplayMode, setListDisplayMode} = useListDisplayMode();
 
@@ -29,8 +29,8 @@ export default function Posts({ posts }: PostsProps) {
   return (
     <>
       <div ref={postsRef}>
-        {posts
-          ? posts.map((post) => <Post key={post.id} post={post} />)
+        {postsData
+          ? postsData.map((post) => <Post key={post.id} post={post} />)
           : "No post"}
       </div>
     </>

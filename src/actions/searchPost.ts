@@ -90,7 +90,23 @@ export async function searchPost(formData: FormData) {
       ORDER BY p."createdAt" DESC
     `;
 
-      return postData;
+    const postIds = postData.map(post =>post.id);
+    const like = await prismadb.like.findMany({
+    where: {
+        userId: session.user.id,
+        postId: {in: postIds}
+    },
+    select:{postId: true}
+  })
+
+  const likedPostIds= new Set(like.map(like => like.postId));
+  const postsWithLikes = postData.map(post => ({
+    ...post,
+    isLiked: likedPostIds.has(post.id)
+  }));
+  
+
+      return postsWithLikes;
     }
   } catch (error) {
     console.log("検索失敗");
