@@ -1,13 +1,16 @@
+import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
+export const GET =  async (_: NextRequest, {}:{params:{id: string}}) => {
   console.log('======APIconect========')
   try {
-    console.log({params:params})
+    const session = await auth();
+    const userId = session?.user?.id
+    if(userId){
     const latestPlan = await prismadb.plan.findMany({
       where:{
-        userId: params.id
+        userId: userId
       },
       orderBy: { createdAt: "desc" },
       include: {
@@ -15,7 +18,8 @@ export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
       }
     });
     return NextResponse.json({message:'成功', data: latestPlan})
-    //jsonレスポンス
+    }
+    return new Error('ユーザーが見つかりません')
   } catch (err) {
     // console.log({});
     return NextResponse.json({message:'失敗', ERROR:err})

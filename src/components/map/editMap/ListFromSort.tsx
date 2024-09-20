@@ -4,7 +4,7 @@ import { getPostsCreatedAt } from "@/lib/getPosts";
 import { NoteSlotType, PostType } from "@/types";
 import { Image } from "@phosphor-icons/react/dist/ssr/Image";
 import { ChatText } from "@phosphor-icons/react/dist/ssr/ChatText";
-import { useNoteSlot, usePostDisplayMode } from "@/store";
+import { useNoteSlot, usePostDisplayMode, useSearchedNoteSlot } from "@/store";
 import Posts from "@/components/Post/Posts";
 import Notes from "@/components/note/Notes";
 
@@ -17,13 +17,13 @@ const ListFromSort = ({ postsData }: { postsData: NoteSlotType[] }) => {
       ? setPostDisplayMode("text")
       : setPostDisplayMode("pict");
   };
-  const {noteSlot} = useNoteSlot();
+  const { searchedNoteSlot, setSearchedNoteSlot } = useSearchedNoteSlot();
 
 
   return (
     <>
-      <div className={`bg-gray-100 rounded-xl relative ${noteSlot.length > 0 ? 'pb-4' : 'pb-[400px]'}`}>
-        {noteSlot.length > 0 ? "" :
+      <div className={`bg-gray-100 rounded-xl relative ${searchedNoteSlot.length > 0 ? 'pb-4' : 'pb-[400px]'}`}>
+        {searchedNoteSlot.length > 0 ? "" :
         <div className="fixed bottom-0 h-12 my-4 z-[1000]">
           <button
             className="bg-gray-100 rounded-tr-full p-4"

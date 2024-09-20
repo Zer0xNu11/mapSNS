@@ -26,7 +26,7 @@ const PlanMap = async ({params}:Params) => {
   return (
     <div className="w-full h-[100vh] flex flex-row">
       <div className="w-[100%] h-[80vh]">
-        <EditMap planId={planId} />
+        {/* <EditMap planId={planId} /> */}
       </div>
     </div>
   );

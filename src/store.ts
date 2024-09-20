@@ -50,6 +50,11 @@ interface noteSlotState{
 }
 
 
+interface searchedNoteSlotState{
+  searchedNoteSlot: NoteSlotType[]
+  setSearchedNoteSlot: (data:NoteSlotType[]) => void;
+}
+
 interface planSlotState{
   planSlot: PlanSlotType[]
   setPlanSlot: (data:PlanSlotType[]) => void;
@@ -58,6 +63,16 @@ interface planSlotState{
 interface postsSlotState{
   postsSlot: NoteSlotType[]
   setPostsSlot: (data:NoteSlotType[]) => void;
+}
+
+interface editNoteState{
+  editNoteId: string;
+  setEditNoteId: (data:string) => void;
+}
+
+interface editPlanState{
+  editPlanId: string
+  setEditPlanId: (data:string) => void;
 }
 
 interface mapStyleState{
@@ -112,6 +127,11 @@ export  const useNoteSlot = create<noteSlotState>((set) => ({
   setNoteSlot:  (data:NoteSlotType[]) => set(() => ({ noteSlot: data }))
 }));
 
+export  const useSearchedNoteSlot = create<searchedNoteSlotState>((set) => ({
+  searchedNoteSlot: [],
+  setSearchedNoteSlot:  (data:NoteSlotType[]) => set(() => ({ searchedNoteSlot: data }))
+}));
+
 export  const usePlanSlot = create<planSlotState>((set) => ({
   planSlot: [],
   setPlanSlot:  (data:PlanSlotType[]) => set(() => ({ planSlot: data }))
@@ -120,6 +140,16 @@ export  const usePlanSlot = create<planSlotState>((set) => ({
 export const usePostsSlot = create<postsSlotState>((set) => ({
   postsSlot: [],
   setPostsSlot: (data: NoteSlotType[]) => set(() => ({ postsSlot: data }))
+}));
+
+export const useEditNote = create<editNoteState>((set) => ({
+  editNoteId: '',
+  setEditNoteId: (data: string) => set(() => ({ editNoteId: data }))
+}));
+
+export const useEditPlan = create<editPlanState>((set) => ({
+  editPlanId: '',
+  setEditPlanId: (data: string) => set(() => ({ editPlanId: data }))
 }));
 
 export const useMapStyle = create<mapStyleState>((set) => ({

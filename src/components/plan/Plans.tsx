@@ -4,8 +4,8 @@ import { auth } from '@/auth'
 import Plan from './Plan';
 
 
-const getLatestplan = async (id : string) : Promise<PlanType[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/${id}`,{
+const getLatestplan = async () : Promise<PlanType[]> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/getPlans`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
   // console.log('Fetching URL:', response);
@@ -20,9 +20,7 @@ const getLatestplan = async (id : string) : Promise<PlanType[]> => {
 }
 
 export default async function Plans(){
-  const session = await auth();
-  const userId = session?.user?.id
-  const plans = userId? await getLatestplan(userId) : null;
+  const plans = await getLatestplan();
 
   return (
     <>

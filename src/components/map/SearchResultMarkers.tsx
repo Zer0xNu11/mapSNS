@@ -9,7 +9,7 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { Button } from "../ui/button";
-import { useNoteSlot, usePlanSlot, useSelectedPostStore } from "@/store";
+import { useNoteSlot, usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
 import { PostLeafletType } from "@/types";
 import { tracePost } from "@/lib/createPlan";
 import { getNoteData } from "@/lib/getPosts";
@@ -27,12 +27,12 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   const [points, setPoint] = useState([]);
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { planSlot, setPlanSlot } = usePlanSlot();
-  const { noteSlot, setNoteSlot } = useNoteSlot();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
+  const {searchedNoteSlot, setSearchedNoteSlot} = useSearchedNoteSlot();
 
   const searchNoteId = async (noteId: string) => {
     const data = await getNoteData(noteId);
-    setNoteSlot(data);
+    setSearchedNoteSlot(data);
   };
 
   const addPlan = async (lat:number,lng:number) => {

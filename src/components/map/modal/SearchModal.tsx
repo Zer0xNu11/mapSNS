@@ -9,9 +9,9 @@ import ja from "date-fns/locale/ja";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { searchPost } from "@/actions/searchPost";
 import { useMarkerStore, usePostsSlot } from "@/store";
-import SearchMordalRadiusSelector from "./SearchMordalRadiusSelector";
+import SearchModalRadiusSelector from "./SearchModalRadiusSelector";
 
-const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
+const SearchModal = ({ closeModal }: { closeModal: () => void }) => {
   const [isDetailSort, setIsDetailSort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [text, setText] = useState("");
@@ -83,7 +83,7 @@ const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
             ></input>
 
             {/* エリア半径 */}
-            <SearchMordalRadiusSelector />
+            <SearchModalRadiusSelector />
 
             <div className="mb-4">
               <button
@@ -213,4 +213,4 @@ const SearchMordal = ({ closeModal }: { closeModal: () => void }) => {
   );
 };
 
-export default SearchMordal;
+export default SearchModal;

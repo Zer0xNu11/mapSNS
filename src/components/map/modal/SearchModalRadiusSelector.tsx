@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const SearchMordalRadiusSelector = () => {
+const SearchModalRadiusSelector = () => {
   const [radius, setRadius] = useState("medium");
 
   return (
@@ -34,4 +34,4 @@ const SearchMordalRadiusSelector = () => {
   );
 };
 
-export default SearchMordalRadiusSelector;
+export default SearchModalRadiusSelector;
