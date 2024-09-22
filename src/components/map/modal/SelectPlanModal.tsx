@@ -47,7 +47,8 @@ const SelectPlanModal = () => {
             <div className="text-xl mb-4">マップにセットするプランを選択</div>
             <div className="flex flex-col gap-4 overflow-y-scroll w-full px-2 pb-4">
               {userPlans.map((plan) => (
-                <button 
+                <button
+                key = {plan.id} 
                 className="bg-blue-400 rounded-xl text-xl w-64 h-32 mx-auto py-4 hover:opacity-70"
                 // onClick = {()=>{setEditPlanId(plan.id)}}
                 onClick = {()=>{

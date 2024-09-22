@@ -44,6 +44,7 @@ const SelectNoteModal = () => {
             <div className="flex flex-col gap-4 overflow-y-scroll w-full px-2 pb-4">
               {userNotes.map((note) => (
                 <button
+                  key={note.id}
                   className="bg-yellow-400 rounded-xl text-xl w-64 h-32 mx-auto py-4 hover:opacity-70"
                   onClick={() => {
                     setCurrentNoteData(note.id, note.title);
