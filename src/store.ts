@@ -18,11 +18,6 @@ interface selectedPostState{
   setSelectedPostId: (postId: string | null) => void;
 }
 
-interface selectedNoteIdStore{
-  searchedPostId: string
-  searchedNoteId: string
-  addData: (postId: string, noteId:string) => void;
-}
 
 interface selectedPlanPointState{
   selectedPlanPointId: string | null
@@ -66,13 +61,19 @@ interface postsSlotState{
 }
 
 interface editNoteState{
-  editNoteId: string;
-  setEditNoteId: (data:string) => void;
+  editNoteData:{
+    id: string;
+    title: string;
+  }
+  setEditNoteData: (id: string, title: string) => void;
 }
 
 interface editPlanState{
-  editPlanId: string
-  setEditPlanId: (data:string) => void;
+  editPlanData:{
+    id: string;
+    title: string;
+  }
+  setEditPlanData: (id: string, title: string) => void;
 }
 
 interface mapStyleState{
@@ -99,12 +100,6 @@ setSelectedPostId: (postId) => set(() => ({ selectedPostId: postId })),
 export  const useSelectedPlanPointStore = create<selectedPlanPointState>((set) => ({
   selectedPlanPointId: null,
 setSelectedPlanPointId: (planPointId) => set(() => ({ selectedPlanPointId: planPointId })),
-}));
-
-export const useSerachDataStore = create<selectedNoteIdStore>((set) => ({
-  searchedPostId: '',
-  searchedNoteId: '',
-addData: (postId, noteId) => set(() => ({ searchedPostId: postId, searchedNoteId: noteId })),
 }));
 
 export  const usePostDisplayMode = create<postDisplayModeState>((set) => ({
@@ -143,13 +138,19 @@ export const usePostsSlot = create<postsSlotState>((set) => ({
 }));
 
 export const useEditNote = create<editNoteState>((set) => ({
-  editNoteId: '',
-  setEditNoteId: (data: string) => set(() => ({ editNoteId: data }))
+  editNoteData: {
+    id:'',
+    title:'',
+  },
+  setEditNoteData: (id: string, title: string) => set(() => ({ editNoteData:{id:id, title: title } }))
 }));
 
 export const useEditPlan = create<editPlanState>((set) => ({
-  editPlanId: '',
-  setEditPlanId: (data: string) => set(() => ({ editPlanId: data }))
+  editPlanData: {
+    id:'',
+    title:'',
+  },
+  setEditPlanData: (id: string, title: string) => set(() => ({ editPlanData:{id:id, title: title } }))
 }));
 
 export const useMapStyle = create<mapStyleState>((set) => ({

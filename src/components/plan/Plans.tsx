@@ -1,30 +1,92 @@
-import React from 'react'
-import { PlanType} from '@/types'
-import { auth } from '@/auth'
-import Plan from './Plan';
-
-
-const getLatestplan = async () : Promise<PlanType[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/plans/getPlans`,{
-    cache:'no-store', //キャッシュ無効化のオプション
-  });
-  // console.log('Fetching URL:', response);
-
-  if(response.status !== 200){
-    throw new Error('不正な値です');
-  }
-
-  const data = await response.json();
-  console.log({data: data})
-  return data.data as PlanType[];
-}
+import React from "react";
+import { PlanType } from "@/types";
+import Plan from "./Plan";
+import { auth } from "@/auth";
+import { prismadb } from "@/globals/db";
 
 export default async function Plans(){
-  const plans = await getLatestplan();
+  const session = await auth();
+  const userId = session?.user?.id;
 
-  return (
-    <>
-      {plans ? plans.map((plan)=><Plan key={plan.id} plan={plan}/>) : 'No plan'}
-    </>
-  )
+  if (!userId) {
+    throw new Error("ユーザーが認証されていません");
+  }
+
+  try {
+    const latestPlans = await prismadb.plan.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: true,
+      },
+    });
+
+    console.log({latestPlans : latestPlans})
+
+    // Prismaの返す型をPlanTypeに変換
+    const plans: PlanType[] = latestPlans.map((plan) => ({
+      id: plan.id,
+      title: plan.title,
+      content: plan.content ?? undefined,
+      createdAt: plan.createdAt.toISOString(),
+      updatedAt: plan.updatedAt.toISOString(),
+      userId: plan.userId,
+      user: plan.user,
+      imageUrl: plan.imageUrl ?? undefined
+      // 必要に応じて他のフィールドも追加
+    }));
+
+    return (
+      <>
+        <div className="flex flex-col gap-4 overflow-y-scroll h-[80vh]">
+          {plans.length >0 ?
+             plans.map((plan) => <Plan key={plan.id} plan={plan} />)
+            : "プランがありません"}
+        </div>
+      </>
+    );
+    
+  } catch (error) {
+    console.error("プランの取得に失敗しました:", error);
+    throw new Error("プランの取得に失敗しました");
+  }
 }
+
+// "use client";
+// import React, { useEffect, useState } from "react";
+// import { PlanType } from "@/types";
+// import Plan from "./Plan";
+// import { getLatestplan } from "@/lib/getPlans";
+
+// export default function Plans() {
+//   const [plans, setPlans] = useState<PlanType[]>();
+
+//   useEffect(() => {
+//     async function getPlans() {
+//       try {
+//         const data = await getLatestplan();
+//         setPlans(data);
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     }
+
+//     getPlans();
+//   }, []);
+
+//   if (!plans || plans.length < 1) {
+//     return <div></div>;
+//   }
+
+//   return (
+//     <>
+//       <div className="flex flex-col gap-4 overflow-y-scroll h-[80vh]">
+//         {plans
+//           ? plans.map((plan) => <Plan key={plan.id} plan={plan} />)
+//           : "No plan"}
+//       </div>
+//     </>
+//   );
+// }

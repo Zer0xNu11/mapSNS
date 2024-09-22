@@ -1,3 +1,4 @@
+'use client'
 import { PlanType } from "@/types";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -12,7 +13,7 @@ export interface PlanProps {
 const Plan: React.FC<PlanProps> = async ({plan}) => {
   return (
     <>
-    <div className="bg-blue-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
+    <div className="bg-blue-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between max-w-[512px] h-[20vh]">
       <div className="mb-4 w-1/2 h-full">
         <div className="flex items-center mb-2">
           <div>

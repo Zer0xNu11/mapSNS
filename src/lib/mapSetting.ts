@@ -72,6 +72,9 @@ export const ICON_PLAN_HIGHLIGHTED = icon({
 
 // LineColor
 export const LINE_COLOR = {
-red : { color: "#ee445e" },
-blue : { color: "#6ba7f5" },
-}
+  red : { color: "#ff1100"},
+  paleRed : { color: "#f47971", dashArray: '10, 10' },
+  blue : { color: "#000dbd"},
+  green : {color: "#00c73c"},
+  yellow : {color: "#ffe229"},
+  }

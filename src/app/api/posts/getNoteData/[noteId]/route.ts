@@ -11,6 +11,7 @@ export const GET = async (
   console.log("======APIconect NotePost========");
   console.log(params.noteId)
   const session = await auth();
+  console.log({session:session})
   try {
     if (session?.user?.id) {
     const postData = await prismadb.$queryRaw<NoteSlotType[]>`

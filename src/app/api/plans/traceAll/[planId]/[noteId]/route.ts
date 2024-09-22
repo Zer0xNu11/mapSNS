@@ -2,8 +2,8 @@ import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
-export const GET =  async (_: NextRequest, {params}:{params:{planId:string, postId: string}}) => {
-  console.log('======APIconect tracePost========')
+export const GET =  async (_: NextRequest, {params}:{params:{planId:string, noteId: string}}) => {
+  console.log('======APIconect tracePostAll========')
   const session = await auth();
 
 
@@ -12,10 +12,11 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
   }
 
   try {
-  const post = await prismadb.post.findUnique({
+  const posts = await prismadb.post.findMany({
     where:{
-      id: params.postId
+      noteId: params.noteId
     },
+    orderBy:{order:"asc"},
     include: {
       author:{
         select: {
@@ -29,7 +30,7 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
     }
   });
 
-  if (!post) {
+  if (!posts) {
     return NextResponse.json({ message: 'Post not found' }, { status: 404 });
   }
   
@@ -41,19 +42,22 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
   const newOrder = (maxOrder?.order ?? 0) + 1;
 
     if (session?.user?.id) {
-    const createdPlan = await prismadb.planPoint.create({
+    const userId = session.user.id
+    const createdPlans = await Promise.all(posts.map(async (post, index)=> {
+      const createdPlan = await prismadb.planPoint.create({
       data: {
         content: post.content || '',
-        userId: session?.user?.id,
+        userId: userId,
         imageUrl: post.imageUrl || null,
         postId: post.id,
         planId: params.planId,
-        order: newOrder,
+        order: (newOrder+index),
       },
       include: {
         user: true,
       },
-    });
+    })
+    
 
     //位置情報 SQL
     await prismadb.$executeRaw`
@@ -67,9 +71,11 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
   `;
 
     console.log({data:createdPlan})
-    return NextResponse.json({message:'成功', data: createdPlan})
+   return createdPlan
     //jsonレスポンス
-  }
+  }))
+  return NextResponse.json({message:'成功', data: createdPlans})
+}
   } catch (err) {
     // console.log({});
     return NextResponse.json({message:'失敗', ERROR:err})

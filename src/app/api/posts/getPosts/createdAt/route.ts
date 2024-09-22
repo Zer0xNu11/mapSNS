@@ -2,7 +2,7 @@ import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest) => {
-  console.log('======APIconect========')
+  console.log('====== APIconect getPosts cratedAt ========')
   try {
     const latestPosts = await prismadb.post.findMany({
       take: 100,

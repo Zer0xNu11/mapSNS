@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import "../map.css";
 import { useEffect, useState } from "react";
 import { getPosition } from "@/lib/getPostion";
-import { mapStyles } from "@/lib/mapSetting";
+import { LINE_COLOR, mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
 
@@ -33,33 +33,37 @@ import { MapPinSimpleArea } from "@phosphor-icons/react/dist/ssr/MapPinSimpleAre
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
 import { MapTrifold } from "@phosphor-icons/react/dist/ssr/MapTrifold";
 import { XSquare } from "@phosphor-icons/react/dist/ssr/XSquare";
+import { DownloadSimple } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
 import { useNoteSlot } from "@/store";
 import ListFromNoteId from "@/components/ListFromNoteId";
 import { NoteLogMarker } from "../NoteLogMarker";
 import { Button } from "@/components/ui/button";
 import SearchModal from "../modal/SearchModal";
-import SelectPlanModal from "../modal/SelectPlanMordal";
-import { PlanType } from "@/types";
-import { SessionProvider } from "next-auth/react";
+import SelectPlanModal from "../modal/SelectPlanModal";
+import SelectNoteModal from "../modal/SelectNoteModal";
+import { getNoteData } from "@/lib/getPosts";
+import { getCurrentNoteData, getCurrentPlanData } from "@/lib/localStorageHandler";
 
 export interface EditMapProps {}
 
 const EditMap: React.FC<EditMapProps> = ({}) => {
   const [position, setPosition] = useState<LatLng | null>(null);
+
   const [isSearchModal, setIsSearchModal] = useState(false);
-  // const closeModal = () => {
-  //   setIsSearchModal(false);
-  // }
+  const [isSelectPlanModal, setIsSelectPlanModal] = useState(false);
+  const [isSelectNoteModal, setIsSelectNoteModal] = useState(false);
+  const [noteMode, setNoteMode] = useState("selfNote"); //selfNote, searchNote
 
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } =
     usePlanListDisplayMode();
+
   const { planSlot, setPlanSlot } = usePlanSlot();
   const { postsSlot, setPostsSlot } = usePostsSlot();
   const { noteSlot, setNoteSlot } = useNoteSlot();
   const { searchedNoteSlot, setSearchedNoteSlot } = useSearchedNoteSlot();
-  const { editPlanId, setEditPlanId } = useEditPlan();
-  const { editNoteId, setEditNoteId } = useEditNote();
+  const { editPlanData, setEditPlanData } = useEditPlan();
+  const { editNoteData, setEditNoteData } = useEditNote();
   const { mapStyle, setMapStyle } = useMapStyle();
   const { setUserMarker } = useUserMarkerStore();
 
@@ -75,11 +79,23 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
       : setPlanListDisplayMode("list");
   };
 
+  const noteModeChangeButton = () => {
+    console.log("clicked");
+    noteMode === "selfNote"
+      ? setNoteMode("searchNote")
+      : setNoteMode("selfNote");
+    console.log(listDisplayMode);
+  };
+
   const changeMapStyle = () => {
     setMapStyle(
       mapStyle === mapStyles.google ? mapStyles.blackWhite : mapStyles.google
     );
   };
+
+  // const planModalHandler = () =>{
+  //   setIsSelectPlanModal(true)
+  // }
 
   useEffect(() => {
     async function initializeMap() {
@@ -110,23 +126,53 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
 
   useEffect(() => {
     async function editSlotInitializing() {
+      //note初期読み込み
+      const currentNoteData = getCurrentNoteData();
+      const noteId = currentNoteData.id;
+      const noteTitle = currentNoteData.title;
+      if (noteId && noteTitle) {
+        setEditNoteData(noteId, noteTitle);
+      } else {
+        setNoteSlot([]);
+      }
+
+      //plan初期読み込み
+      const currentPlanData = getCurrentPlanData();
+      const planId = currentPlanData.id;
+      const planTitle = currentPlanData.title;
+      if (planId && planTitle) {
+        setEditPlanData(planId, planTitle);
+      }
+    }
+
+    editSlotInitializing();
+  }, []);
+
+  useEffect(() => {
+    async function editSlotUpdating() {
       //note読み込み
-      if (editNoteId) {
+      const noteId = editNoteData.id;
+      const noteTitle = editNoteData.title;
+      if (noteId && noteTitle) {
+        const data = await getNoteData(noteId);
+        setNoteSlot(data);
       } else {
         setNoteSlot([]);
       }
 
       //plan読み込み
-      if (editPlanId) {
-        const data = await getPlanData(editPlanId);
+      const planId = editPlanData.id;
+      const planTitle = editPlanData.title;
+      if (planId && planTitle) {
+        const data = await getPlanData(planId);
         setPlanSlot(data);
       } else {
         setPlanSlot([]);
       }
     }
 
-    editSlotInitializing();
-  }, [editNoteId, editPlanId]);
+    editSlotUpdating();
+  }, [editNoteData, editPlanData]);
 
   // useEffect(() => {
   //   console.log("postsSlot changed");
@@ -245,18 +291,25 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         <SearchModal closeModal={() => setIsSearchModal(false)} />
       )}
 
-      {/* {isSearchModal && (
+      {isSelectNoteModal && (
         <div className="fixed top-4 right-4 z-[9999]">
-          <button onClick={() => setIsSearchModal(false)}>
+          <button onClick={() => setIsSelectNoteModal(false)}>
             <XSquare size={48} color="#f1f1f3" weight="fill" />
           </button>
         </div>
       )}
-      {isSearchModal && (
-        <SearchModal closeModal={() => setIsSearchModal(false)} />
-      )} */}
-      {<SelectPlanModal />}
+      {isSelectNoteModal && <SelectNoteModal />}
 
+      {isSelectPlanModal && (
+        <div className="fixed top-4 right-4 z-[9999]">
+          <button onClick={() => setIsSelectPlanModal(false)}>
+            <XSquare size={48} color="#f1f1f3" weight="fill" />
+          </button>
+        </div>
+      )}
+      {isSelectPlanModal && <SelectPlanModal />}
+
+      {/* 検索リスト */}
       <div className="w-full h-[100vh]">
         <motion.div
           className="xs:hidden  fixed right-0 top-0 bottom-0 my-auto h-20 z-[1000]"
@@ -293,23 +346,43 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          <ListFromSort postsData={postsSlot} />
-          {searchedNoteSlot.length > 0 ? (
+          <div className="bg-yellow-600 w-full h-16 flex flex-row justify-center items-center gap-4">
+            <Button onClick={() => setIsSelectNoteModal(true)}>
+              ノートを選択
+            </Button>
+            <Button onClick={noteModeChangeButton}>検索リスト</Button>
+          </div>
+          {noteMode === "selfNote" ? (
+            <ListFromNoteId postsData={noteSlot} />
+          ) : (
+            ""
+          )}
+          {noteMode === "searchNote" ? (
             <div>
-              <div className="flex justify-center items-center">
-                <div className="text-xl inline-block mb-2 mr-4">Users Note</div>
+              <ListFromSort postsData={postsSlot} />
+              {searchedNoteSlot.length > 0 ? (
                 <div>
-                  <button onClick={() => setSearchedNoteSlot([])}>
-                    <XSquare size={32} color="#080707" weight="fill" />
-                  </button>
+                  <div className="flex justify-center items-center">
+                    <div className="text-xl inline-block mb-2 mr-4">
+                      Users Note
+                    </div>
+                    <div>
+                      <button onClick={() => setSearchedNoteSlot([])}>
+                        <XSquare size={32} color="#080707" weight="fill" />
+                      </button>
+                    </div>
+                  </div>
+                  <ListFromNoteId postsData={searchedNoteSlot} />
                 </div>
-              </div>
-              <ListFromNoteId postsData={searchedNoteSlot} />
+              ) : (
+                ""
+              )}
             </div>
           ) : (
             ""
           )}
         </motion.div>
+        {/* プランリスト */}
         <div>
           <motion.div
             className="xs:hidden  fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
@@ -347,10 +420,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             aria-hidden={planListDisplayMode !== "list"}
           >
             <div className="bg-sky-500 w-full h-16 flex flex-row justify-center items-center gap-4">
-              <Button>プランを選択</Button>
-              <Button>プランを編集</Button>
+              {editPlanData.title && (
+                <div className="inline-block text-xl">{editPlanData.title}</div>
+              )}
+              <Button onClick={() => setIsSelectPlanModal(true)}>
+                プランを選択
+                <DownloadSimple size={32} weight="fill" />
+              </Button>
+              {/* <Button>プランを編集</Button> */}
             </div>
-            {editPlanId ? <ListFromPlan planId={editPlanId} /> : ""}
+            {editPlanData.id ? <ListFromPlan planId={editPlanData.id} /> : ""}
           </motion.div>
         </div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
@@ -362,7 +441,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               minZoom={2}
             />
             <EditMapMarker
-              planId={editPlanId}
+              planId={editPlanData.id}
               position={position}
               polylineCoordinates={planSlot.map((item) => item.coordinates)}
               planPoints={planSlot.map((item) => ({
@@ -373,15 +452,23 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               }))}
             />
             {postsSlot ? (
-              <SearchResultMarkers planId={editPlanId} posts={postsSlot} />
+              <SearchResultMarkers planId={editPlanData.id} posts={postsSlot} />
             ) : (
               ""
             )}
             <NoteLogMarker
+              pathOption={LINE_COLOR.paleRed}
               posts={searchedNoteSlot}
               polylineCoordinates={searchedNoteSlot.map(
                 (item) => item.coordinates
               )}
+              searchedMode = {true}
+              planId={editPlanData.id}
+            />
+            <NoteLogMarker
+              pathOption={LINE_COLOR.red}
+              posts={noteSlot}
+              polylineCoordinates={noteSlot.map((item) => item.coordinates)}
             />
             <UserMarker />
           </MapContainer>

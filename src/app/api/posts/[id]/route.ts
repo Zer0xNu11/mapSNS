@@ -2,7 +2,7 @@ import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
-  console.log('======APIconect========')
+  console.log('====== APIconect Posts Id ========')
   try {
     console.log({params:params})
     const latestPosts = await prismadb.post.findMany({

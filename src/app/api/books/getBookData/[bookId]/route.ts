@@ -2,7 +2,7 @@ import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest, {params}:{params:{bookId: string}}) => {
-  console.log('======APIconect========')
+  console.log('====== APIconect getBookData ========')
   try {
     console.log({params:params})
     const bookData = await prismadb.book.findUnique({

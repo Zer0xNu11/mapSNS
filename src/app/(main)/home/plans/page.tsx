@@ -1,11 +1,8 @@
-import { auth } from "@/auth";
 import Plans from "@/components/plan/Plans";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function PlanPage() {
-  const session = await auth();
-  // console.log({sessionhome: session})
   return (
     <>
       {/* <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/books`}>
@@ -20,3 +17,4 @@ export default async function PlanPage() {
     </>
   );
 }
+

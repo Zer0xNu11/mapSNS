@@ -24,10 +24,6 @@ export async function createNote(state: NoteFormState, formData: FormData) {
           content: content || '',
           authorId: session?.user?.id,
         },
-        include: {
-          author: true,
-          posts: true
-        },
       });
 
     }else {
@@ -35,9 +31,9 @@ export async function createNote(state: NoteFormState, formData: FormData) {
       return state;
     }
   } catch (error) {
-    console.log("投稿失敗");
+    console.log("ノート作成失敗");
     console.log(error)
-    state.error = "投稿エラー";
+    state.error = "ノート作成失敗";
     return state;
   }
   redirect("/home/notes");

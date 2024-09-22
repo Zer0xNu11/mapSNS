@@ -10,7 +10,7 @@ import { createPlan, PlanFormState } from '@/actions/createPlan'
 const PlanForm = () => {
   const [titleText, setTitleText] = useState('');
   // const [text, setText] = useState('');
-  const initialState: PlanFormState = {error: '', planId: ''};
+  const initialState: PlanFormState = {error: '', planId: '', path: ''};
   const [state, formAction] = useFormState(createPlan, initialState);
   const limitLength = 16;  //文字数制限
   const [remLength, setRemLength] = useState(limitLength);

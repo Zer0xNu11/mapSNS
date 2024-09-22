@@ -1,8 +1,9 @@
+//削除予定
 import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET =  async (_: NextRequest, {params}:{params:{id: string}}) => {
-  console.log('======APIconect========')
+  console.log('====== APIconect notes id ========')
   try {
     console.log({params:params})
     const latestNotes = await prismadb.note.findMany({

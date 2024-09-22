@@ -1,32 +1,51 @@
-import React from 'react'
-import { NoteType} from '@/types'
-import { auth } from '@/auth'
-import Note from './Note';
+import React from "react";
+import { NoteType } from "@/types";
+import { auth } from "@/auth";
+import Note from "./Note";
+import { prismadb } from "@/globals/db";
 
+export default async function Notes() {
+  const session = await auth();
+  const userId = session?.user?.id;
 
-const getLatestnotes = async (id : string) : Promise<NoteType[]> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`,{
-    cache:'no-store', //キャッシュ無効化のオプション
-  });
-  // console.log('Fetching URL:', response);
-
-  if(response.status !== 200){
-    throw new Error('不正な値です');
+  if (!userId) {
+    throw new Error("ユーザーが認証されていません");
   }
 
-  const data = await response.json();
-  console.log({data: data})
-  return data.data as NoteType[];
-}
+  try {
+    const latestNotes = await prismadb.note.findMany({
+      where: {
+        authorId: userId,
+      },
+      orderBy: { createdAt: "desc" },
+      include: {
+        author: true,
+      },
+    });
 
-export default async function Notes(){
-  const session = await auth();
-  const userId = session?.user?.id
-  const notes = userId? await getLatestnotes(userId) : null;
+    const notes: NoteType[] = latestNotes.map((note) => ({
+      id: note.id,
+      title: note.title,
+      content: note.content ?? undefined,
+      createdAt: note.createdAt.toISOString(),
+      updatedAt: note.updatedAt.toISOString(),
+      authorId: note.authorId,
+      author: note.author,
+      imageUrl: note.imageUrl ?? undefined,
+      // 必要に応じて他のフィールドも追加
+    }));
 
-  return (
-    <>
-      {notes ? notes.map((note)=><Note key={note.id} note={note}/>) : 'No note'}
-    </>
-  )
+    return (
+      <>
+        <div className="flex flex-col gap-4 overflow-y-scroll h-[80vh]">
+          {notes.length >0
+            ? notes.map((note) => <Note key={note.id} note={note} />)
+            : "ノートがありません"}
+        </div>
+      </>
+    );
+  } catch (error) {
+    console.error("ノートの取得に失敗しました:", error);
+    throw new Error("ノートの取得に失敗しました");
+  }
 }

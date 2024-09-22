@@ -39,9 +39,8 @@ export interface NoteType{
   content?: string;
   createdAt: string; 
   authorId: string;  
-  author: UserType;
   imageUrl? : string;
-  totalLikes : number
+  totalLikes? : number
 }
 
 export interface NoteSlotType{
@@ -65,9 +64,7 @@ export interface PlanType{
   content?: string;
   createdAt: string; 
   userId: string;  
-  user: UserType;
   imageUrl? : string;
-  totalLikes : number
 }
 
 export interface PlanPointType{

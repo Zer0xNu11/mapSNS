@@ -15,15 +15,8 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
     <>
       <div className="bg-yellow-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
         <div className="mb-4 w-1/2 h-full">
-          <div className="flex items-center mb-2">
-          <h2 className="text-gray-700 break-all text-md">{note.title}</h2>
-            {/* <Image
-              className="w-10 h-10 rounded-full mr-2"
-              src="/images/placeholder.png"
-              width="100"
-              height="100"
-              alt="User Avatar"
-            /> */}
+          <div className="flex flex-col  mb-2">
+            <h2 className="text-gray-700 break-all font-bold">{note.title}</h2>
             <div>
               {/* <h2 className="font-semibold text-md">{note.author?.name}</h2> */}
               <p className="text-gray-500 text-sm ">
@@ -31,21 +24,24 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
               </p>
             </div>
           </div>
-        
         </div>
-        <div className="w-1/2 h-full items-center">
-          <img
-            className="mr-2 object-contain h-full"
-            src={note.imageUrl || "/images/blank.png"}
-            alt="User Avatar"
-          />
+        {note.imageUrl && (
+          <div className="w-1/2 h-full items-center">
+            <img
+              className="mr-2 object-contain h-full"
+              src={note.imageUrl}
+              alt="imgae"
+            />
+          </div>
+        )}
+        <div className="flex flex-col gap-2">
+          <Link href={`/home/notes/${note.id}`}>
+            <Button>書く</Button>
+          </Link>
+          <Link href={`/home/notes/${note.id}`}>
+            <Button>編集</Button>
+          </Link>
         </div>
-        <Link href={`/home/notes/${note.id}`}>
-          <Button>書く</Button>
-        </Link>
-        <Link href={`/home/notes/${note.id}`}>
-          <Button>編集</Button>
-        </Link>
       </div>
     </>
   );
