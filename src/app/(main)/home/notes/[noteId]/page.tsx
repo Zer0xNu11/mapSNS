@@ -1,4 +1,3 @@
-import NoteMain from "@/components/map/noteMap/noteMain";
 import React from "react";
 
 interface Params {
@@ -9,16 +8,13 @@ interface Params {
 const NotePage = async ({ params }: Params) => {
   const noteId = params.noteId;
   
-  try {
-    return (
-      <>
-        {/* <div>NotePage{` ${note.title}`} totalLike{`${note.totalLikes}`}</div> */}
-        <NoteMain noteId={noteId}/>
-      </>
-    );
-  } catch (err) {
-    console.log(err);
-  }
+  return (
+    <div className="w-full h-[100vh] flex flex-row">
+      <div className="w-[100%] h-[80vh]">
+        Under Construction
+      </div>
+    </div>
+  );
 };
 
 export default NotePage;

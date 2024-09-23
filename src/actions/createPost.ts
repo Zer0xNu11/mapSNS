@@ -6,6 +6,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+
 //サーバーアクションズ内でbindした値の型を定義
 export interface PostFormState {
   error: string;
@@ -22,10 +23,26 @@ export async function createPost(state: PostFormState, formData: FormData) {
   const path = state.path;
   console.log({path:path});
 
+  //バリデーション
+  const validateFile = (file: File) => {
+    const validMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const maxSizeMB = 5; // 画像size制限 MB
+    
+    if (!validMimeTypes.includes(file.type)) {
+      throw new Error('サポートされていないファイル形式です。');
+    }
+    
+    if (file.size / 1024 / 1024 > maxSizeMB) {
+      throw new Error('ファイルサイズが大きすぎます。');
+    }
+  };
+
   //vercelbrob 画像保存
   const uploadFileToVercelBlob = async () => {
     const imageFile = formData.get("image") as File;
     if(imageFile && imageFile.size > 0){
+    validateFile(imageFile);
+
     const blob = await put(imageFile.name, imageFile, {
       access: "public",
     });

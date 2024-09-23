@@ -29,11 +29,16 @@ import ListFromSort from "./ListFromSort";
 import ListFromPlan from "./ListFromPlan";
 import { getPlanData } from "@/lib/getPlanData";
 import UserMarker from "../UserMarker";
+
 import { MapPinSimpleArea } from "@phosphor-icons/react/dist/ssr/MapPinSimpleArea";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
 import { MapTrifold } from "@phosphor-icons/react/dist/ssr/MapTrifold";
 import { XSquare } from "@phosphor-icons/react/dist/ssr/XSquare";
+import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
 import { DownloadSimple } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
+import { ListMagnifyingGlass } from "@phosphor-icons/react/dist/ssr/ListMagnifyingGlass";
+import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
+
 import { useNoteSlot } from "@/store";
 import ListFromNoteId from "@/components/ListFromNoteId";
 import { NoteLogMarker } from "../NoteLogMarker";
@@ -42,7 +47,11 @@ import SearchModal from "../modal/SearchModal";
 import SelectPlanModal from "../modal/SelectPlanModal";
 import SelectNoteModal from "../modal/SelectNoteModal";
 import { getNoteData } from "@/lib/getPosts";
-import { getCurrentNoteData, getCurrentPlanData } from "@/lib/localStorageHandler";
+import {
+  getCurrentNoteData,
+  getCurrentPlanData,
+} from "@/lib/localStorageHandler";
+import Link from "next/link";
 
 export interface EditMapProps {}
 
@@ -346,12 +355,51 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          <div className="bg-yellow-600 w-full h-16 flex flex-row justify-center items-center gap-4">
-            <Button onClick={() => setIsSelectNoteModal(true)}>
-              ノートを選択
-            </Button>
-            <Button onClick={noteModeChangeButton}>検索リスト</Button>
+          <div className="bg-yellow-600 w-full h-16 flex flex-row justify-end items-center gap-4">
+            {/* ノートスロット */}
+            {noteMode === "selfNote" ? (
+              <div className="flex flex-row items-center justify-between">
+                {editNoteData.title ? (
+                  <div className="flex flex-row justify-end items-center text-xl gap-4">
+                    <div>{editNoteData.title}</div>
+                    <Button onClick={() => setIsSelectNoteModal(true)}>
+                      <DownloadSimple size={32} weight="fill" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex justify-center">
+                    <Button onClick={() => setIsSelectNoteModal(true)}>
+                      <div className="mx-2">記録ノートを選択</div>
+                      <DownloadSimple size={32} weight="fill" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="font-bold text-xl text-white w-full text-center">
+                検索結果
+              </div>
+            )}
+            {/* 検索ノート切り替え */}
+            <div>
+              <Button onClick={noteModeChangeButton}>
+                {noteMode === "selfNote" ? (
+                  <div>
+                    <ListMagnifyingGlass
+                      size={32}
+                      color="#f6f6f9"
+                      weight="fill"
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <Notebook size={32} color="#f6f6f9" weight="fill" />
+                  </div>
+                )}
+              </Button>
+            </div>
           </div>
+
           {noteMode === "selfNote" ? (
             <ListFromNoteId postsData={noteSlot} />
           ) : (
@@ -419,21 +467,31 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             variants={planMenuVariants}
             aria-hidden={planListDisplayMode !== "list"}
           >
-            <div className="bg-sky-500 w-full h-16 flex flex-row justify-center items-center gap-4">
-              {editPlanData.title && (
-                <div className="inline-block text-xl">{editPlanData.title}</div>
+            <div className="bg-sky-500 w-full h-16 flex flex-row items-center">
+              {editPlanData.title ? (
+                <div className="flex flex-row items-center text-xl w-full justify-end gap-4">
+                  <div className="w-full">{editPlanData.title}</div>
+                  <Button
+                    className="mx-4"
+                    onClick={() => setIsSelectPlanModal(true)}
+                  >
+                    <DownloadSimple size={32} weight="fill" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-full flex justify-center">
+                  <Button onClick={() => setIsSelectPlanModal(true)}>
+                    <div className="mx-2">プランを選択</div>
+                    <DownloadSimple size={32} weight="fill" />
+                  </Button>
+                </div>
               )}
-              <Button onClick={() => setIsSelectPlanModal(true)}>
-                プランを選択
-                <DownloadSimple size={32} weight="fill" />
-              </Button>
-              {/* <Button>プランを編集</Button> */}
             </div>
             {editPlanData.id ? <ListFromPlan planId={editPlanData.id} /> : ""}
           </motion.div>
         </div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
-          <MapContainer center={position} zoom={zoom}>
+          <MapContainer center={position} zoom={zoom} zoomControl={false}>
             <TileLayer
               attribution={mapStyle.attribution}
               url={mapStyle.style}
@@ -462,7 +520,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               polylineCoordinates={searchedNoteSlot.map(
                 (item) => item.coordinates
               )}
-              searchedMode = {true}
+              searchedMode={true}
               planId={editPlanData.id}
             />
             <NoteLogMarker
@@ -489,6 +547,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           >
             <MapTrifold size={32} color="#080707" weight="fill" />
           </button>
+          <Link
+            href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${editNoteData.id}`}
+          >
+            <button
+              className="bg-green-400 rounded-full p-2 m-2 border-black border-2 disabled:opacity-50 "
+              disabled={editNoteData.id ? false : true}
+            >
+              <MapPinPlus size={32} color="#050505" weight="fill" />
+            </button>
+          </Link>
         </div>
       </div>
     </>

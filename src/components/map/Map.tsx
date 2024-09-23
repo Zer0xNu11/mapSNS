@@ -169,7 +169,7 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
 
         </motion.div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
-          <MapContainer center={position} zoom={zoom}>
+          <MapContainer center={position} zoom={zoom} zoomControl={false}>
             <TileLayer
               attribution={mapStyle.attribution}
               url={mapStyle.style}
