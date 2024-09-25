@@ -5,7 +5,7 @@ import PostDetail from "@/components/Post/PostDetail";
 const DetailPost = async ({
   params,
 }: {
-  params: { authorId: string; postId: string };
+  params: { postId: string };
 }) => {
   console.log("====== Detail Post========");
   const session = await auth();
@@ -30,7 +30,7 @@ const DetailPost = async ({
 
 
   if (!data) {
-    return <div>"存在しない投稿です"</div>;
+    return <div>存在しない投稿です</div>;
   }
 
   const post = {

@@ -89,7 +89,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <PostLikeIcon post={post} />
         </div>
         <div className="absolute z-30 right-2 bottom-2 ">
-          <PostToolMenu authorId={post.authorId} postId={post.id}/>
+          <PostToolMenu postId={post.id}/>
         </div>
       </div>
     </>

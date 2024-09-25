@@ -12,12 +12,11 @@ import { Ellipsis } from "lucide-react";
 import Link from "next/link";
 
 interface PostToolMenuProps {
-  authorId : string,
   postId : string
 }
 
 
-const PostToolMenu :React.FC<PostToolMenuProps>= ({authorId, postId}) => {
+const PostToolMenu :React.FC<PostToolMenuProps>= ({postId}) => {
 
     return (
       <>
@@ -50,7 +49,7 @@ const PostToolMenu :React.FC<PostToolMenuProps>= ({authorId, postId}) => {
                   </p>
                 </div>
               </DropdownMenuLabel> */}
-            <DropdownMenuItem><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${authorId}/${postId}`}>詳細を見る</Link></DropdownMenuItem>
+            <DropdownMenuItem><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}>詳細を見る</Link></DropdownMenuItem>
             <DropdownMenuItem>レコード表示</DropdownMenuItem>
             <DropdownMenuItem>プランへ追加</DropdownMenuItem>
           </DropdownMenuContent>
