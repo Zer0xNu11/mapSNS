@@ -18,9 +18,9 @@ const SearchModal = ({ closeModal }: { closeModal: () => void }) => {
   const [startDate, setStartDate] = useState<Date | undefined>(undefined);
   const [endDate, setEndDate] = useState<Date | undefined>(undefined);
   const [category, setCategory] = useState({
-    food: false,
-    base: false,
-    other: false,
+    food: true,
+    base: true,
+    other: true,
   });
   const [likes, setLikes] = useState("");
   const [radius, setRadius] = useState("");
@@ -156,7 +156,7 @@ const SearchModal = ({ closeModal }: { closeModal: () => void }) => {
                           onChange={handleCategoryChange}
                           className="form-checkbox"
                         />
-                        <span className="ml-2">拠点</span>
+                        <span className="ml-2">宿泊</span>
                       </label>
                       <label className="inline-flex items-center">
                         <input

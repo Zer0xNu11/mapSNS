@@ -9,7 +9,7 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { Button } from "../ui/button";
-import { useNoteSlot, usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
+import { useEditPlan, useNoteSlot, usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
 import { PostLeafletType } from "@/types";
 import { tracePost } from "@/lib/createPlan";
 import { getNoteData } from "@/lib/getPosts";
@@ -29,6 +29,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   const { planSlot, setPlanSlot } = usePlanSlot();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
   const {searchedNoteSlot, setSearchedNoteSlot} = useSearchedNoteSlot();
+  const { editPlanData } = useEditPlan();
 
   const searchNoteId = async (noteId: string) => {
     const data = await getNoteData(noteId);
@@ -81,6 +82,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
                   onClick={() => addPlan(post.coordinates[0], post.coordinates[1])}
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+                  disabled={editPlanData.id ? false : true}
                 >
                   プランへ追加
                 </button>

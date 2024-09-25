@@ -3,7 +3,7 @@ import { MapContainer, TileLayer } from "react-leaflet";
 import { divIcon, LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../map.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getPosition } from "@/lib/getPostion";
 import { LINE_COLOR, mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
@@ -38,6 +38,7 @@ import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
 import { DownloadSimple } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
 import { ListMagnifyingGlass } from "@phosphor-icons/react/dist/ssr/ListMagnifyingGlass";
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
+import { FileArrowDown } from "@phosphor-icons/react/dist/ssr/FileArrowDown";
 
 import { useNoteSlot } from "@/store";
 import ListFromNoteId from "@/components/ListFromNoteId";
@@ -75,6 +76,9 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const { editNoteData, setEditNoteData } = useEditNote();
   const { mapStyle, setMapStyle } = useMapStyle();
   const { setUserMarker } = useUserMarkerStore();
+
+  const closeNoteModalRef = useRef(null);
+  const closePlanModalRef = useRef(null);
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
@@ -302,21 +306,31 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
 
       {isSelectNoteModal && (
         <div className="fixed top-4 right-4 z-[9999]">
-          <button onClick={() => setIsSelectNoteModal(false)}>
+          <button
+            ref={closeNoteModalRef}
+            onClick={() => setIsSelectNoteModal(false)}
+          >
             <XSquare size={48} color="#f1f1f3" weight="fill" />
           </button>
         </div>
       )}
-      {isSelectNoteModal && <SelectNoteModal />}
+      {isSelectNoteModal && (
+        <SelectNoteModal closeButtonRef={closeNoteModalRef} />
+      )}
 
       {isSelectPlanModal && (
         <div className="fixed top-4 right-4 z-[9999]">
-          <button onClick={() => setIsSelectPlanModal(false)}>
+          <button
+            ref={closePlanModalRef}
+            onClick={() => setIsSelectPlanModal(false)}
+          >
             <XSquare size={48} color="#f1f1f3" weight="fill" />
           </button>
         </div>
       )}
-      {isSelectPlanModal && <SelectPlanModal />}
+      {isSelectPlanModal && (
+        <SelectPlanModal closeButtonRef={closePlanModalRef} />
+      )}
 
       {/* 検索リスト */}
       <div className="w-full h-[100vh]">
@@ -376,8 +390,13 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 )}
               </div>
             ) : (
-              <div className="font-bold text-xl text-white w-full text-center">
-                検索結果
+              <div className="flex flex-row justify-end items-center text-xl gap-4">
+                <div className="font-bold text-xl text-white w-full text-center">
+                  検索結果
+                </div>
+                <Button onClick={() => setIsSelectNoteModal(true)}>
+                  <FileArrowDown size={32} color="#f2f2f2" weight="fill" />
+                </Button>
               </div>
             )}
             {/* 検索ノート切り替え */}

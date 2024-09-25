@@ -20,6 +20,7 @@ export interface PostFormState {
 export async function createPost(state: PostFormState, formData: FormData) {
   const session = await auth();
   const content: string = formData.get("post") as string;
+  const category : string = formData.get("selectedCategory") as string;
   const path = state.path;
   console.log({path:path});
 
@@ -71,6 +72,7 @@ export async function createPost(state: PostFormState, formData: FormData) {
           authorId: session?.user?.id,
           imageUrl: imageUrl || null,
           noteId: state.noteId,
+          category: category,
           order: newOrder,
         },
         include: {

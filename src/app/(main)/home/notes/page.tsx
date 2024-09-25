@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import Notes from "@/components/note/Notes";
 import { Button } from "@/components/ui/button";
+import { SessionProvider } from "next-auth/react";
 import Link from "next/link";
 
 export default async function NotesPage() {

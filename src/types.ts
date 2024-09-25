@@ -1,9 +1,9 @@
 export interface UserType{
-  id: number 
-  name: string
-  email: string 
-  password: string
-  posts: PostType[];
+  id: string; 
+  name: string;
+  email: string; 
+  password?: string;
+  posts?: PostType[];
 }
 
 export interface PostType{

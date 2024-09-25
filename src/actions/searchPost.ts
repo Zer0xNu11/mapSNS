@@ -21,8 +21,9 @@ export async function searchPost(formData: FormData) {
   const endDate = endDateInput ? new Date(endDateInput) : new Date('2500-12-31');
 
   const category = ["food", "base", "other"].filter(
-    (key) => formData.get(`category.${key}`) === "on"
+    (key) => formData.get(`${key}`) === "on"
   );
+  
   const likes = formData.get("likes")
     ? parseInt(formData.get("likes") as string, 10)
     : null;
@@ -35,6 +36,7 @@ export async function searchPost(formData: FormData) {
     if (radius === "large") return 5000;
   };
   console.log({ searchRadius: searchRadius() });
+  console.log({ category: category });
 
   if (keyword === null) {
     throw new Error();
@@ -46,7 +48,7 @@ export async function searchPost(formData: FormData) {
       ? Prisma.sql`"createdAt" BETWEEN ${startDate.toISOString()}::timestamp AND ${endDate.toISOString()}::timestamp`
       : Prisma.empty,
     category.length > 0
-      ? Prisma.sql`"category" && ${category}::text[]`
+      ? Prisma.sql`"category" = ANY(${category}::text[])`
       : Prisma.empty,
     likes ? Prisma.sql`"totalLikes" >= ${likes}` : Prisma.empty,
     Prisma.sql`ST_DWithin(

@@ -5,6 +5,8 @@ import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
 import { useListDisplayMode, usePostDisplayMode, useSelectedPostStore } from "@/store";
 import { motion } from "framer-motion";
+import ToolMenu from "../ui/PostToolMenu";
+import PostToolMenu from "../ui/PostToolMenu";
 
 export interface PostProps {
   post: NoteSlotType;
@@ -85,6 +87,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
         </motion.div>
         <div className="absolute z-30 right-4 top-4 ">
           <PostLikeIcon post={post} />
+        </div>
+        <div className="absolute z-30 right-2 bottom-2 ">
+          <PostToolMenu authorId={post.authorId} postId={post.id}/>
         </div>
       </div>
     </>

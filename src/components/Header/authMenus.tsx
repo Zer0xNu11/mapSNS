@@ -2,6 +2,7 @@ import React from "react";
 import { signIn, signOut } from "@/auth";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { currentDataReset } from "@/actions/currendDataReset";
 
 export function SignIn({
   provider,
@@ -25,6 +26,7 @@ export function SignOut({
     <form className="w-full" 
       action={async()=> {
       'use server';
+      currentDataReset()
       await signOut();
     }}>
       <Button variant="ghost" className="w-full p-0" {...props}>

@@ -4,7 +4,7 @@ import { setCurrentNoteData } from "@/lib/localStorageHandler";
 import { useEditNote } from "@/store";
 import { NoteType } from "@/types";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 
 const getLatestNotes = async (): Promise<NoteType[]> => {
   const response = await fetch(
@@ -23,9 +23,20 @@ const getLatestNotes = async (): Promise<NoteType[]> => {
   return data.data as NoteType[];
 };
 
-const SelectNoteModal = () => {
+interface SelectNoteModalProps {
+  closeButtonRef: RefObject<HTMLButtonElement>;
+}
+
+const SelectNoteModal: React.FC<SelectNoteModalProps>  = ({closeButtonRef}) => {
   const [userNotes, setUserNotes] = useState<NoteType[]>([]);
   const { setEditNoteData } = useEditNote();
+
+  const closeModal = () => {
+    console.log('checke press button')
+    if (closeButtonRef.current) {
+      closeButtonRef.current.click();
+    }
+  };
 
   useEffect(() => {
     async function loadNotes() {
@@ -61,6 +72,7 @@ const SelectNoteModal = () => {
                   onClick={() => {
                     setCurrentNoteData(note.id, note.title);
                     setEditNoteData(note.id, note.title);
+                    closeModal();
                   }}
                 >
                   <div className="w-full break-words text-center">

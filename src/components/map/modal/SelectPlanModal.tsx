@@ -4,7 +4,7 @@ import { setCurrentPlanData } from "@/lib/localStorageHandler";
 import { useEditPlan, usePlanSlot } from "@/store";
 import { PlanType } from "@/types";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { RefObject, useEffect, useState } from "react";
 
 const getLatestPlans = async (): Promise<PlanType[]> => {
   const response = await fetch(
@@ -23,11 +23,20 @@ const getLatestPlans = async (): Promise<PlanType[]> => {
   return data.data as PlanType[];
 };
 
-const SelectPlanModal = () => {
-  // const { data: session, status } = useSession();
-  // const userId = session?.user?.id;
+interface SelectPlanModalProps {
+  closeButtonRef: RefObject<HTMLButtonElement>;
+}
+
+const SelectPlanModal: React.FC<SelectPlanModalProps>  = ({closeButtonRef}) => {
   const [userPlans, setUserPlans] = useState<PlanType[]>([]);
   const { setEditPlanData } = useEditPlan()
+
+  const closeModal = () => {
+    console.log('checke press button')
+    if (closeButtonRef.current) {
+      closeButtonRef.current.click();
+    }
+  };
 
 
   useEffect(()=>{
@@ -65,6 +74,7 @@ const SelectPlanModal = () => {
                   onClick={() => {
                     setCurrentPlanData(plan.id, plan.title);
                     setEditPlanData(plan.id, plan.title);
+                    closeModal();
                   }}
                 >
                   <div className="w-full break-words text-center">

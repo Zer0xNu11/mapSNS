@@ -6,10 +6,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { BioMenu, SignIn, SignOut, UserSetting } from "./authMenus";
+import { BioMenu, SignIn, UserSetting } from "./authMenus";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { auth } from "@/auth";
 import { LogOutIcon, Settings, User } from "lucide-react";
+import { SignOut } from "./SignOut";
 
 export default async function UserButton() {
 

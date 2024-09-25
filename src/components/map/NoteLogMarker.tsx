@@ -9,7 +9,7 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { MapProps } from "./Map";
-import { usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
+import { useEditPlan, usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
 import { PostLeafletType, PostType } from "@/types";
 import { tracePost, tracePostAll } from "@/lib/createPlan";
 
@@ -32,6 +32,7 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { searchedNoteSlot} = useSearchedNoteSlot();
   const { planSlot, setPlanSlot } = usePlanSlot();
+  const { editPlanData } = useEditPlan();
   const [points, setPoint] = useState([]);
 
   const addPlan = async (lat: number, lng: number) => {
@@ -95,6 +96,7 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
                   }
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+                  disabled={editPlanData.id ? false : true}
                 >
                   プランへ追加
                 </button>
@@ -103,7 +105,8 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
                     addPlanAll(post.noteId, posts)
                   }
                   type="submit"
-                  className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
+                  className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300 `}
+                  disabled={editPlanData.id ? false : true}
                 >
                   すべて追加
                 </button>
