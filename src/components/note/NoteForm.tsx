@@ -37,12 +37,12 @@ const NoteForm = () => {
           <input type='text' name='title' placeholder="ノートのタイトル" className='w-full p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400'
           onChange={(e)=>{setTitleText(e.target.value)}}
           />
-          <textarea
+          {/* <textarea
             name='post'
             className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="ノートの紹介文(省略可)"
-            // onChange={(e)=>{setText(e.target.value)}}
-          ></textarea>
+            onChange={(e)=>{setText(e.target.value)}}
+          ></textarea> */}
           <div className={`${remLength>=0 ? '' : 'text-red-500'}`}>{`残り${remLength}文字`}</div>
           {/* <input type="file" name='image' /> */}
           {/* <input type="file" name='file' ref={fileSelectRef}/> */}

@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { divIcon, LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../map.css";
@@ -17,6 +17,7 @@ import { navHeight } from "@/lib/commonSetting";
 import {
   useEditNote,
   useEditPlan,
+  useFocusCoordinate,
   useListDisplayMode,
   useMapStyle,
   usePlanListDisplayMode,
@@ -53,6 +54,32 @@ import {
   getCurrentPlanData,
 } from "@/lib/localStorageHandler";
 import Link from "next/link";
+
+const MapUpdater = () => {
+  const map = useMap();
+  const {focusCoordinate} = useFocusCoordinate();
+  const {planListDisplayMode} = usePlanListDisplayMode()
+  const {listDisplayMode} = useListDisplayMode()
+
+  useEffect(() => {
+    if (focusCoordinate) {
+      const windowWidth = 374
+      const offset = planListDisplayMode === 'map' ? 
+      (listDisplayMode === 'map' ? 0 : windowWidth / 2 ) :
+      (listDisplayMode === 'map' ? -windowWidth / 2 : 0 ) ;
+
+      // const currentCenter = map.getCenter();
+      const newCenter = map.containerPointToLatLng(
+        map.latLngToContainerPoint(focusCoordinate).add([offset, 0])
+      );
+        map.setView(newCenter, map.getZoom(), { animate: true });
+    }
+  }, [focusCoordinate, map, planListDisplayMode, listDisplayMode]);
+
+
+  return null;
+};
+
 
 export interface EditMapProps {}
 
@@ -511,6 +538,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         </div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom} zoomControl={false}>
+            <MapUpdater/>
             <TileLayer
               attribution={mapStyle.attribution}
               url={mapStyle.style}

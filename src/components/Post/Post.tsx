@@ -3,10 +3,10 @@
 import { NoteSlotType, PostType } from "@/types";
 import { PostLikeIcon } from "./PostLikeIcon";
 import Image from "next/image";
-import { useListDisplayMode, usePostDisplayMode, useSelectedPostStore } from "@/store";
+import { useFocusCoordinate, useListDisplayMode, usePostDisplayMode, useSelectedPostStore } from "@/store";
 import { motion } from "framer-motion";
-import ToolMenu from "../ui/PostToolMenu";
 import PostToolMenu from "../ui/PostToolMenu";
+import { latLng } from "leaflet";
 
 export interface PostProps {
   post: NoteSlotType;
@@ -16,9 +16,11 @@ export interface PostProps {
 const Post: React.FC<PostProps> = ({ post }) => {
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { postDisplayMode } = usePostDisplayMode();
+  const {setFocusCoordinate} = useFocusCoordinate();
 
   const clickHandler = () => {
     setSelectedPostId(post.id);
+    setFocusCoordinate(latLng(post.coordinates))
   };
 
   return (

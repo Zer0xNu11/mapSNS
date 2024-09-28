@@ -15,6 +15,7 @@ export interface PostType{
     imageUrl? : string;
     totalLikes : number;
     noteId: string;
+    category : string;
   }
 
 export interface PostLeafletType{

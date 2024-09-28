@@ -6,7 +6,7 @@ export const GET =  async (_: NextRequest, {params}:{params:{postId: string}}) =
   console.log('====== APIconect Posts id GET ========')
   try {
     console.log({params:params})
-    const latestPosts = await prismadb.post.findUnique({
+    const selectedPost = await prismadb.post.findUnique({
       where:{
         id: params.postId
       },
@@ -22,7 +22,7 @@ export const GET =  async (_: NextRequest, {params}:{params:{postId: string}}) =
         note: true
       }
     });
-    return NextResponse.json({message:'成功', data: latestPosts})
+    return NextResponse.json({message:'成功', data: selectedPost})
     //jsonレスポンス
   } catch (err) {
     // console.log({});

@@ -6,33 +6,42 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 interface PostDetailProps {
   post: PostType;
   isOwn: boolean;
-  path: string
+  path: string;
 }
 
 const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
-
-  const deletePost = async(postId : string) =>{
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`, {
-      cache: "no-store",
-      method:'DELETE'
-    });
+  const currentPath = path;
+  const deletePost = async (postId: string) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+      {
+        cache: "no-store",
+        method: "DELETE",
+      }
+    );
     const data = await response.json();
-    if(response.ok){
-      alert(data.message)
+    if (response.ok) {
+      alert(data.message);
       window.location.href = `${path}`;
       // redirect(`${process.env.NEXT_PUBLIC_API_URL}/home`)
-    }else{
-      alert('削除に失敗しました');
+    } else {
+      alert("削除に失敗しました");
     }
-  }
+  };
 
   return (
     <>
       <div className="bg-white w-full h-full">
+        <Link href={currentPath}>
+          <Button>戻る</Button>
+        </Link>
+        
+        <div className="flex flex-col justify-center items-center">
         <div className="flex flex-row items-center pt-2 pl-2">
           <Image
             className="w-10 h-10 rounded-full mr-2"
@@ -48,13 +57,13 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
             </p>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center">
+          
           <div className="flex flex-col justify-center items-center my-4">
-            <img
+            {post.imageUrl ? <img
               className="max-w-[80vw] max-h-[50vh] object-contain"
               src={post.imageUrl || "/images/blank.png"}
               alt="Post Image"
-            />
+            /> : ''}
             <div className="w-full my-4">
               <p className="text-gray-700 break-word whitespace-pre-line m-4">
                 {post.content}
@@ -63,13 +72,20 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
           </div>
         </div>
 
-        {isOwn? <div className="flex flex-row justify-center gap-4">
-          <Button className="">編集</Button>
-          <Button 
-          className=""
-          onClick={() => deletePost(post.id)}
-          >削除</Button>
-        </div> : ''}
+        {isOwn ? (
+          <div className="flex flex-row justify-center gap-4">
+            <Link
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/post/${post.id}`}
+            >
+              <Button className="">編集</Button>
+            </Link>
+            <Button className="" onClick={() => deletePost(post.id)}>
+              削除
+            </Button>
+          </div>
+        ) : (
+          ""
+        )}
       </div>
     </>
   );

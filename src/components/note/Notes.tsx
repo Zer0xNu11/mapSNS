@@ -32,7 +32,6 @@ export default async function Notes() {
       authorId: note.authorId,
       author: note.author,
       imageUrl: note.imageUrl ?? undefined,
-      // 必要に応じて他のフィールドも追加
     }));
 
     return (

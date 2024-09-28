@@ -13,6 +13,11 @@ interface UserMarkerState {
   setUserMarker: (latlng: LatLng) => void;
 }
 
+interface FocusCoordinateState{
+  focusCoordinate: LatLng | null;
+  setFocusCoordinate: (latlng: LatLng) => void;
+}
+
 interface selectedPostState{
   selectedPostId: string | null
   setSelectedPostId: (postId: string | null) => void;
@@ -89,6 +94,11 @@ export  const useMarkerStore = create<MarkerState>((set) => ({
 export  const useUserMarkerStore = create<UserMarkerState>((set) => ({
   userMarker: null,
   setUserMarker: (latlng) => set(() => ({ userMarker: latlng })),
+}));
+
+export  const useFocusCoordinate = create<FocusCoordinateState>((set) => ({
+  focusCoordinate: null,
+  setFocusCoordinate: (latlng) => set(() => ({ focusCoordinate: latlng })),
 }));
 
 

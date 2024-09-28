@@ -1,5 +1,5 @@
 "use client";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.css";
@@ -7,27 +7,49 @@ import { useEffect } from "react";
 import { getPosition } from "@/lib/getPostion";
 import { MakingMarker } from "./MakingMarker";
 import { mapStyles } from "@/lib/mapSetting";
-import { useMarkerStore, useUserMarkerStore } from "@/store";
+import { useFocusCoordinate, useMarkerStore, useUserMarkerStore } from "@/store";
 import UserMarker from "./UserMarker";
 import GpsButton from "./GpsButton";
 
-const PostLocation: React.FC = () => {
+interface PostLocationProps {
+  isEdit?: boolean;
+}
+
+const MapUpdater = () => {
+  const map = useMap();
+  const { marker } = useMarkerStore();
+
+  useEffect(() => {
+    if (marker) {
+      map.setView(marker, map.getZoom());
+    }
+  }, [marker, map]);
+
+  return null;
+};
+
+const PostLocation: React.FC<PostLocationProps> = ({ isEdit = false }) => {
   const { marker, setMarker } = useMarkerStore();
+  const {focusCoordinate} = useFocusCoordinate();
   const { userMarker, setUserMarker } = useUserMarkerStore();
 
   async function initializeMap() {
     const point = await getPosition();
     console.log({ point: point });
 
-    if (point != null) {
-      setMarker(latLng([point.lat, point.lng]));
-      setUserMarker(latLng([point.lat, point.lng]));
-      console.log({ position: marker });
+    if (isEdit && focusCoordinate) {
+      setMarker(latLng(focusCoordinate));
     } else {
-      // デフォルトの位置
-      setMarker(latLng([35.680522, 139.766566]));
-      setUserMarker(latLng([35.680522, 139.766566]));
-      console.log({ position: "デフォルト" });
+      if (point != null) {
+        setMarker(latLng([point.lat, point.lng]));
+        setUserMarker(latLng([point.lat, point.lng]));
+        console.log({ position: marker });
+      } else {
+        // デフォルトの位置
+        setMarker(latLng([35.680522, 139.766566]));
+        setUserMarker(latLng([35.680522, 139.766566]));
+        console.log({ position: "デフォルト" });
+      }
     }
   }
 
@@ -45,7 +67,8 @@ const PostLocation: React.FC = () => {
 
   return (
     <MapContainer center={marker} zoom={zoom} zoomControl={false}>
-      <GpsButton initializeMap={initializeMap}/>
+      <MapUpdater />
+      <GpsButton initializeMap={initializeMap} isEdit = {isEdit}/>
       <TileLayer
         attribution={mapStyle.attribution}
         url={mapStyle.style}

@@ -1,7 +1,7 @@
 import { NoteSlotType, PostType } from '../types'
 
 //廃棄予定
-export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
+export const getPost = async (id : string) : Promise<PostType> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`,{
     cache:'no-store', //キャッシュ無効化のオプション
   });
@@ -13,7 +13,7 @@ export const getLatestPosts = async (id : string) : Promise<PostType[]> => {
 
   const data = await response.json();
   console.log({data: data})
-  return data.data as PostType[];
+  return data.data as PostType;
 }
 
 

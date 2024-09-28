@@ -1,6 +1,5 @@
 "use client";
 
-import { createPost, PostFormState } from "@/actions/createPost";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import { useMarkerStore } from "@/store";
@@ -14,27 +13,47 @@ import PostLocation from "@/components/map/PostLocation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CategorySelector from "@/components/Post/CategorySelector";
+import { getPost } from "@/lib/getPosts";
+import { updatePost } from "@/actions/updatePost";
+import { PostType } from "@/types";
 
 interface Params {
-  params: { noteId: string };
+  params: { postId: string };
 }
 
-const PostForm = ({ params }: Params) => {
-  const noteId = params.noteId;
-  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/home`;
+interface PostEditFormProps {
+  post: PostType;
+}
 
-  const [text, setText] = useState("");
-  const initialState: PostFormState = {
-    error: "",
-    noteId: noteId,
-    path: currentPath,
-  };
-  const [state, formAction] = useFormState(createPost, initialState);
+interface PostEditFormState {
+  error: string;
+  postId: string;
+  path: string;
+  positionLat?: number | null;
+  positionLng?: number | null;
+  // position? : {lat:number | null, lng:number | null};
+}
+
+const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
+  const postId = post.id;
+  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`;
+  const [text, setText] = useState(post.content ?? "");
+
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const limitLength = 60; //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
   const [loading, setLoading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null | undefined>(
+    undefined
+  );
+  const [isImgDel, setIsImgDel] = useState<boolean>(false);
+
+  const initialState: PostEditFormState = {
+    error: "",
+    postId: postId,
+    path: currentPath,
+  };
+  const [state, formAction] = useFormState(updatePost, initialState);
 
   const { marker } = useMarkerStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -53,14 +72,12 @@ const PostForm = ({ params }: Params) => {
           className={`bg-gray-700 w-32 hover:bg-gray-600 duration-200 text-white font-semibold px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}
         >
-          投稿
+          保存
         </button>
         <PendLoading />
       </>
     );
   };
-
- 
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -102,7 +119,6 @@ const PostForm = ({ params }: Params) => {
             <textarea
               name="post"
               className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="感動を未来へ伝えよう"
               value={text}
               onChange={(e) => {
                 setText(e.target.value);
@@ -111,7 +127,7 @@ const PostForm = ({ params }: Params) => {
             <div
               className={`text-right ${remLength >= 0 ? "" : "text-red-500"}`}
             >{`残り${remLength}文字`}</div>
-            <CategorySelector />
+            <CategorySelector value = {post.category}/>
             <div className="mt-5 flex flex-row gap-4 items-center justify-between">
               <input
                 type="file"
@@ -127,11 +143,12 @@ const PostForm = ({ params }: Params) => {
                 className="bg-yellow-300 w-32 flex items-center rounded-md justify-center"
               >
                 <ImageIcon size={32} color="#1d0202" weight="light" />
-                <a className="m-2">画像追加</a>
+                <a className="m-2">画像変更</a>
               </button>
             </div>
-            {previewUrl && (
-              <div className="mt-4">
+
+            <div className="mt-4">
+              {previewUrl ? (
                 <Image
                   src={previewUrl}
                   alt="プレビュー"
@@ -139,12 +156,39 @@ const PostForm = ({ params }: Params) => {
                   height={200}
                   className="object-cover rounded"
                 />
-              </div>
-            )}
+              ) : post.imageUrl && !isImgDel ? (
+                <div className="flex flex-row items-center">
+                  <img
+                    src={post.imageUrl}
+                    alt="プレビュー"
+                    width={200}
+                    height={200}
+                    className="object-cover rounded"
+                  />
+                  <button
+                    className="bg-red-400 text-white rounded-xl h-10 w-32 mx-2"
+                    onClick={() => {
+                      setIsImgDel(true);
+                    }}
+                  >
+                    削除
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+            <input
+              type="checkbox"
+              name="isImgDel"
+              checked={isImgDel}
+              className="hidden"
+              readOnly
+            />
           </form>
           <div className="mt-4 w-[90%] h-[40vh] flex flex-col">
             <label>位置調整</label>
-            <PostLocation />
+            <PostLocation isEdit={true} />
           </div>
         </div>
       </div>
@@ -152,4 +196,21 @@ const PostForm = ({ params }: Params) => {
   }
 };
 
-export default PostForm;
+const EditPage = ({ params }: Params) => {
+  const [post, setPost] = useState<PostType>();
+
+  useEffect(() => {
+    const initialize = async () => {
+      const data = await getPost(params.postId);
+      if (data) {
+        setPost(data);
+      }
+    };
+
+    initialize();
+  }, []);
+
+  return <>{post ? <PostEditForm post={post} /> : "投稿読み込み中"}</>;
+};
+
+export default EditPage;

@@ -70,7 +70,11 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
           position={latLng(post.coordinates[0], post.coordinates[1])}
           icon={selectedPostId === post.id ? ICON_HIGHLIGHTED : ICON_Marker}
           eventHandlers={{
-            click: () => setSelectedPostId(post.id),
+            click: () => 
+              {
+                setSelectedPostId(post.id);
+
+              }
           }}
         >
           {searchedMode ? (

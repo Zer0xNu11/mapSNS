@@ -1,7 +1,11 @@
 import { useState } from "react";
 
-const CategorySelector = () => {
-  const [selectedCategory, setSelectedCategory] = useState("other");
+interface CategorySelectorProps {
+  value? : string
+}
+
+const CategorySelector : React.FC<CategorySelectorProps>  = ({value = 'other'}) => {
+  const [selectedCategory, setSelectedCategory] = useState(value);
 
   return (
     <div className="mb-4">

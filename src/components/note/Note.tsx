@@ -1,7 +1,10 @@
+"use client";
 import { NoteType } from "@/types";
-import Image from "next/image";
 import { Button } from "../ui/button";
-import Link from "next/link";
+import { setCurrentNoteData } from "@/lib/localStorageHandler";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import NoteToolMenu from "../ui/NoteToolMenu";
 
 export interface NoteProps {
   note: NoteType;
@@ -11,6 +14,24 @@ export interface NoteProps {
 }
 
 const Note: React.FC<NoteProps> = async ({ note }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const writeNote = async () => {
+    setLoading(true);
+    const setLocalStorage = async () => {
+      setCurrentNoteData(note.id, note.title);
+    };
+    try {
+      await setLocalStorage();
+      router.push(`/home`);
+    } catch (error) {
+      console.error("Error writing note:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="bg-yellow-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
@@ -34,12 +55,16 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
           </div>
         )} */}
         <div className="flex flex-col gap-2">
-          <Link href={`/home/notes/${note.id}`}>
-            <Button>書く</Button>
-          </Link>
-          <Link href={`/home/notes/${note.id}`}>
-            <Button>編集</Button>
-          </Link>
+          <div className="flex justify-end">
+          <NoteToolMenu noteId={note.id} />
+          </div>
+          <Button
+            className="disabled:bg-gray-500"
+            onClick={writeNote}
+            disabled={loading}
+          >
+            書く
+          </Button>
         </div>
       </div>
     </>
