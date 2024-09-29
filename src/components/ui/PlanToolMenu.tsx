@@ -9,14 +9,14 @@ import { Button } from "./button";
 
 import { DotsThreeOutlineVertical } from "@phosphor-icons/react/dist/ssr/DotsThreeOutlineVertical";
 import Link from "next/link";
-import { deleteNote } from "@/lib/deleteNote";
+import { deletePlan } from "@/lib/deletePlan";
 
 interface PostToolMenuProps {
-  noteId : string
+  planId : string
 }
 
 
-const NoteToolMenu :React.FC<PostToolMenuProps>= ({noteId}) => {
+const PlanToolMenu :React.FC<PostToolMenuProps>= ({planId}) => {
 
     return (
       <>
@@ -39,12 +39,12 @@ const NoteToolMenu :React.FC<PostToolMenuProps>= ({noteId}) => {
             side="top"
             forceMount
           >
-            <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/note/${noteId}`}>名前変更</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild><button className="w-full" onClick={async () => deleteNote(noteId)}>削除</button></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/plan/${planId}`}>名前変更</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><button className="w-full" onClick={async () => deletePlan(planId)}>削除</button></DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </>
     );
 };
 
-export default NoteToolMenu;
+export default PlanToolMenu;

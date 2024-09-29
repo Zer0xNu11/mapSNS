@@ -47,7 +47,6 @@ const SelectNoteModal: React.FC<SelectNoteModalProps>  = ({closeButtonRef}) => {
     loadNotes();
   }, []);
 
-  if (userNotes && userNotes.length > 0) {
     return (
       <>
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
@@ -85,13 +84,6 @@ const SelectNoteModal: React.FC<SelectNoteModalProps>  = ({closeButtonRef}) => {
         </div>
       </>
     );
-  } else {
-    return (
-      <>
-        <div>ノートデータが見つかりません</div>
-      </>
-    );
-  }
 };
 
 export default SelectNoteModal;

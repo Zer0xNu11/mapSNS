@@ -77,7 +77,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
             <Link
               href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/post/${post.id}`}
             >
-              <Button className="">編集</Button>
+              <Button className="w-full">編集</Button>
             </Link>
             <Button className="" onClick={() => deletePost(post.id)}>
               削除

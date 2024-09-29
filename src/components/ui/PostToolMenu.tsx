@@ -8,7 +8,6 @@ import {
 import { Button } from "./button";
 
 import { DotsThreeOutlineVertical } from "@phosphor-icons/react/dist/ssr/DotsThreeOutlineVertical";
-import { Ellipsis } from "lucide-react";
 import Link from "next/link";
 
 interface PostToolMenuProps {
@@ -49,9 +48,9 @@ const PostToolMenu :React.FC<PostToolMenuProps>= ({postId}) => {
                   </p>
                 </div>
               </DropdownMenuLabel> */}
-            <DropdownMenuItem><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}>詳細を見る</Link></DropdownMenuItem>
-            <DropdownMenuItem>レコード表示</DropdownMenuItem>
-            <DropdownMenuItem>プランへ追加</DropdownMenuItem>
+            <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}>詳細を見る</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild>レコード表示</DropdownMenuItem>
+            <DropdownMenuItem asChild>プランへ追加</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </>

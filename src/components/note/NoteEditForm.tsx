@@ -46,7 +46,7 @@ const NoteEditForm: React.FC<NoteEditFormProps> = ({ note }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
-        <form action={formAction}>
+        <form action={formAction} className="w-80 flex flex-col items-cent">
           <input
             type="text"
             name="title"
@@ -65,18 +65,19 @@ const NoteEditForm: React.FC<NoteEditFormProps> = ({ note }) => {
             onChange={(e)=>{setText(e.target.value)}}
           ></textarea> */}
           <div
-            className={`${remLength >= 0 ? "" : "text-red-500"}`}
+            className={`text-right ${remLength >= 0 ? "" : "text-red-500"}`}
           >{`残り${remLength}文字`}</div>
           {/* <input type="file" name='image' /> */}
           {/* <input type="file" name='file' ref={fileSelectRef}/> */}
-
-          <button
-            type="submit"
-            className={`mt-2 bg-gray-700 hover:bg-green-700 duration-200 text-white font-semibold py-2 px-4 rounded disabled:opacity-40`}
-            disabled={remLength >= 0 ? false : true}
-          >
-            更新
-          </button>
+          <div className="w-full flex justify-center">
+            <button
+              type="submit"
+              className={`mt-2 max-w-40 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:opacity-40`}
+              disabled={remLength >= 0 ? false : true}
+            >
+              更新
+            </button>
+          </div>
         </form>
       </div>
     </div>

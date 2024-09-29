@@ -2,20 +2,20 @@ import { auth } from "@/auth"
 import { prismadb } from "@/globals/db"
 import { NextRequest, NextResponse } from "next/server"
 
-export const DELETE = async(req: NextRequest, {params}:{params:{noteId: string}}) =>{
-  console.log('====== APIconect Note id DELETE ========')
+export const DELETE = async(req: NextRequest, {params}:{params:{planId: string}}) =>{
+  console.log('====== APIconect plan id DELETE ========')
   const session = await auth()
   const userId = session?.user?.id  
 try{
 
   if(!userId){throw new Error}
 
- const note = await prismadb.note.findUnique({
+ const plan = await prismadb.plan.findUnique({
     where:{
-      id: params.noteId
+      id: params.planId
     },
     include: {
-      author:{
+      user:{
         select: {
           id: true,
         }
@@ -23,11 +23,10 @@ try{
     }
   });
 
-  if(userId !== note?.authorId){throw new Error}
+  if(userId !== plan?.userId){throw new Error}
 
   await prismadb.$transaction(async (tx) => {
-    await tx.likeSum.deleteMany({where: {id: params.noteId }});
-    await tx.note.deleteMany({where: {id: params.noteId}});
+    await tx.plan.deleteMany({where: {id: params.planId}});
   });
 
 //  const redirectUrl = new URL('/home', req.url);
@@ -35,7 +34,6 @@ try{
 return NextResponse.json({message:'削除成功'})
 
 }catch(err){
-  console.log(err)
   return NextResponse.json({message:'削除失敗', ERROR:err})
 }
 

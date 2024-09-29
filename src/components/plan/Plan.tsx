@@ -2,6 +2,7 @@
 import { PlanType } from "@/types";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import PlanToolMenu from "../ui/PlanToolMenu";
 
 export interface PlanProps {
   plan: PlanType;
@@ -24,12 +25,15 @@ const Plan: React.FC<PlanProps> = async ({ plan }) => {
           </div>
           {/* <p className="text-gray-700 break-all">{plan.content}</p> */}
         </div>
-        <div className="h-full items-end">
-        <Link href={`/home/plans/${plan.id}`}>
-          <Button>編集</Button>
-        </Link>
+        <div className="flex flex-col gap-2">
+            <div className="flex justify-end">
+              <PlanToolMenu planId={plan.id} />
+            </div>
+            <Link href={`/home/plans/${plan.id}`}>
+              <Button>編集</Button>
+            </Link>
+          </div>
         </div>
-      </div>
     </>
   );
 };
