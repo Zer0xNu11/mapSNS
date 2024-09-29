@@ -3,6 +3,9 @@ import { PlanType } from "@/types";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import PlanToolMenu from "../ui/PlanToolMenu";
+import { setCurrentPlanData } from "@/lib/localStorageHandler";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export interface PlanProps {
   plan: PlanType;
@@ -11,6 +14,26 @@ export interface PlanProps {
 }
 
 const Plan: React.FC<PlanProps> = async ({ plan }) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const setLocalStorage = async () => {
+    setCurrentPlanData(plan.id, plan.title);
+  };
+
+  const writePlan = async () => {
+    setLoading(true);
+
+    try {
+      await setLocalStorage();
+      router.push(`/home`);
+    } catch (error) {
+      console.error("Error writing note:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="bg-blue-300 shadow-md rounded-lg m-4 p-4 mb-4 flex flex-row justify-between h-[20vh]">
@@ -29,9 +52,10 @@ const Plan: React.FC<PlanProps> = async ({ plan }) => {
             <div className="flex justify-end">
               <PlanToolMenu planId={plan.id} />
             </div>
-            <Link href={`/home/plans/${plan.id}`}>
-              <Button>編集</Button>
-            </Link>
+              <Button
+              onClick={writePlan}
+              disabled={loading}
+              >マップにセット</Button>
           </div>
         </div>
     </>

@@ -41,6 +41,7 @@ export async function createPost(state: PostFormState, formData: FormData) {
   //vercelbrob 画像保存
   const uploadFileToVercelBlob = async () => {
     const imageFile = formData.get("image") as File;
+    console.log({imagesize:imageFile.size})
     if(imageFile && imageFile.size > 0){
     validateFile(imageFile);
 

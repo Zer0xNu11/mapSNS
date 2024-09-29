@@ -58,7 +58,7 @@ const PostLocation: React.FC<PostLocationProps> = ({ isEdit = false }) => {
   }, []);
 
   // 初期マップズームレベル
-  const zoom = 18;
+  const zoom = 16;
   const mapStyle = mapStyles.blackWhite;
 
   if (!marker) {

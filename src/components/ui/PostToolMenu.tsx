@@ -49,8 +49,8 @@ const PostToolMenu :React.FC<PostToolMenuProps>= ({postId}) => {
                 </div>
               </DropdownMenuLabel> */}
             <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}>詳細を見る</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild>レコード表示</DropdownMenuItem>
-            <DropdownMenuItem asChild>プランへ追加</DropdownMenuItem>
+            <DropdownMenuItem asChild><button className="w-full">レコード表示</button></DropdownMenuItem>
+            <DropdownMenuItem asChild><button className="w-full">プランへ追加</button></DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </>

@@ -17,11 +17,13 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const setLocalStorage = async () => {
+    setCurrentNoteData(note.id, note.title);
+  };
+
   const writeNote = async () => {
     setLoading(true);
-    const setLocalStorage = async () => {
-      setCurrentNoteData(note.id, note.title);
-    };
+
     try {
       await setLocalStorage();
       router.push(`/home`);
@@ -56,7 +58,7 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
         )} */}
         <div className="flex flex-col gap-2">
           <div className="flex justify-end">
-          <NoteToolMenu noteId={note.id} />
+            <NoteToolMenu noteId={note.id} />
           </div>
           <Button
             className="disabled:bg-gray-500"

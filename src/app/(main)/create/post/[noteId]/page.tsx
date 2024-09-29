@@ -15,6 +15,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import CategorySelector from "@/components/Post/CategorySelector";
 
+import imageCompression from 'browser-image-compression';
+
+
 interface Params {
   params: { noteId: string };
 }
@@ -35,12 +38,15 @@ const PostForm = ({ params }: Params) => {
   const [remLength, setRemLength] = useState(limitLength);
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [compressedImage, setCompressedImage] = useState<File | null>(null);
 
   const { marker } = useMarkerStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const PendLoading = () => {
     const { pending } = useFormStatus();
+    // return pending ? <div className="absolute right-0 left-0 top-0 bottom-0 m-auto w-full h-full z-50"><Loading /></div> : "";
     return pending ? <Loading /> : "";
   };
 
@@ -62,19 +68,36 @@ const PostForm = ({ params }: Params) => {
 
  
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // setFileName(file.name);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+      try{
+        const options = {
+          maxSizeMB: 1, // 最大サイズMB
+          maxWidthOrHeight: 1920, // 最大の幅または高さ
+          useWebWorker: true, // 圧縮処理をWeb Workerで実行する
+        }
+
+        const compressedFile = await imageCompression(file, options);
+        setCompressedImage(compressedFile);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreviewUrl(reader.result as string);
+        };
+        reader.readAsDataURL(compressedFile);
+
+
+      }catch(error){
+        console.error("画像圧縮に失敗", error);
+      }
+  
     } else {
       setPreviewUrl(null);
+      setCompressedImage(null);
     }
   };
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -88,11 +111,23 @@ const PostForm = ({ params }: Params) => {
     state.positionLng = marker?.lng || null;
   }, [marker]);
 
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    
+    const formData = new FormData(event.currentTarget);
+    
+    if (compressedImage) {
+      formData.set('image', compressedImage, compressedImage.name);
+    }
+
+    formAction(formData);
+  };
+
   {
     return (
       <div className={"min-h-screen right-0 left-0 bg-gray-100 "}>
         <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
-          <form action={formAction} className="w-full">
+          <form ref={formRef} onSubmit={handleSubmit} className="w-full">
             <div className="flex justify-between mb-2">
               <Link href={currentPath}>
                 <Button>戻る</Button>
