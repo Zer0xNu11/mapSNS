@@ -1,6 +1,6 @@
-export const deletePost = async (postId: string, path: string) => {
+export const deletePlanPoint = async (planPointId: string, path: string) => {
   const isConfirmed = confirm(
-    "本当にこの投稿を削除しますか？この操作は取り消せません。"
+    "本当にこのプランを削除しますか？この操作は取り消せません。"
   );
 
   if (!isConfirmed) {
@@ -9,7 +9,7 @@ export const deletePost = async (postId: string, path: string) => {
   }
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/planPoints/${planPointId}`,
     {
       cache: "no-store",
       method: "DELETE",

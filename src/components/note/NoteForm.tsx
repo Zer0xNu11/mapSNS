@@ -4,6 +4,8 @@ import { useFormState } from "react-dom";
 import { useEffect, useRef, useState } from "react";
 import type { PutBlobResult } from "@vercel/blob";
 import { createNote, NoteFormState } from "@/actions/createNote";
+import { useFormStatus } from "react-dom";
+import Loading from "@/app/loading";
 
 const NoteForm = () => {
   const [titleText, setTitleText] = useState("");
@@ -13,6 +15,13 @@ const NoteForm = () => {
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const limitLength = 16; //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const PendLoading = () => {
+    const { pending } = useFormStatus();
+    return pending ? <Loading /> : "";
+  };
+  const { pending } = useFormStatus();
 
   const fileSelectRef = useRef<HTMLInputElement>(null);
   // const fileSelect = () => {
@@ -29,7 +38,13 @@ const NoteForm = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
-        <form action={formAction} className="w-80 flex flex-col items-cent">
+        <form
+          action={formAction}
+          onSubmit={() => {
+            setIsLoading(true);
+          }}
+          className="w-80 flex flex-col items-cent"
+        >
           <input
             type="text"
             name="title"
@@ -53,8 +68,8 @@ const NoteForm = () => {
           <div className="w-full flex justify-center">
             <button
               type="submit"
-              className={`mt-2 max-w-40 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:opacity-40`}
-              disabled={remLength >= 0 ? false : true}
+              className={`mt-2 max-w-40 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-500`}
+              disabled={remLength < 0 || isLoading}
             >
               作成
             </button>

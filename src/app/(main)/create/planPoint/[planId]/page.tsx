@@ -17,7 +17,7 @@ interface Params {
 
 const PlanForm = ({ params }: Params) => {
   const planId = params.planId;
-  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/home/plans/${planId}`;
+  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/home`;
 
   const [text, setText] = useState("");
   const initialState: PlanFormState = {

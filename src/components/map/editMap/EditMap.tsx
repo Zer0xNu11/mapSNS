@@ -20,6 +20,7 @@ import {
   useFocusCoordinate,
   useListDisplayMode,
   useMapStyle,
+  useMarkerStore,
   usePlanListDisplayMode,
   usePlanSlot,
   usePostsSlot,
@@ -40,6 +41,7 @@ import { DownloadSimple } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
 import { ListMagnifyingGlass } from "@phosphor-icons/react/dist/ssr/ListMagnifyingGlass";
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
 import { FileArrowDown } from "@phosphor-icons/react/dist/ssr/FileArrowDown";
+import { Crosshair } from "@phosphor-icons/react/dist/ssr/Crosshair";
 
 import { useNoteSlot } from "@/store";
 import ListFromNoteId from "@/components/ListFromNoteId";
@@ -54,32 +56,37 @@ import {
   getCurrentPlanData,
 } from "@/lib/localStorageHandler";
 import Link from "next/link";
+import GpsButton from "../GpsButton";
+import GetGpsButton from "./GetGpsButton";
 
 const MapUpdater = () => {
   const map = useMap();
-  const {focusCoordinate} = useFocusCoordinate();
-  const {planListDisplayMode} = usePlanListDisplayMode()
-  const {listDisplayMode} = useListDisplayMode()
+  const { focusCoordinate } = useFocusCoordinate();
+  const { planListDisplayMode } = usePlanListDisplayMode();
+  const { listDisplayMode } = useListDisplayMode();
 
   useEffect(() => {
     if (focusCoordinate) {
-      const windowWidth = 374
-      const offset = planListDisplayMode === 'map' ? 
-      (listDisplayMode === 'map' ? 0 : windowWidth / 2 ) :
-      (listDisplayMode === 'map' ? -windowWidth / 2 : 0 ) ;
+      const windowWidth = 374;
+      const offset =
+        planListDisplayMode === "map"
+          ? listDisplayMode === "map"
+            ? 0
+            : windowWidth / 2
+          : listDisplayMode === "map"
+          ? -windowWidth / 2
+          : 0;
 
       // const currentCenter = map.getCenter();
       const newCenter = map.containerPointToLatLng(
         map.latLngToContainerPoint(focusCoordinate).add([offset, 0])
       );
-        map.setView(newCenter, map.getZoom(), { animate: true });
+      map.setView(newCenter, map.getZoom(), { animate: true });
     }
   }, [focusCoordinate, map, planListDisplayMode, listDisplayMode]);
 
-
   return null;
 };
-
 
 export interface EditMapProps {}
 
@@ -102,10 +109,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const { editPlanData, setEditPlanData } = useEditPlan();
   const { editNoteData, setEditNoteData } = useEditNote();
   const { mapStyle, setMapStyle } = useMapStyle();
-  const { setUserMarker } = useUserMarkerStore();
+  const { userMarker, setUserMarker } = useUserMarkerStore();
+  const { marker, setMarker } = useMarkerStore();
+  const { focusCoordinate, setFocusCoordinate } = useFocusCoordinate();
 
   const closeNoteModalRef = useRef(null);
   const closePlanModalRef = useRef(null);
+
+  const openSearchModal = () =>{
+    setIsSearchModal(true)
+  }
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
@@ -133,9 +146,21 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
     );
   };
 
-  // const planModalHandler = () =>{
-  //   setIsSelectPlanModal(true)
-  // }
+  async function getCurrentPoint() {
+    const point = await getPosition();
+    console.log({ point: point });
+
+    if (point != null) {
+      setMarker(latLng([point.lat, point.lng]));
+      setUserMarker(latLng([point.lat, point.lng]));
+    } else {
+      // デフォルトの位置
+      setMarker(latLng([35.680522, 139.766566]));
+      setUserMarker(latLng([35.680522, 139.766566]));
+      console.log({ position: "デフォルト" });
+      console.log( marker == userMarker );
+    }
+  }
 
   useEffect(() => {
     async function initializeMap() {
@@ -538,7 +563,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         </div>
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom} zoomControl={false}>
-            <MapUpdater/>
+            <MapUpdater />
             <TileLayer
               attribution={mapStyle.attribution}
               url={mapStyle.style}
@@ -546,6 +571,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               minZoom={2}
             />
             <EditMapMarker
+              openSearchModal={openSearchModal}
               planId={editPlanData.id}
               position={position}
               polylineCoordinates={planSlot.map((item) => item.coordinates)}
@@ -578,10 +604,10 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             <UserMarker />
           </MapContainer>
         </div>
-        <div className="fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000]">
-          <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
+        <div className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] ${listDisplayMode === "list" || planListDisplayMode === "list" ? 'hidden xs:block': ''}`}>
+          {/* <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
             <MapPinSimpleArea size={32} color="#050505" weight="duotone" />
-          </button>
+          </button> */}
           <button
             className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
             onClick={() => setIsSearchModal(true)}
@@ -594,6 +620,15 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           >
             <MapTrifold size={32} color="#080707" weight="fill" />
           </button>
+            <button
+              className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+              onClick={async () => {
+                await getCurrentPoint();
+                userMarker && setFocusCoordinate(userMarker);
+              }}
+            >
+              <Crosshair size={32} color="#050505" weight="fill" />
+            </button>
           <Link
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${editNoteData.id}`}
           >

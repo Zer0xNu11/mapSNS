@@ -1,7 +1,7 @@
 "use client";
 import { NoteType } from "@/types";
 import { Button } from "../ui/button";
-import { setCurrentNoteData } from "@/lib/localStorageHandler";
+import { getCurrentNoteData, setCurrentNoteData } from "@/lib/localStorageHandler";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NoteToolMenu from "../ui/NoteToolMenu";
@@ -19,6 +19,9 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
 
   const setLocalStorage = async () => {
     setCurrentNoteData(note.id, note.title);
+    const checkNoteData =getCurrentNoteData();
+    console.log(checkNoteData.title);
+     
   };
 
   const writeNote = async () => {

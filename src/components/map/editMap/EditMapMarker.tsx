@@ -24,6 +24,7 @@ export interface EditMapMarkerProps {
   position: LatLng;
   polylineCoordinates: [number, number][];
   planPoints: PlanLeafletType[];
+  openSearchModal: () => void;
 }
 
 export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
@@ -31,6 +32,7 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   position,
   polylineCoordinates,
   planPoints,
+  openSearchModal,
 }) => {
   const { marker, setMarker } = useMarkerStore();
   const { selectedPlanPointId, setSelectedPlanPointId } =
@@ -62,7 +64,7 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
       >
         <Popup>
           <div className="flex flex-row gap-4">
-            <Button>周囲を検索</Button>
+            <Button onClick={() => openSearchModal()}>周囲を検索</Button>
             {editPlanData.id ? (
               <Link
                 href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/planPoint/${planId}`}

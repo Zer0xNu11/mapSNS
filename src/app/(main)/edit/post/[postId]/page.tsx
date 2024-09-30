@@ -44,7 +44,7 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const limitLength = 60; //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null | undefined>(
     undefined
   );
@@ -86,6 +86,7 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setIsLoading(true);
       try{
         const options = {
           maxSizeMB: 1, // 最大サイズMB
@@ -99,12 +100,14 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
         const reader = new FileReader();
         reader.onloadend = () => {
           setPreviewUrl(reader.result as string);
+          setIsLoading(false);
         };
         reader.readAsDataURL(compressedFile);
 
 
       }catch(error){
         console.error("画像圧縮に失敗", error);
+        setIsLoading(false);
       }
   
     } else {
@@ -129,6 +132,7 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     
     const formData = new FormData(event.currentTarget);
     
@@ -142,6 +146,11 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
   {
     return (
       <div className={"min-h-screen right-0 left-0 bg-gray-100 "}>
+          {isLoading && (
+          <div className="absolute inset-0 z-[9999] ">
+            <Loading />
+          </div>
+        )}
         <div className="bg-white shadow-md rounded p-4 mb-4 flex flex-col items-center">
           <form ref={formRef} onSubmit={handleSubmit} className="w-full">
             <div className="flex justify-between mb-2">
@@ -175,6 +184,7 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post }) => {
                 type="button"
                 onClick={triggerFileInput}
                 className="bg-yellow-300 w-32 flex items-center rounded-md justify-center"
+                disabled={isLoading}
               >
                 <ImageIcon size={32} color="#1d0202" weight="light" />
                 <a className="m-2">画像変更</a>

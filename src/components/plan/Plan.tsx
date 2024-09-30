@@ -15,14 +15,14 @@ export interface PlanProps {
 
 const Plan: React.FC<PlanProps> = async ({ plan }) => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setLocalStorage = async () => {
     setCurrentPlanData(plan.id, plan.title);
   };
 
   const writePlan = async () => {
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       await setLocalStorage();
@@ -30,7 +30,7 @@ const Plan: React.FC<PlanProps> = async ({ plan }) => {
     } catch (error) {
       console.error("Error writing note:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -54,7 +54,7 @@ const Plan: React.FC<PlanProps> = async ({ plan }) => {
             </div>
               <Button
               onClick={writePlan}
-              disabled={loading}
+              disabled={isLoading}
               >マップにセット</Button>
           </div>
         </div>

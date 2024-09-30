@@ -70,7 +70,6 @@ export interface PlanType{
 
 export interface PlanPointType{
   id: string;
-  title: string;
   content?: string;
   createdAt: string; 
   userId: string;  
