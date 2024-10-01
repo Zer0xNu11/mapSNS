@@ -73,23 +73,23 @@ model Note {
 }
 
 model PlanPoint {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id        String                                @id @default(cuid())
+  createdAt DateTime                              @default(now())
+  updatedAt DateTime                              @updatedAt
   content   String?
-  memo String? @default("")
+  memo      String?                               @default("")
   userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User                                  @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId    String?
-  post      Post?      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post?                                 @relation(fields: [postId], references: [id], onDelete: Cascade)
   imageUrl  String?
   open      Boolean[]
   planId    String
-  plan      Plan      @relation(fields: [planId], references: [id], onDelete: Cascade)
+  plan      Plan                                  @relation(fields: [planId], references: [id], onDelete: Cascade)
   tag       String[]
-  category  String  @default("other")
-  location   Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
-  order      Int
+  category  String                                @default("other")
+  location  Unsupported("geometry(Point, 4326)")? // SRID 4326はWGS84座標系を表す null許容
+  order     Int
 }
 
 model Plan {
@@ -151,9 +151,9 @@ model NoteBooks {
 model Like {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   postId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])
