@@ -3,40 +3,38 @@
 import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { put } from "@vercel/blob";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
 
 //サーバーアクションズ内でbindした値の型を定義
 export interface PlanFormState {
   error: string;
-  planId: string;
+  planId : string;
   path: string;
-  positionLat?: number | null;
-  positionLng?: number | null;
-  // position? : {lat:number | null, lng:number | null};
 }
 
-export async function createPlanPoint(
-  state: PlanFormState,
-  formData: FormData
-) {
+export async function updatePlanPoint(state: PlanFormState, formData: FormData) {
   const session = await auth();
   const content: string = formData.get("planContent") as string;
+  const isImgDel : boolean = formData.get("isImgDel") === 'on' ? true : false;
+  console.log({isImgDel: isImgDel})
+  console.log(formData.get("isImgDel"))
+  
   const path = state.path;
-  console.log({ path: path });
-  console.log("create PlanPoint");
+  const planPointId = state.planId
+
 
   //バリデーション
   const validateFile = (file: File) => {
-    const validMimeTypes = ["image/jpeg", "image/png", "image/gif"];
+    const validMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
     const maxSizeMB = 5; // 画像size制限 MB
-
+    
     if (!validMimeTypes.includes(file.type)) {
-      throw new Error("サポートされていないファイル形式です。");
+      throw new Error('サポートされていないファイル形式です。');
     }
-
+    
     if (file.size / 1024 / 1024 > maxSizeMB) {
-      throw new Error("ファイルサイズが大きすぎます。");
+      throw new Error('ファイルサイズが大きすぎます。');
     }
   };
 
@@ -54,41 +52,47 @@ export async function createPlanPoint(
   return null;
   };
 
+
   try {
-    const maxOrder = await prismadb.planPoint.findFirst({
-      where: { planId: state.planId },
-      orderBy: { order: "desc" },
-      select: { order: true },
-    });
-    const newOrder = (maxOrder?.order ?? 0) + 1;
+
 
     if (session?.user?.id) {
-      console.log("======   createPlanPoint =========");
+      console.log("======into Try =========");
       const imageUrl = await uploadFileToVercelBlob();
-      const createdPlanPoint = await prismadb.planPoint.create({
+      console.log({ imageUrl: imageUrl });
+      const updatedPost = imageUrl ? (await prismadb.planPoint.update({
+        where:{id: planPointId},
         data: {
           content: content,
-          userId: session?.user?.id,
-          imageUrl: imageUrl || null,
-          planId: state.planId,
-          order: newOrder,
+          imageUrl: imageUrl,
         },
-      });
+      })) : isImgDel ? (await prismadb.planPoint.update({
+        where:{id: planPointId},
+        data: {
+          content: content,
+          imageUrl: null,
+        },
+      })) : (await prismadb.planPoint.update({
+        where:{id: planPointId},
+        data: {
+          content: content,
+        },
+      }));
 
       //位置情報 SQL
-      await prismadb.$executeRaw`
-        UPDATE "PlanPoint"
-        SET location = ST_SetSRID(ST_MakePoint(${state.positionLng}, ${state.positionLat}), 4326)
-        WHERE id = ${createdPlanPoint.id}
-      `;
+      // await prismadb.$executeRaw`
+      //   UPDATE "Post"
+      //   SET location = ST_SetSRID(ST_MakePoint(${state.positionLng}, ${state.positionLat}), 4326)
+      //   WHERE id = ${updatedPost.id}
+      // `;
     } else {
       state.error = "ログインしてください";
       return state;
     }
   } catch (error) {
-    console.log("PlanPoint作成失敗");
-    console.log(error);
-    state.error = "PlanPoint作成エラー";
+    console.log("保存失敗");
+    console.log(error)
+    state.error = "保存失敗";
     return state;
   }
   redirect(path);

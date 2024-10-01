@@ -15,22 +15,30 @@ import { Button } from "@/components/ui/button";
 
 import imageCompression from "browser-image-compression";
 import Image from "next/image";
+import { PlanPointType } from "@/types";
+import { getPlanPoint } from "@/lib/getPlanData";
+import { updatePlanPoint } from "@/actions/updatePlanPoint";
 
 interface Params {
-  params: { planId: string };
+  params : {planPointId: string};
 }
 
-const PlanForm = ({ params }: Params) => {
-  const planId = params.planId;
-  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/home`;
+interface PlanEditFormProps {
+  planPoint: PlanPointType;
+}
 
-  const [text, setText] = useState("");
-  const initialState: PlanFormState = {
-    error: "",
-    planId: planId,
-    path: currentPath,
-  };
-  const [state, formAction] = useFormState(createPlanPoint, initialState);
+interface PlanPointEditFormState {
+  error: string,
+  planId: string,
+  path: string,
+}
+
+const EditPlanPointForm : React.FC<PlanEditFormProps>  = ({ planPoint }) => {
+  const planPointId = planPoint.id;
+  const currentPath = `${process.env.NEXT_PUBLIC_BASE_URL}/detail/planPoint/${planPointId}`;
+
+  const [text, setText] = useState(planPoint.content ?? "");
+
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
   const limitLength = 60; //文字数制限
   const [remLength, setRemLength] = useState(limitLength);
@@ -38,6 +46,14 @@ const PlanForm = ({ params }: Params) => {
   const [isLoading, setIsLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [compressedImage, setCompressedImage] = useState<File | null>(null);
+  const [isImgDel, setIsImgDel] = useState<boolean>(false);
+  
+  const initialState: PlanPointEditFormState = {
+    error: "",
+    planId: planPointId,
+    path: currentPath,
+  };
+  const [state, formAction] = useFormState(updatePlanPoint, initialState);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -107,11 +123,6 @@ const PlanForm = ({ params }: Params) => {
     setRemLength(limitLength - text.length);
   }, [text]);
 
-  useEffect(() => {
-    state.positionLat = marker?.lat || null;
-    state.positionLng = marker?.lng || null;
-  }, [marker]);
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
@@ -145,6 +156,7 @@ const PlanForm = ({ params }: Params) => {
               name="planContent"
               className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="プランを記入"
+              value={text}
               onChange={(e) => {
                 setText(e.target.value);
               }}
@@ -168,12 +180,11 @@ const PlanForm = ({ params }: Params) => {
               disabled={isLoading}
             >
               <ImageIcon size={32} color="#1d0202" weight="light" />
-              <a className="m-2">画像追加</a>
+              <a className="m-2">画像変更</a>
             </button>
 
             {/* lat lng */}
-            <div className="mb-4 flex flex-wrap gap-4 items-center">
-              {/* <label className="block mb-2">座標:</label> */}
+            {/* <div className="mb-4 flex flex-wrap gap-4 items-center">
               <input
                 type="number"
                 name="lat"
@@ -188,9 +199,9 @@ const PlanForm = ({ params }: Params) => {
                 className="p-2 border border-gray-300 rounded hidden"
                 readOnly
               />
-            </div>
-            {previewUrl && (
-              <div className="mt-4">
+            </div> */}
+            <div className="mt-4">
+              {previewUrl ? (
                 <Image
                   src={previewUrl}
                   alt="プレビュー"
@@ -198,8 +209,35 @@ const PlanForm = ({ params }: Params) => {
                   height={200}
                   className="object-cover rounded"
                 />
-              </div>
-            )}
+              ) : planPoint.imageUrl && !isImgDel ? (
+                <div className="flex flex-row items-center">
+                  <img
+                    src={planPoint.imageUrl}
+                    alt="プレビュー"
+                    width={200}
+                    height={200}
+                    className="object-cover rounded"
+                  />
+                  <button
+                    className="bg-red-400 text-white rounded-xl h-10 w-32 mx-2"
+                    onClick={() => {
+                      setIsImgDel(true);
+                    }}
+                  >
+                    削除
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
+              <input
+                type="checkbox"
+                name="isImgDel"
+                checked={isImgDel}
+                className="hidden"
+                readOnly
+              />
+            </div>
           </form>
           <div className="w-[80%] h-[50vh]"></div>
         </div>
@@ -208,4 +246,22 @@ const PlanForm = ({ params }: Params) => {
   }
 };
 
-export default PlanForm;
+
+const EditPlanPointPage = ({ params }: Params) => {
+  const [planPoint, setPlanPoint] = useState<PlanPointType>();
+
+  useEffect(() => {
+    const initialize = async () => {
+      const data = await getPlanPoint(params.planPointId);
+      if (data) {
+        setPlanPoint(data);
+      }
+    };
+
+    initialize();
+  }, []);
+
+  return <>{planPoint ? <EditPlanPointForm planPoint={planPoint} /> : "投稿読み込み中"}</>;
+};
+
+export default EditPlanPointPage;

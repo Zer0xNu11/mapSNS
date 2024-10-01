@@ -1,6 +1,7 @@
 "use client";
 
-import { PlanPointType} from "@/types";
+import { PlanPointType, PostType } from "@/types";
+import { divIcon } from "leaflet";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
@@ -56,16 +57,20 @@ const PlanPointDetail: React.FC<PlanPointDetailProps> = ({ planPoint, path }) =>
           </div>
         </div>
 
+        {/* {isOwn ? (
           <div className="flex flex-row justify-center gap-4">
             <Link
-              href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/planPoint/${planPoint.id}`}
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/edit/post/${post.id}`}
             >
               <Button className="w-full">編集</Button>
             </Link>
-            {/* <Button className="" onClick={() => deletePost(planPoint.id, path)}>
+            <Button className="" onClick={() => deletePost(post.id, path)}>
               削除
-            </Button> */}
+            </Button>
           </div>
+        ) : (
+          ""
+        )} */}
       </div>
     </>
   );

@@ -2,6 +2,34 @@ import { auth } from "@/auth";
 import { prismadb } from "@/globals/db";
 import { NextRequest, NextResponse } from "next/server";
 
+
+export const GET =  async (_: NextRequest, {params}:{params:{planPointId: string}}) => {
+  console.log('====== APIconect Posts id GET ========')
+  try {
+    console.log({params:params})
+    const selectedPost = await prismadb.planPoint.findUnique({
+      where:{
+        id: params.planPointId
+      },
+      include: {
+        user:{
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            imageUrl: true,
+          }
+        },
+      }
+    });
+    return NextResponse.json({message:'成功', data: selectedPost})
+    //jsonレスポンス
+  } catch (err) {
+    // console.log({});
+    return NextResponse.json({message:'失敗', ERROR:err})
+  }
+};
+
 export const DELETE = async(req: NextRequest, {params}:{params:{planPointId: string}}) =>{
   console.log('====== APIconect PlanPoints id DELETE ========')
   const session = await auth()

@@ -34,3 +34,12 @@ export const getPlanList = async (planId: string): Promise<PlanPointType[]> => {
   return data.data as PlanPointType[];
 };
 
+export const getPlanPoint = async (planPointId: string): Promise<PlanPointType> => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/planPoints/${planPointId}`, {
+    cache: "no-store",
+  });
+
+  const data = await response.json();
+  console.log({plandata:data})
+  return data.data as PlanPointType;
+};
