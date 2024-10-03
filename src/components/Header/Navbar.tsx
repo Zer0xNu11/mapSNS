@@ -13,7 +13,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="font-semibold text-xl">
           <Link href="/home" className="hidden xs:block">
-            📍RyoCorder
+            ぶらつ記
           </Link>
           <Link href="/home" className="xs:hidden">
             📍
