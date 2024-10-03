@@ -1,7 +1,6 @@
 import Link from "next/link";
 import React from "react";
 import UserButton from "./UserButton";
-import SortButton from "./SortButton";
 import { Button } from "../ui/button";
 import { Compass } from "@phosphor-icons/react/dist/ssr/Compass";
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";

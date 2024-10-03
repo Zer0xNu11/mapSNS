@@ -33,7 +33,7 @@ export async function searchPost(formData: FormData) {
     if (radius === null) return 200;
     if (radius === "small") return 200;
     if (radius === "medium") return 1000;
-    if (radius === "large") return 500000;
+    if (radius === "large") return 5000;
   };
   console.log({ searchRadius: searchRadius() });
   console.log({ category: category });
