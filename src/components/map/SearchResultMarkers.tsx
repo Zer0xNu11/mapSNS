@@ -28,7 +28,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { planSlot, setPlanSlot } = usePlanSlot();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
-  const {searchedNoteSlot, setSearchedNoteSlot} = useSearchedNoteSlot();
+  const { setSearchedNoteSlot} = useSearchedNoteSlot();
   const { editPlanData } = useEditPlan();
 
   const searchNoteId = async (noteId: string) => {

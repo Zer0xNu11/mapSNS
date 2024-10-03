@@ -7,6 +7,7 @@ import { useFocusCoordinate, useListDisplayMode, usePostDisplayMode, useSelected
 import { motion } from "framer-motion";
 import PostToolMenu from "../ui/PostToolMenu";
 import { latLng } from "leaflet";
+import { AuthorButton } from "./AuthorButton";
 
 export interface PostProps {
   post: NoteSlotType;
@@ -17,7 +18,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { postDisplayMode } = usePostDisplayMode();
   const {setFocusCoordinate} = useFocusCoordinate();
-
+console.log({POSTAUTHOR:post});
   const clickHandler = () => {
     setSelectedPostId(post.id);
     setFocusCoordinate(latLng(post.coordinates))
@@ -47,16 +48,19 @@ const Post: React.FC<PostProps> = ({ post }) => {
           }}
         >
           <div className="flex items-center mb-2 w-[280px]">
-            <Image
+            <div className="mr-2">
+              <AuthorButton user={post}/>
+            {/* <img
               className="w-10 h-10 rounded-full mr-2"
-              src="/images/placeholder.png"
+              src={post.userImageUrl || "/images/placeholder.png"}
               width="100"
               height="100"
               alt="User Avatar"
-            />
+            /> */}
+            </div>
             <div className="flex flex-col w-full">
               <h2 className="font-semibold text-md">{post.author?.name}</h2>
-              <p className="text-gray-500 text-sm ">
+              <p className="text-gray-500 text-sm mt-4">
                 {new Date(post.createdAt).toLocaleString()}
               </p>
             </div>

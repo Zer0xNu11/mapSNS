@@ -1,6 +1,6 @@
 "use client";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import { divIcon, LatLng, latLng } from "leaflet";
+import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../map.css";
 import { useEffect, useRef, useState } from "react";
@@ -58,6 +58,7 @@ import {
 import Link from "next/link";
 import GpsButton from "../GpsButton";
 import GetGpsButton from "./GetGpsButton";
+import LoadNoteModal from "../modal/LoadNoteModal";
 
 const MapUpdater = () => {
   const map = useMap();
@@ -97,6 +98,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const [isSelectPlanModal, setIsSelectPlanModal] = useState(false);
   const [isSelectNoteModal, setIsSelectNoteModal] = useState(false);
   const [noteMode, setNoteMode] = useState("selfNote"); //selfNote, searchNote
+  const [isLoadNoteModal, setIsLoadNoteModal] = useState(false);
 
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } =
@@ -116,9 +118,9 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const closeNoteModalRef = useRef(null);
   const closePlanModalRef = useRef(null);
 
-  const openSearchModal = () =>{
-    setIsSearchModal(true)
-  }
+  const openSearchModal = () => {
+    setIsSearchModal(true);
+  };
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
@@ -158,7 +160,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
       setMarker(latLng([35.680522, 139.766566]));
       setUserMarker(latLng([35.680522, 139.766566]));
       console.log({ position: "デフォルト" });
-      console.log( marker == userMarker );
+      console.log(marker == userMarker);
     }
   }
 
@@ -238,15 +240,6 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
 
     editSlotUpdating();
   }, [editNoteData, editPlanData]);
-
-  // useEffect(() => {
-  //   console.log("postsSlot changed");
-  // }, [postsSlot]);
-
-  // const onClickCreatedAt = async () => {
-  //   const postPoints = await getPostPointsCreatedAt();
-  //   setPostsSlot(postPoints);
-  // };
 
   // 初期マップズームレベル
   const zoom = 15;
@@ -384,6 +377,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         <SelectPlanModal closeButtonRef={closePlanModalRef} />
       )}
 
+      {isLoadNoteModal && (
+        <div className="fixed top-4 right-4 z-[9999]">
+          <button onClick={() => setIsLoadNoteModal(false)}>
+            <XSquare size={48} color="#f1f1f3" weight="fill" />
+          </button>
+        </div>
+      )}
+      {isLoadNoteModal && (
+        <LoadNoteModal closeModal={() => setIsLoadNoteModal(false)} />
+      )}
       {/* 検索リスト */}
       <div className="w-full h-[100vh]">
         <motion.div
@@ -421,7 +424,9 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
-          <div className="bg-yellow-600 w-full h-16 flex flex-row justify-end items-center gap-4">
+          <div
+            className={`sticky top-0 bg-yellow-600 w-full h-16 flex flex-row justify-end items-center gap-4 z-10`}
+          >
             {/* ノートスロット */}
             {noteMode === "selfNote" ? (
               <div className="flex flex-row items-center justify-between">
@@ -446,7 +451,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 <div className="font-bold text-xl text-white w-full text-center">
                   検索結果
                 </div>
-                <Button onClick={() => setIsSelectNoteModal(true)}>
+                <Button onClick={() => setIsLoadNoteModal(true)}>
                   <FileArrowDown size={32} color="#f2f2f2" weight="fill" />
                 </Button>
               </div>
@@ -538,7 +543,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             variants={planMenuVariants}
             aria-hidden={planListDisplayMode !== "list"}
           >
-            <div className="bg-sky-500 w-full h-16 flex flex-row items-center">
+            <div className="sticky top-0 z-10 bg-sky-500 w-full h-16 flex flex-row items-center">
               {editPlanData.title ? (
                 <div className="flex flex-row items-center text-xl w-full justify-end gap-4">
                   <div className="w-full">{editPlanData.title}</div>
@@ -604,7 +609,13 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             <UserMarker />
           </MapContainer>
         </div>
-        <div className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] ${listDisplayMode === "list" || planListDisplayMode === "list" ? 'hidden xs:block': ''}`}>
+        <div
+          className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] ${
+            listDisplayMode === "list" || planListDisplayMode === "list"
+              ? "hidden xs:block"
+              : ""
+          }`}
+        >
           {/* <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
             <MapPinSimpleArea size={32} color="#050505" weight="duotone" />
           </button> */}
@@ -620,15 +631,15 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           >
             <MapTrifold size={32} color="#080707" weight="fill" />
           </button>
-            <button
-              className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-              onClick={async () => {
-                await getCurrentPoint();
-                userMarker && setFocusCoordinate(userMarker);
-              }}
-            >
-              <Crosshair size={32} color="#050505" weight="fill" />
-            </button>
+          <button
+            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+            onClick={async () => {
+              await getCurrentPoint();
+              userMarker && setFocusCoordinate(userMarker);
+            }}
+          >
+            <Crosshair size={32} color="#050505" weight="fill" />
+          </button>
           <Link
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${editNoteData.id}`}
           >

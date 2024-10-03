@@ -1,7 +1,8 @@
 export interface UserType{
   id: string; 
   name: string;
-  email: string; 
+  email: string;
+  imageUrl?: string; 
   password?: string;
   posts?: PostType[];
 }
@@ -41,7 +42,7 @@ export interface NoteType{
   createdAt: string; 
   authorId: string;  
   imageUrl? : string;
-  totalLikes? : number
+  totalLikes? : number;
 }
 
 export interface NoteSlotType{
@@ -52,6 +53,9 @@ export interface NoteSlotType{
   authorId: string;  
   author: UserType;
   imageUrl? : string;
+  userImageUrl? :string;
+  userName?:string;
+  userId?:string;
   postId? : string;
   coordinates: [number, number] 
   totalLikes: number;

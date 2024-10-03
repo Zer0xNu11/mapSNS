@@ -1,6 +1,5 @@
 "use client";
 
-import { PlanFormState } from "@/actions/createPlan";
 import { createPlanPoint } from "@/actions/createPlanPoint";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +17,7 @@ import Image from "next/image";
 import { PlanPointType } from "@/types";
 import { getPlanPoint } from "@/lib/getPlanData";
 import { updatePlanPoint } from "@/actions/updatePlanPoint";
+import { useSession } from "next-auth/react";
 
 interface Params {
   params : {planPointId: string};
@@ -74,7 +74,7 @@ const EditPlanPointForm : React.FC<PlanEditFormProps>  = ({ planPoint }) => {
           className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}
         >
-          プラン作成
+          更新
         </button>
         <PendLoading />
       </>

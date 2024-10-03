@@ -17,7 +17,7 @@ const ListFromSort = ({ postsData }: { postsData: NoteSlotType[] }) => {
       ? setPostDisplayMode("text")
       : setPostDisplayMode("pict");
   };
-  const { searchedNoteSlot, setSearchedNoteSlot } = useSearchedNoteSlot();
+  const { searchedNoteSlot } = useSearchedNoteSlot();
 
 
   return (

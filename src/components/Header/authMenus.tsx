@@ -36,23 +36,23 @@ export function SignOut({
   );
 }
 
-export function BioMenu(){
-  return(
-    <Link href="/bio-menu" className="w-full">
-    <Button variant="ghost" className="w-full p-0 ">
-      プロフィール
-    </Button>
-    </Link>
-  )
-}
+// export function BioMenu(){
+//   return(
+//     <Link href={`/bio-menu/${userId}`} className="w-full">
+//     <Button variant="ghost" className="w-full p-0 ">
+//       プロフィール
+//     </Button>
+//     </Link>
+//   )
+// }
 
-export function UserSetting(){
-  return(
-    <Link href="/user-setting" className="w-full">
-    <Button variant="ghost" className="w-full p-0 ">
-      設定
-    </Button>
-    </Link>
-  )
-}
+// export function UserSetting(){
+//   return(
+//     <Link href="/user-setting" className="w-full">
+//     <Button variant="ghost" className="w-full p-0 ">
+//       設定
+//     </Button>
+//     </Link>
+//   )
+// }
 

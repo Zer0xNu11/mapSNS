@@ -12,7 +12,6 @@ export interface NoteIdProps {
 
 const ListFromNoteId = ({ postsData }: NoteIdProps) => {
   const { postDisplayMode, setPostDisplayMode } = usePostDisplayMode();
-
   const togglePostDisplayMode = () => {
     postDisplayMode === "pict"
       ? setPostDisplayMode("text")

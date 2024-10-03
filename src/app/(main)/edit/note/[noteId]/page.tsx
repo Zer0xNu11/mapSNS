@@ -33,7 +33,6 @@ const EditNotePage = async ({ params }: Params) => {
       createdAt: noteData.createdAt.toISOString(),
       authorId: noteData.authorId,
       imageUrl: noteData.imageUrl ?? undefined,
-      // 必要に応じて他のフィールドも追加
     };
 
 
