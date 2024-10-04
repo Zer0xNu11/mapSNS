@@ -9,7 +9,13 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { Button } from "../ui/button";
-import { useEditPlan, useNoteSlot, usePlanSlot, useSearchedNoteSlot, useSelectedPostStore } from "@/store";
+import {
+  useEditPlan,
+  useNoteSlot,
+  usePlanSlot,
+  useSearchedNoteSlot,
+  useSelectedPostStore,
+} from "@/store";
 import { PostLeafletType } from "@/types";
 import { tracePost } from "@/lib/createPlan";
 import { getNoteData } from "@/lib/getPosts";
@@ -28,7 +34,7 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
   const { planSlot, setPlanSlot } = usePlanSlot();
   const [polylineCoordinates, setPolylineCoordinates] = useState();
-  const { setSearchedNoteSlot} = useSearchedNoteSlot();
+  const { setSearchedNoteSlot } = useSearchedNoteSlot();
   const { editPlanData } = useEditPlan();
 
   const searchNoteId = async (noteId: string) => {
@@ -36,13 +42,13 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
     setSearchedNoteSlot(data);
   };
 
-  const addPlan = async (lat:number,lng:number) => {
+  const addPlan = async (lat: number, lng: number) => {
     if (planId && selectedPostId) {
       const data = await tracePost(planId, selectedPostId);
       const newPlan = {
         ...data,
-        coordinates: [lat,lng] as [number,number],
-      }
+        coordinates: [lat, lng] as [number, number],
+      };
       setPlanSlot(planSlot.concat(newPlan));
       setSelectedPostId("");
     }
@@ -62,11 +68,15 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
           >
             <Popup>
               <div>
-                {post.imageUrl ? <img
-                  className="object-cover w-full h-full rounded-2xl mb-2"
-                  src={post.imageUrl}
-                  alt="Post Image"
-                /> : ""}
+                {post.imageUrl ? (
+                  <img
+                    className="object-cover w-full h-full rounded-2xl mb-2"
+                    src={post.imageUrl}
+                    alt="Post Image"
+                  />
+                ) : (
+                  ""
+                )}
                 {`${post.content}`}
               </div>
               <br />
@@ -75,11 +85,13 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
                   onClick={() => searchNoteId(post.noteId)}
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                 >
-                  レコード表示
+                  ノート表示
                 </button>
                 <br />
                 <button
-                  onClick={() => addPlan(post.coordinates[0], post.coordinates[1])}
+                  onClick={() =>
+                    addPlan(post.coordinates[0], post.coordinates[1])
+                  }
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                   disabled={editPlanData.id ? false : true}

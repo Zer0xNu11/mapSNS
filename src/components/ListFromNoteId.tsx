@@ -18,7 +18,6 @@ const ListFromNoteId = ({ postsData }: NoteIdProps) => {
       : setPostDisplayMode("pict");
   };
 
-  console.log({postsData:postsData})
 
   // useEffect(() => {
   //   const initialize = async () => {

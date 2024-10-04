@@ -3,7 +3,6 @@ export const tracePost = async (planId: string, postId: string) => {
     cache: "no-store",
   });
   const data = await response.json();
-  console.log({tracePostData:data})
   return data.data;
 };
 
@@ -12,6 +11,5 @@ export const tracePostAll = async (planId: string, noteId: string) => {
     cache: "no-store",
   });
   const data = await response.json();
-  console.log({tracePostData:data})
   return data.data;
 };

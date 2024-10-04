@@ -70,7 +70,6 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, note
     WHERE id = ${createdPlan.id};
   `;
 
-    console.log({data:createdPlan})
    return createdPlan
     //jsonレスポンス
   }))

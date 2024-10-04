@@ -66,7 +66,6 @@ export const GET =  async (_: NextRequest, {params}:{params:{planId:string, post
     WHERE id = ${createdPlan.id};
   `;
 
-    console.log({data:createdPlan})
     return NextResponse.json({message:'成功', data: createdPlan})
     //jsonレスポンス
   }

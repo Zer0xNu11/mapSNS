@@ -95,7 +95,7 @@ console.log({POSTAUTHOR:post});
           <PostLikeIcon post={post} />
         </div>
         <div className="absolute z-30 right-2 bottom-2 ">
-          <PostToolMenu postId={post.id}/>
+          <PostToolMenu post={post} />
         </div>
       </div>
     </>

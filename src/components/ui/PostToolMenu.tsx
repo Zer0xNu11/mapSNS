@@ -9,13 +9,36 @@ import { Button } from "./button";
 
 import { DotsThreeOutlineVertical } from "@phosphor-icons/react/dist/ssr/DotsThreeOutlineVertical";
 import Link from "next/link";
+import { getNoteData } from "@/lib/getPosts";
+import { useEditPlan, usePlanSlot, useSearchedNoteSlot } from "@/store";
+import { PostLeafletType, PostType } from "@/types";
+import { tracePost } from "@/lib/createPlan";
 
 interface PostToolMenuProps {
-  postId : string
+  post: PostLeafletType,
 }
 
 
-const PostToolMenu :React.FC<PostToolMenuProps>= ({postId}) => {
+const PostToolMenu :React.FC<PostToolMenuProps>= ({post}) => {
+  const { setSearchedNoteSlot} = useSearchedNoteSlot();
+  const { planSlot, setPlanSlot } = usePlanSlot();
+  const { editPlanData } = useEditPlan();
+
+  const searchNoteId = async (noteId: string) => {
+    const data = await getNoteData(noteId);
+    setSearchedNoteSlot(data);
+  };
+
+  const addPlan = async (lat: number, lng: number) => {
+    if (editPlanData && post.id) {
+      const data = await tracePost(editPlanData.id, post.id);
+      const newPlan = {
+        ...data,
+        coordinates: [lat, lng] as [number, number],
+      };
+      setPlanSlot(planSlot.concat(newPlan));
+    }
+  };
 
     return (
       <>
@@ -48,9 +71,9 @@ const PostToolMenu :React.FC<PostToolMenuProps>= ({postId}) => {
                   </p>
                 </div>
               </DropdownMenuLabel> */}
-            <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}>詳細を見る</Link></DropdownMenuItem>
-            <DropdownMenuItem asChild><button className="w-full">レコード表示</button></DropdownMenuItem>
-            <DropdownMenuItem asChild><button className="w-full">プランへ追加</button></DropdownMenuItem>
+            <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${post.id}`}>詳細を見る</Link></DropdownMenuItem>
+            <DropdownMenuItem asChild><button onClick={()=>{searchNoteId(post.noteId)}} className="w-full">ノート表示</button></DropdownMenuItem>
+            <DropdownMenuItem asChild><button onClick={()=>{addPlan(post.coordinates[0], post.coordinates[1])}} className="w-full disabled:text-gray-400" disabled={!editPlanData || editPlanData.id ===''}>プランへ追加</button></DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </>
