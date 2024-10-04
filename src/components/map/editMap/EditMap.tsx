@@ -59,6 +59,8 @@ import Link from "next/link";
 import GpsButton from "../GpsButton";
 import GetGpsButton from "./GetGpsButton";
 import LoadNoteModal from "../modal/LoadNoteModal";
+import { AuthorButton } from "@/components/Post/AuthorButton";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 
 const MapUpdater = () => {
   const map = useMap();
@@ -488,10 +490,12 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 <div>
                   <div className="flex justify-center items-center">
                     <div className="text-xl inline-block mb-2 mr-4">
-                      Users Note
+                      {`${postsSlot[0].userName}のノート`}
                     </div>
                     <div>
-                      <button onClick={() => setSearchedNoteSlot([])}>
+                      <button onClick={() => setSearchedNoteSlot([])}
+                        className="hover:opacity-50"
+                        >
                         <XSquare size={32} color="#080707" weight="fill" />
                       </button>
                     </div>
