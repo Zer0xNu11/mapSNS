@@ -66,7 +66,7 @@ const LoadNoteModal = ({ closeModal }: { closeModal: () => void }) => {
             <input
               type="text"
               placeholder="ノートコードを入力"
-              className="bg-gray-200 h-12 w-80 rounded-md text-center focus:outline-none focus:ring-0 focus:border-gray-300 "
+              className="bg-gray-200 h-12 w-[50vw] max-w-80 rounded-md text-center focus:outline-none focus:ring-0 focus:border-gray-300 "
               value={text}
               onSubmit={(e) => {
                 e.preventDefault(); // フォームのデフォルトの送信を防ぐ
