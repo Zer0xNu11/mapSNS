@@ -68,7 +68,7 @@ const Note: React.FC<NoteProps> = async ({ note }) => {
             onClick={writeNote}
             disabled={loading}
           >
-            書く
+            マップにセット
           </Button>
         </div>
       </div>

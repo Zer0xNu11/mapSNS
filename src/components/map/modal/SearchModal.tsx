@@ -185,7 +185,7 @@ const SearchModal = ({ closeModal }: { closeModal: () => void }) => {
                   </div>
 
                   {/* lat lng */}
-                  <div className="mb-4 flex flex-wrap gap-4 items-center">
+                  <div className="mb-4 hidden gap-4 items-center">
                     <label className="block mb-2">座標:</label>
                     <input
                       type="number"
