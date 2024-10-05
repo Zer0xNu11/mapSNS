@@ -490,7 +490,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 <div>
                   <div className="flex justify-center items-center">
                     <div className="text-xl inline-block mb-2 mr-4">
-                      {`${postsSlot[0].userName}のノート`}
+                      {`${searchedNoteSlot[0].userName || 'User'}のノート`}
                     </div>
                     <div>
                       <button onClick={() => setSearchedNoteSlot([])}
