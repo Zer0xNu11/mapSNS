@@ -98,9 +98,20 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
             click: () => setSelectedPlanPointId(planPoint.id),
           }}
         >
-          {selectedPlanPointId === planPoint.id ? (
+          {/* {selectedPlanPointId === planPoint.id ? ( */}
             <Popup>
-              {`${planPoint.content}`}
+              <div>
+                {planPoint.imageUrl ? (
+                  <img
+                    className="object-cover w-full h-full rounded-2xl mb-2"
+                    src={planPoint.imageUrl}
+                    alt="Post Image"
+                  />
+                ) : (
+                  ""
+                )}
+                {`${planPoint.content}`}
+              </div>
               <br />
               <a
                 href={GOOGLEMAPSETTING(
@@ -113,9 +124,9 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
                 googleMapで付近を探索
               </a>
             </Popup>
-          ) : (
-            ""
-          )}
+          {/* ) : (
+            "" */}
+          {/* )} */}
         </Marker>
       ))}
       <Polyline pathOptions={LINE_COLOR.blue} positions={polylineCoordinates} />
