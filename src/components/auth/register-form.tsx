@@ -21,6 +21,7 @@ import { useState, useTransition } from "react";
 import { RegisterSchema } from "@/lib/schemas";
 import { register } from "@/actions/authAction";
 import { useRouter } from "next/navigation";
+import { setCurrentNoteData, setCurrentPlanData } from "@/lib/localStorageHandler";
 
 export const RegisterForm = () => {
   const router = useRouter();
@@ -56,10 +57,16 @@ export const RegisterForm = () => {
       .then((data)=>{
         setError(data.error);
         setSuccess(data.success)
-        router.push('/login');
+        if(data.success){
+          setCurrentNoteData(data.noteId, data.noteTitle);
+          setCurrentPlanData(data.planId, data.planTitle);
+          router.push('/login');
+        }
       });
     });
   };
+
+  
 
   return (
     <CardWrapper

@@ -112,13 +112,14 @@ export  const useSelectedPlanPointStore = create<selectedPlanPointState>((set) =
 setSelectedPlanPointId: (planPointId) => set(() => ({ selectedPlanPointId: planPointId })),
 }));
 
+//text pict
 export  const usePostDisplayMode = create<postDisplayModeState>((set) => ({
-  postDisplayMode: 'pict',
+  postDisplayMode: 'text',
   setPostDisplayMode:  (mode) => set(() => ( { postDisplayMode: `${mode}` }))
 }));
 
 export  const useListDisplayMode = create<listDisplayModeState>((set) => ({
-  listDisplayMode: 'map',
+  listDisplayMode: 'list',
   setListDisplayMode:  (mode) => set(() => ( { listDisplayMode: `${mode}` }))
 }));
 

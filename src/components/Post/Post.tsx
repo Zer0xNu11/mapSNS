@@ -66,7 +66,7 @@ console.log({POSTAUTHOR:post});
             </div>
           </div>
           <div className="w-full">
-            <p className="text-gray-700 break-word whitespace-pre-line line-clamp-4">
+            <p className="text-gray-700 break-word line-clamp-4">
               {post.content}
             </p>
           </div>

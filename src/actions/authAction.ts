@@ -10,7 +10,7 @@ import { getUserByEmail } from "@/app/db/user";
 import { prismadb } from "@/globals/db";
 
 //Login==================================================================
-export const login = async (values: z.infer<typeof LoginSchema> ) => {
+export const login = async (values: z.infer<typeof LoginSchema>) => {
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -36,7 +36,7 @@ export const login = async (values: z.infer<typeof LoginSchema> ) => {
     }
     throw error;
   }
-  return {success: 'Email sent!'};
+  return { success: "Email sent!" };
 };
 
 //Logout==================================================================
@@ -68,14 +68,99 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "このメールアドレスはすでに使われています" };
   }
 
-  await prismadb.user.create({
+  const createdUser = await prismadb.user.create({
     data: {
       name: name,
       email: email,
       password: hashedPassword,
-      imageUrl: ''
+      imageUrl: "",
     },
   });
 
-  return { success: "User created" };
+  const createdNote = await prismadb.note.create({
+    data: {
+      title: "最初のノート",
+      content: "",
+      authorId: createdUser.id,
+    },
+  });
+
+  const createdPost1 = await prismadb.post.create({
+    data: {
+      content:
+        "リストモードの説明:リスト左下の画像マークで画像とコメントの入れ替え/投稿右下の３つの点で投稿の詳細メニュー",
+      authorId: createdUser.id,
+      imageUrl:
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/Screenshot_2024-10-06%2023.45.14_W8VdzN-KhPRtlm3AIHhfGoX22jIIhpix8S3TJ.png" ||
+        null,
+      noteId: createdNote.id,
+      category: "other",
+      order: 1,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
+
+  await prismadb.$executeRaw`
+  UPDATE "Post"
+  SET location = ST_SetSRID(ST_MakePoint(${39.652924}, ${134.435833}), 4326)
+  WHERE id = ${createdPost1.id}
+`;
+
+  const createdPost2 = await prismadb.post.create({
+    data: {
+      content:
+        "ようこそ「ぶらつ記」へ、まずは画面右下の緑のピンで初めての投稿をしてみよう。",
+      authorId: createdUser.id,
+      imageUrl:
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/Screenshot_2024-10-06%2023.45.14_W8VdzN-KhPRtlm3AIHhfGoX22jIIhpix8S3TJ.png" ||
+        null,
+      noteId: createdNote.id,
+      category: "other",
+      order: 2,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
+
+  await prismadb.$executeRaw`
+  UPDATE "Post"
+  SET location = ST_SetSRID(ST_MakePoint(${39.652924}, ${134.435833}), 4326)
+  WHERE id = ${createdPost2.id}
+`;
+
+  const createdPlan = await prismadb.plan.create({
+    data: {
+      title: "最初のプラン",
+      content: "",
+      userId: createdUser.id,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  return {
+    success: "User created",
+    noteId: createdNote.id,
+    noteTitle: createdNote.title,
+    planId: createdPlan.id,
+    planTitle: createdPlan.title,
+  };
 };

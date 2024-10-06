@@ -490,12 +490,13 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 <div>
                   <div className="flex justify-center items-center">
                     <div className="text-xl inline-block mb-2 mr-4">
-                      {`${searchedNoteSlot[0].userName || 'User'}のノート`}
+                      {`${searchedNoteSlot[0].userName || "User"}のノート`}
                     </div>
                     <div>
-                      <button onClick={() => setSearchedNoteSlot([])}
+                      <button
+                        onClick={() => setSearchedNoteSlot([])}
                         className="hover:opacity-50"
-                        >
+                      >
                         <XSquare size={32} color="#080707" weight="fill" />
                       </button>
                     </div>
@@ -614,36 +615,46 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           </MapContainer>
         </div>
         <div
-          className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] ${
-            listDisplayMode === "list" || planListDisplayMode === "list"
-              ? "hidden xs:block"
-              : ""
-          }`}
+          className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] flex flex-row`}
         >
           {/* <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
             <MapPinSimpleArea size={32} color="#050505" weight="duotone" />
           </button> */}
-          <button
-            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-            onClick={() => setIsSearchModal(true)}
-          >
-            <MagnifyingGlass size={32} color="#050505" />
-          </button>
-          <button
-            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-            onClick={() => changeMapStyle()}
-          >
-            <MapTrifold size={32} color="#080707" weight="fill" />
-          </button>
-          <button
-            className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-            onClick={async () => {
-              await getCurrentPoint();
-              userMarker && setFocusCoordinate(userMarker);
-            }}
-          >
-            <Crosshair size={32} color="#050505" weight="fill" />
-          </button>
+          <div>
+            <button
+              className={`bg-green-400 rounded-full p-2 m-2 border-black border-2 ${
+                listDisplayMode === "list" || planListDisplayMode === "list"
+                  ? "hidden xs:block"
+                  : ""
+              }`}
+              onClick={() => changeMapStyle()}
+            >
+              <MapTrifold size={32} color="#080707" weight="fill" />
+            </button>
+          </div>
+          <div>
+            <button
+              className={`w-13 h-13 bg-green-400 rounded-full p-2 m-2 border-black border-2 ${
+                listDisplayMode === "list" || planListDisplayMode === "list"
+                  ? "hidden xs:block"
+                  : ""
+              }`}
+              onClick={async () => {
+                await getCurrentPoint();
+                userMarker && setFocusCoordinate(userMarker);
+              }}
+            >
+              <Crosshair size={32} color="#050505" weight="fill" />
+            </button>
+          </div>
+          <div>
+            <button
+              className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+              onClick={() => setIsSearchModal(true)}
+            >
+              <MagnifyingGlass size={32} color="#050505" />
+            </button>
+          </div>
           <Link
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${editNoteData.id}`}
           >

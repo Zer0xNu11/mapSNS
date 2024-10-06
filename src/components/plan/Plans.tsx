@@ -35,7 +35,6 @@ export default async function Plans(){
       userId: plan.userId,
       user: plan.user,
       imageUrl: plan.imageUrl ?? undefined
-      // 必要に応じて他のフィールドも追加
     }));
 
     return (
