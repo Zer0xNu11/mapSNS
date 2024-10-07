@@ -91,7 +91,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         "リストモードの説明:リスト左下の画像マークで画像とコメントの入れ替え/投稿右下の３つの点で投稿の詳細メニュー",
       authorId: createdUser.id,
       imageUrl:
-        "/images/manual/listManual.png" ||
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/Screenshot_2024-10-06%2023.45.14_W8VdzN-KhPRtlm3AIHhfGoX22jIIhpix8S3TJ.png" ||
         null,
       noteId: createdNote.id,
       category: "other",
@@ -121,7 +121,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         "ようこそ「ぶらつ記」へ、まずは画面右下の緑のピンで初めての投稿をしてみよう。",
       authorId: createdUser.id,
       imageUrl:
-        "/images/manual/homeManual.png" ||
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/homeManual-hnFBmmkQqC2ahfRwXMsqE0QlXGDKJJ.png" ||
         null,
       noteId: createdNote.id,
       category: "other",
