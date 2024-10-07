@@ -111,7 +111,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   await prismadb.$executeRaw`
   UPDATE "Post"
-  SET location = ST_SetSRID(ST_MakePoint(${39.652924}, ${134.435833}), 4326)
+  SET location = ST_SetSRID(ST_MakePoint(${134.435833}, ${39.652924}), 4326)
   WHERE id = ${createdPost1.id}
 `;
 
@@ -141,7 +141,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   await prismadb.$executeRaw`
   UPDATE "Post"
-  SET location = ST_SetSRID(ST_MakePoint(${39.652924}, ${134.435833}), 4326)
+  SET location = ST_SetSRID(ST_MakePoint(${134.435833}, ${39.652924}), 4326)
   WHERE id = ${createdPost2.id}
 `;
 
