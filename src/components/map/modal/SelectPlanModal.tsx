@@ -53,13 +53,13 @@ const SelectPlanModal: React.FC<SelectPlanModalProps> = ({
       <>
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
           <div className="bg-white absolute rounded p-4 flex flex-col items-center w-[90%] max-w-md max-h-[70vh]">
-            <div className="text-xl mb-4">プランを選択</div>
+            <div className="text-xl mb-4">メモリを選択</div>
 
             <div className="flex flex-col gap-4 overflow-y-auto w-full px-2 pb-4">
               <Link href="../create/plan">
                 <button className="bg-green-400 rounded-xl text-xl w-full h-auto min-h-[4rem] mx-auto py-4 px-3 hover:opacity-70 flex items-center justify-center">
                   <div className="w-full break-words text-center">
-                    +新しいプランを作成
+                    +新しいメモリを作成
                   </div>
                 </button>
               </Link>

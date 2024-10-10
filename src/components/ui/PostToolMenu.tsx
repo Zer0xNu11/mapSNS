@@ -73,7 +73,7 @@ const PostToolMenu :React.FC<PostToolMenuProps>= ({post}) => {
               </DropdownMenuLabel> */}
             <DropdownMenuItem asChild><Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${post.id}`}>詳細を見る</Link></DropdownMenuItem>
             <DropdownMenuItem asChild><button onClick={()=>{searchNoteId(post.noteId)}} className="w-full">ノート表示</button></DropdownMenuItem>
-            <DropdownMenuItem asChild><button onClick={()=>{addPlan(post.coordinates[0], post.coordinates[1])}} className="w-full disabled:text-gray-400" disabled={!editPlanData || editPlanData.id ===''}>プランへ追加</button></DropdownMenuItem>
+            <DropdownMenuItem asChild><button onClick={()=>{addPlan(post.coordinates[0], post.coordinates[1])}} className="w-full disabled:text-gray-400" disabled={!editPlanData || editPlanData.id ===''}>メモリへ追加</button></DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </>

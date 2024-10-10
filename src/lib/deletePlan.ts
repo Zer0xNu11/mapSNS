@@ -1,5 +1,5 @@
 export const deletePlan = async (planId: string) => {
-  const isConfirmed = confirm("本当にこのプランを削除しますか？この操作は取り消せません。");
+  const isConfirmed = confirm("本当にこのメモリを削除しますか？この操作は取り消せません。");
 
   // ユーザーがキャンセルした場合、関数を終了
   if (!isConfirmed) {

@@ -58,7 +58,7 @@ const PlanForm = ({ params }: Params) => {
           className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
           disabled={remLength < 0 || pending}
         >
-          プラン作成
+          メモリ作成
         </button>
         <PendLoading />
       </>
@@ -144,7 +144,7 @@ const PlanForm = ({ params }: Params) => {
             <textarea
               name="planContent"
               className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="プランを記入"
+              placeholder="メモリを記入"
               onChange={(e) => {
                 setText(e.target.value);
               }}

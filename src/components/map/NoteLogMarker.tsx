@@ -102,7 +102,7 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                   disabled={editPlanData.id ? false : true}
                 >
-                  プランへ追加
+                  メモリへ追加
                 </button>
                 <button
                   onClick={() =>

@@ -624,7 +624,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             ""
           )}
         </motion.div>
-        {/* プランリスト */}
+        {/* メモリリスト */}
         <div>
           <motion.div
             className="xs:hidden  fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
@@ -685,7 +685,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               ) : (
                 <div className="w-full flex justify-center">
                   <Button onClick={() => setIsSelectPlanModal(true)}>
-                    <div className="mx-2">プランを選択</div>
+                    <div className="mx-2">メモリを選択</div>
                     <DownloadSimple size={32} weight="fill" />
                   </Button>
                 </div>

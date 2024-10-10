@@ -155,7 +155,7 @@ const EditPlanPointForm : React.FC<PlanEditFormProps>  = ({ planPoint }) => {
             <textarea
               name="planContent"
               className="w-full h-24 p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="プランを記入"
+              placeholder="メモリを記入"
               value={text}
               onChange={(e) => {
                 setText(e.target.value);

@@ -12,10 +12,23 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="font-semibold text-xl">
           <Link href="/home" className="hidden xs:block">
-            ぶらつ記
+            {/* ぶらつ記 */}
+            <img
+              src={"/images/buratsukiLogo.png"}
+              alt="logo"
+              width={150}
+              height={150}
+              className="object-cover rounded"
+            />
           </Link>
           <Link href="/home" className="xs:hidden">
-            📍
+          <img
+              src={"/images/buratsukiLogo.png"}
+              alt="logo"
+              width={150}
+              height={150}
+              className="object-cover"
+            />
           </Link>
         </div>
         <nav>
@@ -23,7 +36,7 @@ const Navbar = () => {
             <div className="flex flex-row gap-4 mx-4">
               <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/plans`}>
                 <Button className="hidden sm:flex">
-                <Star size={16} color="#f6f6f9" weight="fill" />
+                  <Star size={16} color="#f6f6f9" weight="fill" />
                   <div>メモリ</div>
                 </Button>
                 <button className="sm:hidden relative w-12 h-12 bg-[#0f172a] rounded-md">
@@ -38,11 +51,7 @@ const Navbar = () => {
 
               <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/notes`}>
                 <Button className="hidden sm:flex">
-                  <Notebook
-                    size={16}
-                    color="#fcfcfc"
-                    weight="fill"
-                  />
+                  <Notebook size={16} color="#fcfcfc" weight="fill" />
                   <div>ノート</div>
                 </Button>
                 <button className="sm:hidden relative w-12 h-12 bg-[#0f172a] rounded-md ">

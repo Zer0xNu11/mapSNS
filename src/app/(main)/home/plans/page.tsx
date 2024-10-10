@@ -6,7 +6,7 @@ export default async function PlanPage() {
   return (
     <>
       <Link href="../create/plan">
-        <Button>新規プラン</Button>
+        <Button>新規メモリ</Button>
       </Link>
       <div>
         <Plans />

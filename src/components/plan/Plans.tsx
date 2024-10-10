@@ -42,14 +42,14 @@ export default async function Plans(){
         <div className="flex flex-col gap-4 overflow-y-scroll h-[80vh]">
           {plans.length >0 ?
              plans.map((plan) => <Plan key={plan.id} plan={plan} />)
-            : "プランがありません"}
+            : "メモリがありません"}
         </div>
       </>
     );
     
   } catch (error) {
-    console.error("プランの取得に失敗しました:", error);
-    throw new Error("プランの取得に失敗しました");
+    console.error("メモリの取得に失敗しました:", error);
+    throw new Error("メモリの取得に失敗しました");
   }
 }
 

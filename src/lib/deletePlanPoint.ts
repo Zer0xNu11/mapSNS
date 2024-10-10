@@ -1,6 +1,6 @@
 export const deletePlanPoint = async (planPointId: string, path: string) => {
   const isConfirmed = confirm(
-    "本当にこのプランを削除しますか？この操作は取り消せません。"
+    "本当にこのメモリを削除しますか？この操作は取り消せません。"
   );
 
   if (!isConfirmed) {

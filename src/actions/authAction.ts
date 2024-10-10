@@ -147,7 +147,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const createdPlan = await prismadb.plan.create({
     data: {
-      title: "最初のプラン",
+      title: "最初のメモリ",
       content: "",
       userId: createdUser.id,
     },

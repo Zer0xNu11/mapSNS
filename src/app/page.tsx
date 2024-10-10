@@ -6,10 +6,19 @@ export default async function Top() {
     <>
       <main className="flex h-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-gray-700 to-black">
         <div className="space-y-6 text-center">
-          <h1 className="text-6xl font-semibold text-white drop-shadow-md">
+          <div className="flex justify-center mb-8">
+          <img
+              src={"/images/buratsukiLogo.png"}
+              alt="logo"
+              width={500}
+              height={400}
+              className="object-cover rounded"
+            />
+          </div>
+          {/* <h1 className="text-6xl font-semibold text-white drop-shadow-md">
             ぶらつ記
-          </h1>
-          <p className="text-white text-lg pb-5 ">
+          </h1> */}
+          <p className="text-white text-lg pb-10 ">
             -さぁ旅に出よう-
           </p>
           <Link href="/login" className="m-5">

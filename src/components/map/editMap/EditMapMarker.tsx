@@ -85,10 +85,10 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
               <Link
                 href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/planPoint/${planId}`}
               >
-                <Button>プラン追加</Button>
+                <Button>メモリ追加</Button>
               </Link>
             ) : (
-              <Button disabled={true}>プラン追加</Button>
+              <Button disabled={true}>メモリ追加</Button>
             )}
           </div>
           <br />

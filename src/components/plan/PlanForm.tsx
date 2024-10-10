@@ -33,7 +33,7 @@ const PlanForm = () => {
           <input
             type="text"
             name="title"
-            placeholder="プランのタイトル"
+            placeholder="メモリのタイトル"
             className="w-full p-2 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
             onChange={(e) => {
               setTitleText(e.target.value);
