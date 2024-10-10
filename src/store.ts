@@ -44,6 +44,16 @@ interface planListDisplayModeState{
   setPlanListDisplayMode: (listMode: string ) => void;
 }
 
+interface planMarkerDisplayModeState{
+  planMarkerDisplayMode: boolean
+  setPlanMarkerDisplayMode: (planMarkerMode: boolean ) => void;
+}
+
+interface searchingModeState{
+  searchingMode: string
+  setSearchingMode: (searchMode: string ) => void;
+}
+
 interface noteSlotState{
   noteSlot: NoteSlotType[]
   setNoteSlot: (data:NoteSlotType[]) => void;
@@ -126,6 +136,16 @@ export  const useListDisplayMode = create<listDisplayModeState>((set) => ({
 export  const usePlanListDisplayMode = create<planListDisplayModeState>((set) => ({
   planListDisplayMode: 'map',
   setPlanListDisplayMode:  (mode) => set(() => ( { planListDisplayMode: `${mode}` }))
+}));
+
+export  const usePlanMarkerDisplayMode = create<planMarkerDisplayModeState>((set) => ({
+  planMarkerDisplayMode: false,
+  setPlanMarkerDisplayMode:  (mode) => set(() => ( { planMarkerDisplayMode: mode }))
+}));
+
+export  const useSearchingMode = create<searchingModeState>((set) => ({
+  searchingMode: 'off',
+  setSearchingMode:  (mode) => set(() => ( { searchingMode: `${mode}` }))
 }));
 
 export  const useNoteSlot = create<noteSlotState>((set) => ({

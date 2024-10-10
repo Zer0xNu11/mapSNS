@@ -1,5 +1,6 @@
 "use client";
 import {
+  CIRCLE_OPTION,
   GOOGLEMAPSETTING,
   ICON_PIN,
   ICON_PLAN_HIGHLIGHTED,
@@ -9,13 +10,14 @@ import {
 import {
   useEditPlan,
   useMarkerStore,
+  usePlanMarkerDisplayMode,
+  useSearchingMode,
   useSelectedPlanPointStore,
 } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
-import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
+import { Circle, Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
 import { PlanLeafletType } from "@/types";
-import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +26,7 @@ export interface EditMapMarkerProps {
   position: LatLng;
   polylineCoordinates: [number, number][];
   planPoints: PlanLeafletType[];
-  openSearchModal: () => void;
+  searchButtonHandler: () => void;
 }
 
 export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
@@ -32,22 +34,26 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   position,
   polylineCoordinates,
   planPoints,
-  openSearchModal,
+  searchButtonHandler,
 }) => {
   const { marker, setMarker } = useMarkerStore();
   const { selectedPlanPointId, setSelectedPlanPointId } =
     useSelectedPlanPointStore();
   const { editPlanData } = useEditPlan();
+  const { searchingMode, setSearchingMode } = useSearchingMode();
+  const { planMarkerDisplayMode } =  usePlanMarkerDisplayMode();
 
   useEffect(() => {
     if (!marker) {
       setMarker(position);
+      setSearchingMode("off");
     }
   }, [position]);
 
   const map = useMapEvent("click", (e) => {
     const { lat, lng } = e.latlng;
     setMarker(latLng(lat, lng));
+    setSearchingMode("off");
     console.log({ lat: marker?.lat, lng: marker?.lng });
     console.log({ pointlat: lat, pointlng: lng });
   });
@@ -62,9 +68,19 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
         icon={ICON_PIN}
         eventHandlers={{}}
       >
+        {searchingMode === "on" ? (
+          <Circle
+            key={marker.toString()}
+            center={marker}
+            radius={500}
+            pathOptions={CIRCLE_OPTION}
+          ></Circle>
+        ) : (
+          ""
+        )}
         <Popup>
           <div className="flex flex-row gap-4">
-            <Button onClick={() => openSearchModal()}>周囲を検索</Button>
+            <Button onClick={() => searchButtonHandler()}>周囲を検索</Button>
             {editPlanData.id ? (
               <Link
                 href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/planPoint/${planId}`}
@@ -99,37 +115,43 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
           }}
         >
           {/* {selectedPlanPointId === planPoint.id ? ( */}
-            <Popup>
-              <div>
-                {planPoint.imageUrl ? (
-                  <img
-                    className="object-cover w-full h-full rounded-2xl mb-2"
-                    src={planPoint.imageUrl}
-                    alt="Post Image"
-                  />
-                ) : (
-                  ""
-                )}
-                {`${planPoint.content}`}
-              </div>
-              <br />
-              <a
-                href={GOOGLEMAPSETTING(
-                  planPoint.coordinates[0],
-                  planPoint.coordinates[1]
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                googleMapで付近を探索
-              </a>
-            </Popup>
+          <Popup>
+            <div>
+              {planPoint.imageUrl ? (
+                <img
+                  className="object-cover w-full h-full rounded-2xl mb-2"
+                  src={planPoint.imageUrl}
+                  alt="Post Image"
+                />
+              ) : (
+                ""
+              )}
+              {`${planPoint.content}`}
+            </div>
+            <br />
+            <a
+              href={GOOGLEMAPSETTING(
+                planPoint.coordinates[0],
+                planPoint.coordinates[1]
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              googleMapで付近を探索
+            </a>
+          </Popup>
           {/* ) : (
             "" */}
           {/* )} */}
         </Marker>
       ))}
-      <Polyline pathOptions={LINE_COLOR.blue} positions={polylineCoordinates} />
+      { planMarkerDisplayMode ? 
+        <Polyline
+          pathOptions={LINE_COLOR.blue}
+          positions={polylineCoordinates}
+        /> 
+        : ''
+      }
     </>
   );
 };

@@ -17,20 +17,27 @@ export async function searchPost(formData: FormData) {
 
   const startDateInput: string | null = formData.get("startDate") as string;
   const endDateInput: string | null = formData.get("endDate") as string;
-  const startDate = startDateInput ? new Date(startDateInput) : new Date('2024-01-01');
-  const endDate = endDateInput ? new Date(endDateInput) : new Date('2500-12-31');
+  const startDate = startDateInput
+    ? new Date(startDateInput)
+    : new Date("2024-01-01");
+  const endDate = endDateInput
+    ? new Date(endDateInput)
+    : new Date("2500-12-31");
 
   const category = ["food", "base", "other"].filter(
     (key) => formData.get(`${key}`) === "on"
   );
-  
+
   const likes = formData.get("likes")
     ? parseInt(formData.get("likes") as string, 10)
+    : null;
+  const maxLikes = formData.get("maxLikes")
+    ? parseInt(formData.get("maxLikes") as string, 10)
     : null;
   const radius = formData.get("radius") as string | null;
 
   const searchRadius = () => {
-    if (radius === null) return 200;
+    if (radius === null) return 620;
     if (radius === "small") return 200;
     if (radius === "medium") return 1000;
     if (radius === "large") return 5000;
@@ -51,6 +58,7 @@ export async function searchPost(formData: FormData) {
       ? Prisma.sql`"category" = ANY(${category}::text[])`
       : Prisma.empty,
     likes ? Prisma.sql`"totalLikes" >= ${likes}` : Prisma.empty,
+    maxLikes === 0 || maxLikes ? Prisma.sql`"totalLikes" <= ${maxLikes}` : Prisma.empty,
     Prisma.sql`ST_DWithin(
      ST_Transform(location, 3857), 
      ST_Transform(ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), 3857), 
@@ -90,23 +98,23 @@ export async function searchPost(formData: FormData) {
         "User" u ON p."authorId" = u.id
       WHERE ${Prisma.join(conditions, " AND ")}
       ORDER BY p."createdAt" DESC
+      LIMIT 100
     `;
 
-    const postIds = postData.map(post =>post.id);
-    const like = await prismadb.like.findMany({
-    where: {
-        userId: session.user.id,
-        postId: {in: postIds}
-    },
-    select:{postId: true}
-  })
+      const postIds = postData.map((post) => post.id);
+      const like = await prismadb.like.findMany({
+        where: {
+          userId: session.user.id,
+          postId: { in: postIds },
+        },
+        select: { postId: true },
+      });
 
-  const likedPostIds= new Set(like.map(like => like.postId));
-  const postsWithLikes = postData.map(post => ({
-    ...post,
-    isLiked: likedPostIds.has(post.id)
-  }));
-  
+      const likedPostIds = new Set(like.map((like) => like.postId));
+      const postsWithLikes = postData.map((post) => ({
+        ...post,
+        isLiked: likedPostIds.has(post.id),
+      }));
 
       return postsWithLikes;
     }

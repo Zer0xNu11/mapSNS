@@ -1,6 +1,6 @@
 'use client'
 import { GOOGLEMAPSETTING, ICON_PIN} from "@/lib/mapSetting";
-import { useMarkerStore } from "@/store";
+import { useMarkerStore, useSearchingMode } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
 import { Marker, Popup, useMapEvent } from "react-leaflet";
@@ -11,16 +11,19 @@ export interface MakingMarkerProps {
 
 export const MakingMarker : React.FC<MakingMarkerProps> = ({position}) => {
 const {marker, setMarker} = useMarkerStore();
+const { searchingMode, setSearchingMode } = useSearchingMode();
 
 useEffect(()=>{
   if(!marker){
     setMarker(position)
+    setSearchingMode('off')
   }
 },[position])
 
   const map = useMapEvent("click", (e) => {
     const { lat, lng } = e.latlng;
     setMarker(latLng(lat, lng));
+    setSearchingMode('off')
     console.log({lat:marker?.lat,lng:marker?.lng})
     // console.log({pointlat:lat, pointlng:lng})
   });

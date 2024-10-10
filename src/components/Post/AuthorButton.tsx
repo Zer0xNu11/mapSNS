@@ -8,7 +8,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
-import { NoteSlotType } from "@/types";
+import { NoteSlotType} from "@/types";
 import { User } from "lucide-react";
 
 interface AuthorButtonProp {

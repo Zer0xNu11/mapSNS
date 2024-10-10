@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { getPosition } from "@/lib/getPostion";
 import { MakingMarker } from "./MakingMarker";
 import { mapStyles } from "@/lib/mapSetting";
-import { useFocusCoordinate, useMarkerStore, useUserMarkerStore } from "@/store";
+import { useFocusCoordinate, useMarkerStore, useSearchingMode, useUserMarkerStore } from "@/store";
 import UserMarker from "./UserMarker";
 import GpsButton from "./GpsButton";
 
@@ -32,6 +32,7 @@ const PostLocation: React.FC<PostLocationProps> = ({ isEdit = false }) => {
   const { marker, setMarker } = useMarkerStore();
   const {focusCoordinate} = useFocusCoordinate();
   const { userMarker, setUserMarker } = useUserMarkerStore();
+  const { searchingMode, setSearchingMode } = useSearchingMode();
 
   async function initializeMap() {
     const point = await getPosition();
@@ -39,14 +40,17 @@ const PostLocation: React.FC<PostLocationProps> = ({ isEdit = false }) => {
 
     if (isEdit && focusCoordinate) {
       setMarker(latLng(focusCoordinate));
+      setSearchingMode('off')
     } else {
       if (point != null) {
         setMarker(latLng([point.lat, point.lng]));
+        setSearchingMode('off')
         setUserMarker(latLng([point.lat, point.lng]));
         console.log({ position: marker });
       } else {
         // デフォルトの位置
         setMarker(latLng([35.680522, 139.766566]));
+        setSearchingMode('off')
         setUserMarker(latLng([35.680522, 139.766566]));
         console.log({ position: "デフォルト" });
       }

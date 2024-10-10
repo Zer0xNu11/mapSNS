@@ -3,8 +3,8 @@ import React from "react";
 import UserButton from "./UserButton";
 import { Button } from "../ui/button";
 import { Compass } from "@phosphor-icons/react/dist/ssr/Compass";
+import { Star } from "@phosphor-icons/react/dist/ssr/Star";
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
-import { MapPinArea } from "@phosphor-icons/react/dist/ssr/MapPinArea";
 
 const Navbar = () => {
   return (
@@ -23,11 +23,11 @@ const Navbar = () => {
             <div className="flex flex-row gap-4 mx-4">
               <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home/plans`}>
                 <Button className="hidden sm:flex">
-                  <Compass size={16} color="#f6f6f9" weight="fill" />
-                  <div>プラン</div>
+                <Star size={16} color="#f6f6f9" weight="fill" />
+                  <div>メモリ</div>
                 </Button>
                 <button className="sm:hidden relative w-12 h-12 bg-[#0f172a] rounded-md">
-                  <Compass
+                  <Star
                     size={32}
                     color="#f6f6f9"
                     weight="fill"
@@ -57,11 +57,11 @@ const Navbar = () => {
 
               <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/home`}>
                 <Button className="hidden sm:flex">
-                  <MapPinArea size={16} color="#f6f6f9" weight="fill" />
+                  <Compass size={16} color="#f6f6f9" weight="fill" />
                   <div>マップ</div>
                 </Button>
                 <button className="sm:hidden relative w-12 h-12 bg-[#0f172a] rounded-md">
-                  <MapPinArea
+                  <Compass
                     size={32}
                     color="#f6f6f9"
                     weight="fill"

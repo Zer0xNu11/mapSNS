@@ -78,3 +78,13 @@ export const LINE_COLOR = {
   green : {color: "#00c73c"},
   yellow : {color: "#ffe229"},
   }
+
+
+
+//CircleOption
+export const CIRCLE_OPTION = {
+  color: 'green',           // 境界線の色
+  fillColor: '#b3ffbf',      // 塗りつぶしの色
+  fillOpacity: 0.1,       // 塗りつぶしの透明度（0-1）
+  weight: 1,              // 境界線の太さ（ピクセル）
+}

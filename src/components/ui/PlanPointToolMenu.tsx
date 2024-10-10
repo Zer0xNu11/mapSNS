@@ -13,10 +13,12 @@ import { deletePlanPoint } from "@/lib/deletePlanPoint";
 
 interface planPointToolMenuProps {
   planPointId: string;
+  postId : string | undefined
 }
 
 const PlanPointToolMenu: React.FC<planPointToolMenuProps> = ({
   planPointId,
+  postId
 }) => {
   const path = `${process.env.NEXT_PUBLIC_BASE_URL}/home`;
 
@@ -56,6 +58,14 @@ const PlanPointToolMenu: React.FC<planPointToolMenuProps> = ({
               href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/planPoint/${planPointId}`}
             >
               詳細
+            </Link>
+          </DropdownMenuItem>
+
+          <DropdownMenuItem asChild>
+            <Link
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/detail/post/${postId}`}
+            >
+              元の投稿を表示
             </Link>
           </DropdownMenuItem>
           {/* <DropdownMenuItem asChild><button className="w-full">詳細</button></DropdownMenuItem>

@@ -106,7 +106,7 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
             />
           </motion.div>
           <div className="absolute z-30 right-2 bottom-2 ">
-            <PlanPointToolMenu planPointId={planpoint.id} />
+            <PlanPointToolMenu planPointId={planpoint.id} postId={planpoint.postId}/>
           </div>
         </div>
       </div>

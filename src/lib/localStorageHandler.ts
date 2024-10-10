@@ -98,3 +98,23 @@ export const deleteCurrentPlanData = () =>{
   localStorage.setItem('currentPlanTitle', ''); 
 }
 
+
+export const getSearchFormCondition = () =>{
+  const data = localStorage.getItem('formCondition')
+  if(data){
+    const formCondition = JSON.parse(data)
+    return formCondition;
+  }else{
+    const formDefault = {
+      searchText: "",
+      startDate:undefined,
+      endDate: undefined,
+      category: {food: true, base: true, other: true},
+      likes: "",
+      maxLikes: "",
+    }
+    return formDefault
+  }
+  
+ 
+}

@@ -1,17 +1,19 @@
 "use client";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import { LatLng, latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../map.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getPosition } from "@/lib/getPostion";
 import { LINE_COLOR, mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
+import L from "leaflet";
 
 import "leaflet/dist/leaflet.css";
 import { CaretLeft } from "@phosphor-icons/react/dist/ssr/CaretLeft";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr/CaretRight";
+import { GearSix } from "@phosphor-icons/react/dist/ssr/GearSix";
 import { motion } from "framer-motion";
 import { navHeight } from "@/lib/commonSetting";
 import {
@@ -22,9 +24,11 @@ import {
   useMapStyle,
   useMarkerStore,
   usePlanListDisplayMode,
+  usePlanMarkerDisplayMode,
   usePlanSlot,
   usePostsSlot,
   useSearchedNoteSlot,
+  useSearchingMode,
   useUserMarkerStore,
 } from "@/store";
 import ListFromSort from "./ListFromSort";
@@ -33,6 +37,7 @@ import { getPlanData } from "@/lib/getPlanData";
 import UserMarker from "../UserMarker";
 
 import { MapPinSimpleArea } from "@phosphor-icons/react/dist/ssr/MapPinSimpleArea";
+import { MapPinArea } from "@phosphor-icons/react/dist/ssr/MapPinArea";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr/MagnifyingGlass";
 import { MapTrifold } from "@phosphor-icons/react/dist/ssr/MapTrifold";
 import { XSquare } from "@phosphor-icons/react/dist/ssr/XSquare";
@@ -42,18 +47,20 @@ import { ListMagnifyingGlass } from "@phosphor-icons/react/dist/ssr/ListMagnifyi
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
 import { FileArrowDown } from "@phosphor-icons/react/dist/ssr/FileArrowDown";
 import { Crosshair } from "@phosphor-icons/react/dist/ssr/Crosshair";
+import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
 
 import { useNoteSlot } from "@/store";
 import ListFromNoteId from "@/components/ListFromNoteId";
 import { NoteLogMarker } from "../NoteLogMarker";
 import { Button } from "@/components/ui/button";
-import SearchModal from "../modal/SearchModal";
+import SearchModal, { formConditionDataProps } from "../modal/SearchModal";
 import SelectPlanModal from "../modal/SelectPlanModal";
 import SelectNoteModal from "../modal/SelectNoteModal";
 import { getNoteData } from "@/lib/getPosts";
 import {
   getCurrentNoteData,
   getCurrentPlanData,
+  getSearchFormCondition,
 } from "@/lib/localStorageHandler";
 import Link from "next/link";
 import GpsButton from "../GpsButton";
@@ -61,6 +68,9 @@ import GetGpsButton from "./GetGpsButton";
 import LoadNoteModal from "../modal/LoadNoteModal";
 import { AuthorButton } from "@/components/Post/AuthorButton";
 import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import DatePicker, { registerLocale } from "react-datepicker";
+import { searchPost } from "@/actions/searchPost";
+import ja from "date-fns/locale/ja";
 
 const MapUpdater = () => {
   const map = useMap();
@@ -91,6 +101,20 @@ const MapUpdater = () => {
   return null;
 };
 
+interface MapEventHandlerProps {
+  onRightClick: (latlng: L.LatLng) => void;
+}
+
+function MapEventHandler({ onRightClick }: MapEventHandlerProps) {
+  useMapEvents({
+    contextmenu: (e) => {
+      e.originalEvent.preventDefault(); // デフォルトの右クリックメニューを防ぐ
+      onRightClick(e.latlng);
+    },
+  });
+  return null;
+}
+
 export interface EditMapProps {}
 
 const EditMap: React.FC<EditMapProps> = ({}) => {
@@ -105,6 +129,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } =
     usePlanListDisplayMode();
+  const {planMarkerDisplayMode, setPlanMarkerDisplayMode} = usePlanMarkerDisplayMode()
 
   const { planSlot, setPlanSlot } = usePlanSlot();
   const { postsSlot, setPostsSlot } = usePostsSlot();
@@ -116,6 +141,65 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const { userMarker, setUserMarker } = useUserMarkerStore();
   const { marker, setMarker } = useMarkerStore();
   const { focusCoordinate, setFocusCoordinate } = useFocusCoordinate();
+  const { searchingMode, setSearchingMode } = useSearchingMode();
+
+  // form  ===================================================================
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const [category, setCategory] = useState({
+    food: true,
+    base: true,
+    other: true,
+  });
+  const [likes, setLikes] = useState("");
+  const [maxLikes, setMaxLikes] = useState("");
+  const [radius, setRadius] = useState("");
+
+  const [formConditionData, setFormConditionData] =
+    useState<formConditionDataProps>();
+
+  registerLocale("ja", ja as any);
+
+  const submitButtonRef = useRef<HTMLButtonElement>(null);
+  const searchButtonHandler = () => {
+    submitButtonRef.current?.click();
+    setSearchingMode("on");
+  };
+
+  const getData = async (formData: FormData) => {
+    setIsLoading(true);
+    try {
+      const data = await searchPost(formData);
+      if (data) {
+        console.log("Data exits");
+        setPostsSlot(data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    async function setFormCondition() {
+      const formCondition = await getSearchFormCondition();
+      setFormConditionData(formCondition);
+
+      setSearchText(formCondition.searchText);
+      setStartDate(formCondition.startDate);
+      setEndDate(formCondition.endDate);
+      setCategory(formCondition.category);
+      setLikes(formCondition.likes);
+      setMaxLikes(formCondition.maxLikes);
+    }
+
+    setFormCondition();
+    console.log({ searchText, startDate, endDate, category, likes, maxLikes });
+  }, [isSearchModal]);
+  // ==========================================================================
 
   const closeNoteModalRef = useRef(null);
   const closePlanModalRef = useRef(null);
@@ -123,6 +207,22 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const openSearchModal = () => {
     setIsSearchModal(true);
   };
+
+  const handleRightClick = useCallback((latlng: L.LatLng) => {
+    console.log("Right clicked at:", latlng);
+    setMarker(latlng);
+    setSearchingMode("set");
+  }, []);
+
+  useEffect(() => {
+    async function searching() {
+      if (searchingMode === "set") {
+        searchButtonHandler();
+      }
+    }
+
+    searching();
+  }, [marker]);
 
   const modeChangeButton = () => {
     listDisplayMode === "list"
@@ -157,12 +257,13 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
     if (point != null) {
       setMarker(latLng([point.lat, point.lng]));
       setUserMarker(latLng([point.lat, point.lng]));
+      setSearchingMode("off");
     } else {
       // デフォルトの位置
       setMarker(latLng([35.680522, 139.766566]));
       setUserMarker(latLng([35.680522, 139.766566]));
+      setSearchingMode("off");
       console.log({ position: "デフォルト" });
-      console.log(marker == userMarker);
     }
   }
 
@@ -347,8 +448,11 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           </button>
         </div>
       )}
-      {isSearchModal && (
-        <SearchModal closeModal={() => setIsSearchModal(false)} />
+      {isSearchModal && formConditionData && (
+        <SearchModal
+          formConditionData={formConditionData}
+          closeModal={() => setIsSearchModal(false)}
+        />
       )}
 
       {isSelectNoteModal && (
@@ -450,7 +554,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               </div>
             ) : (
               <div className="flex flex-row justify-end items-center text-xl gap-4">
-                <div className="font-bold text-xl text-white w-full text-center">
+                <div>
+                  <button
+                    className="p-2 m-2"
+                    onClick={() => setIsSearchModal(true)}
+                  >
+                    <GearSix size={32} color="#fcfcfc" weight="fill" />
+                  </button>
+                </div>
+                <div className="font-bold text-xl text-white w-full text-center flex gap-1">
+                  {/* <MagnifyingGlass size={32} color="#f2f2f2" weight="fill"/> */}
                   検索結果
                 </div>
                 <Button onClick={() => setIsLoadNoteModal(true)}>
@@ -552,12 +665,22 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               {editPlanData.title ? (
                 <div className="flex flex-row items-center text-xl w-full justify-end gap-4">
                   <div className="w-full">{editPlanData.title}</div>
-                  <Button
-                    className="mx-4"
-                    onClick={() => setIsSelectPlanModal(true)}
-                  >
-                    <DownloadSimple size={32} weight="fill" />
-                  </Button>
+                  <div className="flex flex-row justify-end">
+                    <Button
+                      className="mx-2"
+                      onClick={() => setIsSelectPlanModal(true)}
+                    >
+                      <DownloadSimple size={32} weight="fill" />
+                    </Button>
+                    <Button
+                      className="mx-2"
+                      onClick={() => setPlanMarkerDisplayMode(!planMarkerDisplayMode)}
+                    >
+                     {planMarkerDisplayMode ? 
+                     <LineSegments size={32} color="#4d82ff" weight="fill" /> : 
+                     <LineSegments size={32} color="#b0b0b0" weight="fill" /> }
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="w-full flex justify-center">
@@ -574,6 +697,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         <div className={`absolute top-0 pt-[${navHeight}px]  w-full h-[100vh]`}>
           <MapContainer center={position} zoom={zoom} zoomControl={false}>
             <MapUpdater />
+            <MapEventHandler onRightClick={handleRightClick} />
             <TileLayer
               attribution={mapStyle.attribution}
               url={mapStyle.style}
@@ -581,7 +705,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               minZoom={2}
             />
             <EditMapMarker
-              openSearchModal={openSearchModal}
+              searchButtonHandler={searchButtonHandler}
               planId={editPlanData.id}
               position={position}
               polylineCoordinates={planSlot.map((item) => item.coordinates)}
@@ -650,9 +774,13 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           <div>
             <button
               className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
-              onClick={() => setIsSearchModal(true)}
+              onClick={async () => {
+                await getCurrentPoint();
+                userMarker && setFocusCoordinate(userMarker);
+                searchButtonHandler();
+              }}
             >
-              <MagnifyingGlass size={32} color="#050505" />
+              <MapPinArea size={32} color="#050505" weight="fill" />
             </button>
           </div>
           <Link
@@ -665,6 +793,142 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               <MapPinPlus size={32} color="#050505" weight="fill" />
             </button>
           </Link>
+        </div>
+      </div>
+
+      {/* 検索処理 */}
+      <div className="hidden">
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
+          <div className="bg-white absolute rounded p-4 flex flex-col  items-center w-[90%] max-w-md">
+            <div className="flex-grow overflow-y-scroll w-full px-2 pb-4 max-h-[70vh]">
+              <form action={getData} className="flex flex-col w-full">
+                <input
+                  name="keyword"
+                  className="w-full p-2 my-4 border border-gray-300 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  placeholder="キーワードを入力"
+                  value={searchText}
+                  readOnly
+                ></input>
+                <div className="mb-4">
+                  <div className="mt-4 space-y-4">
+                    {/* 日付範囲 */}
+                    <label className="block my-2">日付範囲:</label>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      <DatePicker
+                        selected={startDate}
+                        selectsStart
+                        startDate={startDate}
+                        endDate={endDate}
+                        locale="ja"
+                        dateFormat="yyyy/MM/dd"
+                        placeholderText="開始日"
+                        className="p-2 border border-gray-300 rounded"
+                        name="startDate"
+                        readOnly
+                      />
+                      <DatePicker
+                        selected={endDate}
+                        selectsEnd
+                        startDate={startDate}
+                        endDate={endDate}
+                        locale="ja"
+                        minDate={startDate}
+                        dateFormat="yyyy/MM/dd"
+                        placeholderText="終了日"
+                        className="p-2 border border-gray-300 rounded"
+                        name="endDate"
+                        readOnly
+                      />
+                    </div>
+                    {/* category 選択 */}
+                    <div className="mb-4 flex flex-wrap gap-4">
+                      <label className="block">カテゴリ:</label>
+                      <div>
+                        <label className="inline-flex items-center mr-4">
+                          <input
+                            type="checkbox"
+                            name="food"
+                            checked={category.food}
+                            // onChange={handleCategoryChange}
+                            className="form-checkbox"
+                            readOnly
+                          />
+                          <span className="ml-2">食事</span>
+                        </label>
+                        <label className="inline-flex items-center mr-4">
+                          <input
+                            type="checkbox"
+                            name="base"
+                            checked={category.base}
+                            // onChange={handleCategoryChange}
+                            className="form-checkbox"
+                            readOnly
+                          />
+                          <span className="ml-2">宿泊</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            name="other"
+                            checked={category.other}
+                            // onChange={handleCategoryChange}
+                            className="form-checkbox"
+                            readOnly
+                          />
+                          <span className="ml-2">その他</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* いいねの数 */}
+                    <label className="block mb-2 w-24">いいねの数:</label>
+                    <div className="mb-4 flex flex-grow items-center justify-between">
+                      <input
+                        type="number"
+                        name="likes"
+                        value={likes}
+                        // onChange={(e) => setLikes(e.target.value)}
+                        className="p-2 border border-gray-300 rounded min-w-0"
+                        placeholder="最小数"
+                        readOnly
+                      />
+                      <div className="text-xl mx-2">~</div>
+                      <input
+                        type="number"
+                        name="maxLikes"
+                        value={maxLikes}
+                        // onChange={(e) => setMaxLikes(e.target.value)}
+                        className="p-2 border border-gray-300 rounded min-w-0"
+                        placeholder="最大数"
+                        readOnly
+                      />
+                    </div>
+
+                    {/* lat lng */}
+                    <div className="mb-4 hidden gap-4 items-center">
+                      <label className="block mb-2">座標:</label>
+                      <input
+                        type="number"
+                        name="lat"
+                        value={marker?.lat}
+                        className="p-2 border border-gray-300 rounded"
+                        readOnly
+                      />
+                      <input
+                        type="number"
+                        name="lng"
+                        value={marker?.lng}
+                        className="p-2 border border-gray-300 rounded"
+                        readOnly
+                      />
+                    </div>
+                  </div>
+                  {/* )} */}
+                </div>
+                <button ref={submitButtonRef}></button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </>

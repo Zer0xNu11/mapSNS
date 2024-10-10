@@ -25,13 +25,15 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
 
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-row items-center pt-2 pl-2">
+            <Link href={`${process.env.NEXT_PUBLIC_BASE_URL}/bio-menu/${post.authorId}`}>
             <Image
               className="w-10 h-10 rounded-full mr-2"
               src="/images/placeholder.png"
               width="100"
               height="100"
               alt="User Avatar"
-            />
+              />
+              </Link>
             <div className="flex flex-col w-full">
               <h2 className="font-semibold text-md">{post.author.name}</h2>
               <p className="text-gray-500 text-sm ">
