@@ -154,6 +154,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
     base: true,
     other: true,
   });
+  const [isOwnPost, setIsOwnPost] = useState(false);
   const [likes, setLikes] = useState("");
   const [maxLikes, setMaxLikes] = useState("");
   const [radius, setRadius] = useState("");
@@ -193,6 +194,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
       setStartDate(formCondition.startDate);
       setEndDate(formCondition.endDate);
       setCategory(formCondition.category);
+      setIsOwnPost(formCondition.isOwnPost);
       setLikes(formCondition.likes);
       setMaxLikes(formCondition.maxLikes);
     }
@@ -689,9 +691,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                     {editPlanData.title}
                   </div>
                   <div className="flex flex-row justify-end">
-                    <Button
-                      onClick={() => setIsSelectPlanModal(true)}
-                    >
+                    <Button onClick={() => setIsSelectPlanModal(true)}>
                       <DownloadSimple size={32} weight="fill" />
                     </Button>
                     <Button
@@ -947,6 +947,22 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                         className="p-2 border border-gray-300 rounded"
                         readOnly
                       />
+                    </div>
+
+                    {/* 自身の投稿を検索に含めるか */}
+                    <div>
+                      <label className="inline-flex items-center mr-4">
+                        <input
+                          type="checkbox"
+                          name="ownPost"
+                          checked={isOwnPost}
+                          onChange={() => setIsOwnPost(!isOwnPost)}
+                          className="form-checkbox"
+                        />
+                        <span className="ml-2">
+                          検索結果に自分の投稿を含める
+                        </span>
+                      </label>
                     </div>
                   </div>
                   {/* )} */}

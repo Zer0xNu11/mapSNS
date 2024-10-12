@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 
 export async function searchPost(formData: FormData) {
   const session = await auth();
+  const userId = session?.user?.id
   const latString: string | null = formData.get("lat") as string;
   const lngString: string | null = formData.get("lng") as string;
   const lat = latString ? parseFloat(latString) : null;
@@ -27,6 +28,8 @@ export async function searchPost(formData: FormData) {
   const category = ["food", "base", "other"].filter(
     (key) => formData.get(`${key}`) === "on"
   );
+
+  const isOwnPost = formData.get('ownPost') === 'on' ? true : false;
 
   const likes = formData.get("likes")
     ? parseInt(formData.get("likes") as string, 10)
@@ -64,6 +67,7 @@ export async function searchPost(formData: FormData) {
      ST_Transform(ST_SetSRID(ST_MakePoint(${lng}, ${lat}), 4326), 3857), 
   ${searchRadius()})`,
     keyword ? Prisma.sql`"content" LIKE ${"%" + keyword + "%"}` : Prisma.empty,
+    !isOwnPost && userId ? Prisma.sql`p."authorId" != ${userId}` : Prisma.empty,
   ].filter((condition): condition is Prisma.Sql => condition !== Prisma.empty);
 
   try {

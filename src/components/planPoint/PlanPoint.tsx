@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import PlanPointToolMenu from "../ui/PlanPointToolMenu";
+import { useEffect, useRef } from "react";
 
 export interface PlanPointProps {
   planpoint: PlanPointType;
@@ -22,6 +23,7 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
   const { selectedPlanPointId, setSelectedPlanPointId } =
     useSelectedPlanPointStore();
   const { postDisplayMode } = usePostDisplayMode();
+  const ref= useRef<HTMLDivElement | null>(null);
 
   const {
     attributes,
@@ -45,9 +47,31 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
     }
   };
 
+  useEffect(() =>{
+    const element = ref.current;
+    if (!element) return;
+    const preventScroll = (e: TouchEvent) => {
+      if (isDragging) {
+        e.preventDefault();
+      }
+    };
+
+    element.addEventListener('touchmove', preventScroll, { passive: false });
+
+    return () => {
+      element.removeEventListener('touchmove', preventScroll);
+    };
+  },[isDragging])
+
   return (
     <>
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+      <div ref={(node) => {
+        setNodeRef(node);
+        if (node !== null) {
+          ref.current = node;
+        }
+      }} 
+      {...attributes} {...listeners} style={style}>
         <div
           id={id}
           className={`relative shadow-md rounded-2xl  mb-4 h-44 [perspective:1000px]  ${

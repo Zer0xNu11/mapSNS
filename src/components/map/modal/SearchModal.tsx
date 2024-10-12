@@ -18,6 +18,7 @@ export interface formConditionDataProps {
   startDate: Date | undefined;
   endDate: Date | undefined;
   category: { food: boolean; base: boolean; other: boolean };
+  isOwnPost: boolean;
   likes: string;
   maxLikes: string;
 }
@@ -39,6 +40,7 @@ const SearchModal = ({
     formConditionData.endDate
   );
   const [category, setCategory] = useState(formConditionData.category);
+  const [isOwnPost, setIsOwnPost] = useState(formConditionData.isOwnPost);
   const [likes, setLikes] = useState(formConditionData.likes);
   const [maxLikes, setMaxLikes] = useState(formConditionData.maxLikes);
   const [radius, setRadius] = useState("");
@@ -54,6 +56,7 @@ const SearchModal = ({
       startDate,
       endDate,
       category,
+      isOwnPost,
       likes,
       maxLikes,
     };
@@ -79,6 +82,7 @@ const SearchModal = ({
     setStartDate(undefined);
     setEndDate(undefined);
     setCategory({ food: true, base: true, other: true });
+    setIsOwnPost(false);
     setLikes("");
     setMaxLikes("");
   };
@@ -124,9 +128,11 @@ const SearchModal = ({
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-[9000]">
       <div className="bg-white absolute rounded p-4 flex flex-col  items-center w-[90%] max-w-md">
         <div className="flex-grow overflow-y-scroll w-full px-2 pb-4 max-h-[70vh]">
-          <div className="w-full bg-gray-700 text-center text-2xl text-white p-2 mb-4">検索条件設定</div>
+          <div className="w-full bg-gray-700 text-center text-2xl text-white p-2 mb-4">
+            検索条件設定
+          </div>
           <div className="mb-4">
-          <FormClearButton />
+            <FormClearButton />
           </div>
           <form action={saveData} className="flex flex-col w-full">
             <span>検索キーワード:</span>
@@ -268,6 +274,20 @@ const SearchModal = ({
                     className="p-2 border border-gray-300 rounded"
                     readOnly
                   />
+                </div>
+
+                {/* 自身の投稿を検索に含めるか */}
+                <div>
+                  <label className="inline-flex items-center mr-4">
+                    <input
+                      type="checkbox"
+                      name="ownPost"
+                      checked={isOwnPost}
+                      onChange={() => setIsOwnPost(!isOwnPost)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">検索結果に自分の投稿を含める</span>
+                  </label>
                 </div>
               </div>
               {/* )} */}
