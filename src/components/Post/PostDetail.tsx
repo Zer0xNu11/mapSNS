@@ -20,7 +20,7 @@ const PostDetail: React.FC<PostDetailProps> = ({ post, isOwn, path }) => {
     <>
       <div className="bg-white w-full h-full">
         <Link href={currentPath}>
-          <Button>戻る</Button>
+          <Button>←戻る</Button>
         </Link>
 
         <div className="flex flex-col justify-center items-center">

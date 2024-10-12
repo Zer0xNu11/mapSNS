@@ -137,7 +137,7 @@ const PlanForm = ({ params }: Params) => {
           <form ref={formRef} onSubmit={handleSubmit} className="w-full">
             <div className="flex justify-between mb-2">
               <Link href={currentPath}>
-                <Button>戻る</Button>
+                <Button>←戻る</Button>
               </Link>
               <SubmitButton />
             </div>

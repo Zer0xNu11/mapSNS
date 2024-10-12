@@ -10,7 +10,7 @@ export default async function NotesPage() {
   return (
     <>
       <Link href="../create/note">
-        <Button>新規ノート</Button>
+        <Button className="mt-2 ml-2">＋新規ノート</Button>
       </Link>
       <div>
         <Notes />

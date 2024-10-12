@@ -19,7 +19,7 @@ const PlanPointDetail: React.FC<PlanPointDetailProps> = ({ planPoint, path }) =>
     <>
       <div className="bg-white w-full h-full">
         <Link href={currentPath}>
-          <Button>戻る</Button>
+          <Button>←戻る</Button>
         </Link>
 
         <div className="flex flex-col justify-center items-center">

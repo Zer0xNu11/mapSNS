@@ -129,7 +129,8 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
   const { listDisplayMode, setListDisplayMode } = useListDisplayMode();
   const { planListDisplayMode, setPlanListDisplayMode } =
     usePlanListDisplayMode();
-  const {planMarkerDisplayMode, setPlanMarkerDisplayMode} = usePlanMarkerDisplayMode()
+  const { planMarkerDisplayMode, setPlanMarkerDisplayMode } =
+    usePlanMarkerDisplayMode();
 
   const { planSlot, setPlanSlot } = usePlanSlot();
   const { postsSlot, setPostsSlot } = usePostsSlot();
@@ -501,9 +502,12 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuButtonVariantsSmall}
         >
-          <button className=" h-20 z-[1000]" onClick={modeChangeButton}>
+          <button
+            className=" h-20 z-[1000] focus:outline-none focus:ring-0 focus:border-none"
+            onClick={modeChangeButton}
+          >
             {listDisplayMode === "list" ? (
-              <CaretRight size={32} color="#6b6b6b" weight="light" />
+              <CaretRight size={32} color="#f7f7f7" />
             ) : (
               <CaretLeft size={32} color="#3d3d3d" weight="light" />
             )}
@@ -515,33 +519,33 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuButtonVariants}
         >
-          <button className=" h-20 z-[1000]" onClick={modeChangeButton}>
+          <button
+            className=" h-20 z-[1000] focus:outline-none focus:ring-0 focus:border-none"
+            onClick={modeChangeButton}
+          >
             {listDisplayMode === "list" ? (
-              <CaretRight size={32} color="#6b6b6b" weight="light" />
+              <CaretRight size={32} color="#f7f7f7" />
             ) : (
               <CaretLeft size={32} color="#3d3d3d" weight="light" />
             )}
           </button>
         </motion.div>
         <motion.div
-          className={`absolute bg-gray-100  top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] right-0 z-[500] xs:w-[400px] h-[100vh]`}
+          className={`absolute top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] right-0 z-[500] xs:w-[400px] h-[100vh] bg-gray-500 bg-opacity-40`}
           initial="closed"
           animate={listDisplayMode === "list" ? "open" : "closed"}
           variants={menuVariants}
           aria-hidden={listDisplayMode !== "list"}
         >
           <div
-            className={`sticky top-0 bg-yellow-600 w-full h-16 flex flex-row justify-end items-center gap-4 z-10`}
+            className={`sticky top-0 w-full h-16 flex flex-row justify-end items-center gap-4 z-10 bg-gray-700 bg-opacity-80`}
           >
             {/* ノートスロット */}
             {noteMode === "selfNote" ? (
-              <div className="flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center justify-center w-full">
                 {editNoteData.title ? (
-                  <div className="flex flex-row justify-end items-center text-xl gap-4">
-                    <div>{editNoteData.title}</div>
-                    <Button onClick={() => setIsSelectNoteModal(true)}>
-                      <DownloadSimple size={32} weight="fill" />
-                    </Button>
+                  <div className="w-full text-xl  text-center border-b border-[#faffb8] text-white">
+                    {editNoteData.title}
                   </div>
                 ) : (
                   <div className="flex justify-center">
@@ -553,7 +557,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 )}
               </div>
             ) : (
-              <div className="flex flex-row justify-end items-center text-xl gap-4">
+              <div className="flex flex-row justify-end items-center text-xl gap-2 w-full">
                 <div>
                   <button
                     className="p-2 m-2"
@@ -562,29 +566,40 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                     <GearSix size={32} color="#fcfcfc" weight="fill" />
                   </button>
                 </div>
-                <div className="font-bold text-xl text-white w-full text-center flex gap-1">
+                <div className="font-bold text-xl text-white w-full text-center">
                   {/* <MagnifyingGlass size={32} color="#f2f2f2" weight="fill"/> */}
                   検索結果
                 </div>
-                <Button onClick={() => setIsLoadNoteModal(true)}>
-                  <FileArrowDown size={32} color="#f2f2f2" weight="fill" />
-                </Button>
               </div>
             )}
             {/* 検索ノート切り替え */}
-            <div>
+            <div className="flex gap-2">
+              {noteMode === "selfNote" ? (
+                <div>
+                  <Button onClick={() => setIsSelectNoteModal(true)}>
+                    <DownloadSimple size={32} weight="fill" />
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  <Button onClick={() => setIsLoadNoteModal(true)}>
+                    <FileArrowDown size={32} color="#f2f2f2" weight="fill" />
+                  </Button>
+                </div>
+              )}
+
               <Button onClick={noteModeChangeButton}>
                 {noteMode === "selfNote" ? (
                   <div>
-                    <ListMagnifyingGlass
-                      size={32}
-                      color="#f6f6f9"
-                      weight="fill"
-                    />
+                    <Notebook size={32} color="#faffb8" weight="fill" />
                   </div>
                 ) : (
                   <div>
-                    <Notebook size={32} color="#f6f6f9" weight="fill" />
+                    <ListMagnifyingGlass
+                      size={32}
+                      color="#baf48a"
+                      weight="fill"
+                    />
                   </div>
                 )}
               </Button>
@@ -627,58 +642,69 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         {/* メモリリスト */}
         <div>
           <motion.div
-            className="xs:hidden  fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+            className="xs:hidden  fixed left-0 top-0 bottom-0 my-auto h-20 z-[900]"
             initial="closed"
             animate={planListDisplayMode === "list" ? "open" : "closed"}
             variants={planMenuButtonVariantsSmall}
           >
-            <button className=" h-20 z-[1000]" onClick={planModeChangeButton}>
+            <button
+              className=" h-20 z-[900] focus:outline-none focus:ring-0 focus:border-none"
+              onClick={planModeChangeButton}
+            >
               {planListDisplayMode === "list" ? (
-                <CaretLeft size={32} color="#6b6b6b" weight="light" />
+                <CaretLeft size={32} color="#f7f7f7" weight="light" />
               ) : (
                 <CaretRight size={32} color="#3d3d3d" weight="light" />
               )}
             </button>
           </motion.div>
           <motion.div
-            className="xs:fixed left-0 top-0 bottom-0 my-auto h-20 z-[1000]"
+            className="xs:fixed left-0 top-0 bottom-0 my-auto h-20 z-[900]"
             initial="closed"
             animate={planListDisplayMode === "list" ? "open" : "closed"}
             variants={planMenuButtonVariants}
           >
-            <button className=" h-20 z-[1000]" onClick={planModeChangeButton}>
+            <button
+              className=" h-20 z-[900] focus:outline-none focus:ring-0 focus:border-none"
+              onClick={planModeChangeButton}
+            >
               {planListDisplayMode === "list" ? (
-                <CaretLeft size={32} color="#6b6b6b" weight="light" />
+                <CaretLeft size={32} color="#f7f7f7" />
               ) : (
                 <CaretRight size={32} color="#3d3d3d" weight="light" />
               )}
             </button>
           </motion.div>
           <motion.div
-            className={`absolute bg-blue-100  top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] left-0 z-[500] xs:w-[400px] h-[100vh]`}
+            className={`absolute top-0 pt-[${navHeight}px] overflow-y-scroll w-[90vw] left-0 z-[500] xs:w-[400px] h-[100vh] bg-gray-500 bg-opacity-40`}
             initial="closed"
             animate={planListDisplayMode === "list" ? "open" : "closed"}
             variants={planMenuVariants}
             aria-hidden={planListDisplayMode !== "list"}
           >
-            <div className="sticky top-0 z-10 bg-sky-500 w-full h-16 flex flex-row items-center">
+            <div className="sticky top-0 z-10  w-full h-16 flex flex-row items-center bg-gray-700 bg-opacity-80">
               {editPlanData.title ? (
                 <div className="flex flex-row items-center text-xl w-full justify-end gap-4">
-                  <div className="w-full">{editPlanData.title}</div>
+                  <div className="w-full text-white border-b border-[#b8d7ff] text-center">
+                    {editPlanData.title}
+                  </div>
                   <div className="flex flex-row justify-end">
                     <Button
-                      className="mx-2"
                       onClick={() => setIsSelectPlanModal(true)}
                     >
                       <DownloadSimple size={32} weight="fill" />
                     </Button>
                     <Button
                       className="mx-2"
-                      onClick={() => setPlanMarkerDisplayMode(!planMarkerDisplayMode)}
+                      onClick={() =>
+                        setPlanMarkerDisplayMode(!planMarkerDisplayMode)
+                      }
                     >
-                     {planMarkerDisplayMode ? 
-                     <LineSegments size={32} color="#4d82ff" weight="fill" /> : 
-                     <LineSegments size={32} color="#b0b0b0" weight="fill" /> }
+                      {planMarkerDisplayMode ? (
+                        <LineSegments size={32} color="#4d82ff" weight="fill" />
+                      ) : (
+                        <LineSegments size={32} color="#b0b0b0" weight="fill" />
+                      )}
                     </Button>
                   </div>
                 </div>

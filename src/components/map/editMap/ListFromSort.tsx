@@ -21,7 +21,7 @@ const ListFromSort = ({ postsData }: { postsData: NoteSlotType[] }) => {
 
   return (
     <>
-      <div className={`bg-gray-100 rounded-xl relative ${searchedNoteSlot.length > 0 ? 'pb-4' : 'pb-[400px]'}`}>
+      <div className={`rounded-xl relative ${searchedNoteSlot.length > 0 ? 'pb-4' : 'pb-[400px]'}`}>
         {searchedNoteSlot.length > 0 ? "" :
         <div className="fixed bottom-0 h-12 my-4 z-[1000]">
           <button

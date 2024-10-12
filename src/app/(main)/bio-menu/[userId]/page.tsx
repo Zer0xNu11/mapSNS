@@ -80,7 +80,7 @@ const UserPage = async ({ params }: { params: { userId: string } }) => {
     <>
       <div className="relative bg-gray-500 w-full h-full  text-white">
       <Link href={currentPath} className="absolute m-4">
-        <Button>戻る</Button>
+        <Button>←戻る</Button>
       </Link>
         <div className=" h-[100vh] flex flex-col items-center justify-center">
           <Avatar className="w-64 h-64">

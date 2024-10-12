@@ -124,7 +124,7 @@ const EditUserData = ({ data }: EditUserDataProps) => {
     <div>
       <div className="relative bg-gray-500 w-full h-full ">
         <Link href={currentPath} className="absolute m-4">
-          <Button>戻る</Button>
+          <Button>←戻る</Button>
         </Link>
         <div className="absolute left-0 right-0 bottom-40 mx-auto z-50">
           <PendLoading />

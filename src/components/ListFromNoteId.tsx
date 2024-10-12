@@ -30,7 +30,7 @@ const ListFromNoteId = ({ postsData }: NoteIdProps) => {
 
   return (
     <>
-      <div className="bg-gray-100 rounded-xl relative pb-[400px]">
+      <div className="rounded-xl relative pb-[400px]">
         <div className="fixed bottom-0 h-12 my-4 z-[1000]">
           <button
             className="bg-gray-100 rounded-tr-full p-4"
