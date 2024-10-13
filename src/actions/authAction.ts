@@ -85,13 +85,43 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     },
   });
 
+  const createdPost0 = await prismadb.post.create({
+    data: {
+      content:
+        "検索はピンの詳細メニュー、または下のボタン（エリアピンボタン）からできます。検索設定は検索リストの歯車マークから。",
+      authorId: createdUser.id,
+      imageUrl:
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/%C3%A3%C2%82%C2%B9%C3%A3%C2%82%C2%AF%C3%A3%C2%83%C2%AA%C3%A3%C2%83%C2%BC%C3%A3%C2%83%C2%B3%C3%A3%C2%82%C2%B7%C3%A3%C2%83%C2%A7%C3%A3%C2%83%C2%83%C3%A3%C2%83%C2%88%202024-10-13%20132615-XOHlP5W3GYGACfKurSiouJjMFTE0Sx.png" ||
+        null,
+      noteId: createdNote.id,
+      category: "other",
+      order: 1,
+    },
+    include: {
+      author: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
+
+  await prismadb.$executeRaw`
+  UPDATE "Post"
+  SET location = ST_SetSRID(ST_MakePoint(${134.435833}, ${39.652924}), 4326)
+  WHERE id = ${createdPost0.id}
+`;
+
   const createdPost1 = await prismadb.post.create({
     data: {
       content:
         "リストモードの説明:リスト左下の画像マークで画像とコメントの入れ替え/投稿右下の３つの点で投稿の詳細メニュー",
       authorId: createdUser.id,
       imageUrl:
-        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/Screenshot_2024-10-06%2023.45.14_W8VdzN-KhPRtlm3AIHhfGoX22jIIhpix8S3TJ.png" ||
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/%C3%A3%C2%82%C2%B9%C3%A3%C2%82%C2%AF%C3%A3%C2%83%C2%AA%C3%A3%C2%83%C2%BC%C3%A3%C2%83%C2%B3%C3%A3%C2%82%C2%B7%C3%A3%C2%83%C2%A7%C3%A3%C2%83%C2%83%C3%A3%C2%83%C2%88%202024-10-13%20133107-SRvJXY8RfjRsI7C7l5EDtrKzSbJVVe.png" ||
         null,
       noteId: createdNote.id,
       category: "other",
@@ -121,7 +151,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         "ようこそ「ぶらつ記」へ、まずは画面右下の緑のピンで初めての投稿をしてみよう。",
       authorId: createdUser.id,
       imageUrl:
-        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/homeManual-hnFBmmkQqC2ahfRwXMsqE0QlXGDKJJ.png" ||
+        "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/%C3%A3%C2%82%C2%B9%C3%A3%C2%82%C2%AF%C3%A3%C2%83%C2%AA%C3%A3%C2%83%C2%BC%C3%A3%C2%83%C2%B3%C3%A3%C2%82%C2%B7%C3%A3%C2%83%C2%A7%C3%A3%C2%83%C2%83%C3%A3%C2%83%C2%88%202024-10-13%20133513-4m7QqKrG4DPGJw0Xqd8a2rAkyIPBme.png" ||
         null,
       noteId: createdNote.id,
       category: "other",
@@ -155,6 +185,23 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       user: true,
     },
   });
+
+  const createdPlanPoint = await prismadb.planPoint.create({
+    data: {
+      content: "ここは他人の投稿を記録しておいたり、自分のメモを管理できる画面です。まずは地図上のピンから「メモリ追加」をしてみよう。",
+      userId: createdUser.id,
+      imageUrl:   "https://s8qadrdsr1dev4fr.public.blob.vercel-storage.com/%C3%A3%C2%82%C2%B9%C3%A3%C2%82%C2%AF%C3%A3%C2%83%C2%AA%C3%A3%C2%83%C2%BC%C3%A3%C2%83%C2%B3%C3%A3%C2%82%C2%B7%C3%A3%C2%83%C2%A7%C3%A3%C2%83%C2%83%C3%A3%C2%83%C2%88%202024-10-13%20132144-EQSlm8280Smlql0E9OSdvtEzETbSYG.png" || null,
+      planId: createdPlan.id,
+      order: 0,
+    },
+  });
+
+  //位置情報 SQL
+  await prismadb.$executeRaw`
+    UPDATE "PlanPoint"
+    SET location = ST_SetSRID(ST_MakePoint(${134.435833}, ${39.652924}), 4326)
+    WHERE id = ${createdPlanPoint.id}
+  `;
 
   return {
     success: "User created",
