@@ -550,12 +550,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                     {editNoteData.title}
                   </div>
                 ) : (
-                  <div className="flex justify-center">
-                    <Button onClick={() => setIsSelectNoteModal(true)}>
-                      <div className="mx-2">記録ノートを選択</div>
-                      <DownloadSimple size={32} weight="fill" />
-                    </Button>
-                  </div>
+                  ""
                 )}
               </div>
             ) : (
@@ -578,9 +573,16 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             <div className="flex gap-2">
               {noteMode === "selfNote" ? (
                 <div>
-                  <Button onClick={() => setIsSelectNoteModal(true)}>
-                    <DownloadSimple size={32} weight="fill" />
-                  </Button>
+                  {editNoteData.title ? (
+                    <Button onClick={() => setIsSelectNoteModal(true)}>
+                      <DownloadSimple size={32} weight="fill" />
+                    </Button>
+                  ) : (
+                    <Button onClick={() => setIsSelectNoteModal(true)}>
+                      <div className="mx-2">記録ノートを選択</div>
+                      <DownloadSimple size={32} weight="fill" />
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <div>
