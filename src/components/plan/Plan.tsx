@@ -6,6 +6,7 @@ import PlanToolMenu from "../ui/PlanToolMenu";
 import { setCurrentPlanData } from "@/lib/localStorageHandler";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEditPlan } from "@/store";
 
 export interface PlanProps {
   plan: PlanType;
@@ -16,9 +17,11 @@ export interface PlanProps {
 const Plan: React.FC<PlanProps> = async ({ plan }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { setEditPlanData } = useEditPlan();
 
   const setLocalStorage = async () => {
     setCurrentPlanData(plan.id, plan.title);
+    setEditPlanData(plan.id, plan.title);
   };
 
   const writePlan = async () => {
@@ -26,6 +29,7 @@ const Plan: React.FC<PlanProps> = async ({ plan }) => {
 
     try {
       await setLocalStorage();
+      
       router.push(`/home`);
     } catch (error) {
       console.error("Error writing note:", error);

@@ -8,6 +8,7 @@ import {
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import {
+  useEditNote,
   useEditPlan,
   useMarkerStore,
   usePlanMarkerDisplayMode,
@@ -39,9 +40,10 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
   const { marker, setMarker } = useMarkerStore();
   const { selectedPlanPointId, setSelectedPlanPointId } =
     useSelectedPlanPointStore();
+  const { editNoteData } = useEditNote();
   const { editPlanData } = useEditPlan();
   const { searchingMode, setSearchingMode } = useSearchingMode();
-  const { planMarkerDisplayMode } =  usePlanMarkerDisplayMode();
+  const { planMarkerDisplayMode } = usePlanMarkerDisplayMode();
 
   useEffect(() => {
     if (!marker) {
@@ -79,6 +81,18 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
           ""
         )}
         <Popup>
+          <div className="flex justify-center mb-1">
+
+          {editNoteData.id ? (
+              <Link
+                href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/directPost/${editNoteData.id}`}
+              >
+                <Button>この位置に投稿</Button>
+              </Link>
+            ) : (
+              <Button disabled={true}>この位置に投稿</Button>
+            )}
+          </div>
           <div className="flex flex-row gap-4">
             <Button onClick={() => searchButtonHandler()}>周囲を検索</Button>
             {editPlanData.id ? (
@@ -145,13 +159,14 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
           {/* )} */}
         </Marker>
       ))}
-      { planMarkerDisplayMode ? 
+      {planMarkerDisplayMode ? (
         <Polyline
           pathOptions={LINE_COLOR.blue}
           positions={polylineCoordinates}
-        /> 
-        : ''
-      }
+        />
+      ) : (
+        ""
+      )}
     </>
   );
 };

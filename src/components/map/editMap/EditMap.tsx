@@ -43,8 +43,9 @@ import { MapTrifold } from "@phosphor-icons/react/dist/ssr/MapTrifold";
 import { XSquare } from "@phosphor-icons/react/dist/ssr/XSquare";
 import { MapPinPlus } from "@phosphor-icons/react/dist/ssr/MapPinPlus";
 import { DownloadSimple } from "@phosphor-icons/react/dist/ssr/DownloadSimple";
-import { ListMagnifyingGlass } from "@phosphor-icons/react/dist/ssr/ListMagnifyingGlass";
+import { ArrowsDownUp } from "@phosphor-icons/react/dist/ssr/ArrowsDownUp";
 import { Notebook } from "@phosphor-icons/react/dist/ssr/Notebook";
+import { ArrowsClockwise } from "@phosphor-icons/react/dist/ssr/ArrowsClockwise";
 import { FileArrowDown } from "@phosphor-icons/react/dist/ssr/FileArrowDown";
 import { Crosshair } from "@phosphor-icons/react/dist/ssr/Crosshair";
 import { LineSegments } from "@phosphor-icons/react/dist/ssr/LineSegments";
@@ -71,6 +72,7 @@ import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { searchPost } from "@/actions/searchPost";
 import ja from "date-fns/locale/ja";
+import { Star } from "@phosphor-icons/react/dist/ssr/Star";
 
 const MapUpdater = () => {
   const map = useMap();
@@ -574,13 +576,22 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               {noteMode === "selfNote" ? (
                 <div>
                   {editNoteData.title ? (
-                    <Button onClick={() => setIsSelectNoteModal(true)}>
-                      <DownloadSimple size={32} weight="fill" />
-                    </Button>
+                    <button
+                      className="bg-[#11172a] rounded-lg"
+                      onClick={() => setIsSelectNoteModal(true)}
+                    >
+                      <div className="flex flex-row items-center mx-2 h-11">
+                        <Notebook size={28} color="#ffffff" weight="fill" />
+                        <ArrowsDownUp size={20} color="#ffffff" weight="fill" />
+                      </div>
+                    </button>
                   ) : (
                     <Button onClick={() => setIsSelectNoteModal(true)}>
-                      <div className="mx-2">記録ノートを選択</div>
-                      <DownloadSimple size={32} weight="fill" />
+                      <div className="mx-2">ノート選択</div>
+                      <div className="flex flex-row items-center">
+                        <Notebook size={28} color="#ffffff" weight="fill" />
+                        <ArrowsDownUp size={20} color="#ffffff" weight="fill" />
+                      </div>
                     </Button>
                   )}
                 </div>
@@ -592,21 +603,24 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                 </div>
               )}
 
-              <Button onClick={noteModeChangeButton}>
+              <button
+                className="bg-[#11172a] rounded-lg"
+                onClick={noteModeChangeButton}
+              >
                 {noteMode === "selfNote" ? (
-                  <div>
-                    <Notebook size={32} color="#faffb8" weight="fill" />
+                  <div className="flex flex-row items-center mx-1">
+                    <Notebook size={20} color="#faffb8" weight="fill" />
+                    <ArrowsClockwise size={16} color="#ffffff" />
+                    <MagnifyingGlass size={20} color="#ababab" weight="fill" />
                   </div>
                 ) : (
-                  <div>
-                    <ListMagnifyingGlass
-                      size={32}
-                      color="#baf48a"
-                      weight="fill"
-                    />
+                  <div className="flex flex-row items-center mx-1">
+                    <Notebook size={20} color="#ababab" weight="fill" />
+                    <ArrowsClockwise size={16} color="#ffffff" />
+                    <MagnifyingGlass size={20} color="#b1f799" weight="fill" />
                   </div>
                 )}
-              </Button>
+              </button>
             </div>
           </div>
 
@@ -693,11 +707,17 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                     {editPlanData.title}
                   </div>
                   <div className="flex flex-row justify-end">
-                    <Button onClick={() => setIsSelectPlanModal(true)}>
-                      <DownloadSimple size={32} weight="fill" />
-                    </Button>
-                    <Button
-                      className="mx-2"
+                    <button
+                      className="bg-[#11172a] rounded-lg"
+                      onClick={() => setIsSelectPlanModal(true)}
+                    >
+                      <div className="flex flex-row items-center mx-2 h-11">
+                        <Star size={28} color="#ffffff" weight="fill" />
+                        <ArrowsDownUp size={20} color="#ffffff" weight="fill" />
+                      </div>
+                    </button>
+                    <button
+                      className="bg-[#11172a] rounded-lg mx-1 px-4 h-11"
                       onClick={() =>
                         setPlanMarkerDisplayMode(!planMarkerDisplayMode)
                       }
@@ -707,14 +727,17 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
                       ) : (
                         <LineSegments size={32} color="#b0b0b0" weight="fill" />
                       )}
-                    </Button>
+                    </button>
                   </div>
                 </div>
               ) : (
                 <div className="w-full flex justify-center">
                   <Button onClick={() => setIsSelectPlanModal(true)}>
                     <div className="mx-2">メモリを選択</div>
-                    <DownloadSimple size={32} weight="fill" />
+                    <div className="flex flex-row items-center mx-2 h-11">
+                      <Star size={24} color="#ffffff" weight="fill" />
+                      <ArrowsDownUp size={20} color="#ffffff" weight="fill" />
+                    </div>
                   </Button>
                 </div>
               )}
@@ -769,12 +792,12 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
         <div
           className={`fixed bottom-0 right-0 h-16 my-4 mr-8 z-[1000] flex flex-row`}
         >
-          {/* <button className="bg-green-400 rounded-full p-2 m-2 border-black border-2">
+          {/* <button className="bg-[#b1f799]  rounded-full p-2 m-2 border-black border-2">
             <MapPinSimpleArea size={32} color="#050505" weight="duotone" />
           </button> */}
           <div>
             <button
-              className={`bg-green-400 rounded-full p-2 m-2 border-black border-2 ${
+              className={`bg-[#b1f799] rounded-full p-2 m-2 border-black border-2 ${
                 listDisplayMode === "list" || planListDisplayMode === "list"
                   ? "hidden xs:block"
                   : ""
@@ -786,7 +809,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           </div>
           <div>
             <button
-              className={`w-13 h-13 bg-green-400 rounded-full p-2 m-2 border-black border-2 ${
+              className={`w-13 h-13 bg-[#b1f799]  rounded-full p-2 m-2 border-black border-2 ${
                 listDisplayMode === "list" || planListDisplayMode === "list"
                   ? "hidden xs:block"
                   : ""
@@ -801,7 +824,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
           </div>
           <div>
             <button
-              className="bg-green-400 rounded-full p-2 m-2 border-black border-2"
+              className="bg-[#b1f799]  rounded-full p-2 m-2 border-black border-2"
               onClick={async () => {
                 await getCurrentPoint();
                 userMarker && setFocusCoordinate(userMarker);
@@ -815,7 +838,7 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
             href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/post/${editNoteData.id}`}
           >
             <button
-              className="bg-green-400 rounded-full p-2 m-2 border-black border-2 disabled:opacity-50 "
+              className="bg-[#b1f799]  rounded-full p-2 m-2 border-black border-2 disabled:opacity-50 "
               disabled={editNoteData.id ? false : true}
             >
               <MapPinPlus size={32} color="#050505" weight="fill" />

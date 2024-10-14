@@ -83,7 +83,7 @@ const PlanPoint: React.FC<PlanPointProps> = ({ planpoint, id }) => {
           data-planpoint-id={planpoint.id}
         >
           <motion.div
-            className={`bg-white mb-4 h-full flex flex-col [backface-visibility:hidden] rounded-2xl p-4`}
+            className={` bg-white mb-4 h-full flex flex-col [backface-visibility:hidden] rounded-2xl p-4`}
             // ${
             //   post.imageUrl && postDisplayMode === "pict" ? "hidden" : ""
             // }

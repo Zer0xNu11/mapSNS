@@ -5,6 +5,7 @@ import { getCurrentNoteData, setCurrentNoteData } from "@/lib/localStorageHandle
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import NoteToolMenu from "../ui/NoteToolMenu";
+import { useEditNote } from "@/store";
 
 export interface NoteProps {
   note: NoteType;
@@ -16,9 +17,11 @@ export interface NoteProps {
 const Note: React.FC<NoteProps> = async ({ note }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { setEditNoteData } = useEditNote();
 
   const setLocalStorage = async () => {
     setCurrentNoteData(note.id, note.title);
+    setEditNoteData(note.id, note.title);
     const checkNoteData =getCurrentNoteData();
     console.log(checkNoteData.title);
      

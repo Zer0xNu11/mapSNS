@@ -28,7 +28,7 @@ console.log({POSTAUTHOR:post});
     <>
       <div
         className={`relative shadow-md rounded-2xl  mb-4 h-44 [perspective:1000px]  ${
-          selectedPostId === post.id ? "border-2 border-blue-500" : ""
+          selectedPostId === post.id ? "border-2 border-yellow-300" : ""
         }`}
         onClick={clickHandler}
         data-post-id={post.id}
@@ -66,7 +66,7 @@ console.log({POSTAUTHOR:post});
             </div>
           </div>
           <div className="w-full">
-            <p className="text-gray-700 break-word line-clamp-4">
+            <p className="text-gray-700 break-word line-clamp-4 text-sm">
               {post.content}
             </p>
           </div>

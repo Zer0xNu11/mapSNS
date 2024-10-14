@@ -28,7 +28,7 @@ export default function Posts({postsData}: PostsProps) {
 
   return (
     <>
-      <div ref={postsRef}>
+      <div ref={postsRef} >
         {postsData
           ? postsData.map((post) => <Post key={post.id} post={post} />)
           : "No post"}
