@@ -17,7 +17,7 @@ import { navHeight } from "@/lib/commonSetting";
 import { getNoteData } from "@/lib/getPosts";
 import UserMarker from "./UserMarker";
 import { useUserMarkerStore } from "@/store";
-import { LINE_COLOR } from "@/lib/mapSetting";
+import { ICON_Marker, LINE_COLOR } from "@/lib/mapSetting";
 
 
 export interface MapProps {
@@ -180,6 +180,7 @@ const Map: React.FC<MapProps> = ({ noteId }) => {
               pathOption={LINE_COLOR.red}
               posts={noteSlot}
               polylineCoordinates={noteSlot.map(item => item.coordinates)}
+              markerType = {ICON_Marker}
             />
                         {/* <NoteLogMarker
               posts={noteSlot.map(item => ({id: item.id, content: item.content, coordinates: item.coordinates, imageUrl: item.imageUrl, totalLikes: item.totalLikes, noteId: item.noteId}))}
