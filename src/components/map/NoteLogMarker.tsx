@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import { LatLng, latLng } from "leaflet";
-import { Marker, Polyline, Popup } from "react-leaflet";
+import { Marker, Polyline, Popup, useMap } from "react-leaflet";
 import {
   GOOGLEMAPSETTING,
   ICON_HIGHLIGHTED,
   ICON_Marker,
+  ICON_UserMarker,
   LINE_COLOR,
 } from "@/lib/mapSetting";
 import { MapProps } from "./Map";
@@ -19,6 +20,7 @@ interface NoteLogMarkerProps {
   polylineCoordinates: [number, number][];
   searchedMode?: boolean;
   planId?: string;
+  markerType : L.Icon<L.IconOptions>;
 }
 
 export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
@@ -27,6 +29,7 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
   posts,
   polylineCoordinates,
   planId,
+  markerType
 }) => {
   // const [posts, setPosts] = useState<Post[]>([]);
   const { selectedPostId, setSelectedPostId } = useSelectedPostStore();
@@ -62,13 +65,15 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
     }
   };
 
+  const mapFunction = useMap();
+
   return (
     <>
       {posts.map((post) => (
         <Marker
           key={post.id}
           position={latLng(post.coordinates[0], post.coordinates[1])}
-          icon={selectedPostId === post.id ? ICON_HIGHLIGHTED : ICON_Marker}
+          icon={selectedPostId === post.id ? ICON_HIGHLIGHTED : markerType}
           eventHandlers={{
             click: () => 
               {
@@ -95,9 +100,10 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
               <div className="flex flex-row gap-2">
                 <br />
                 <button
-                  onClick={() =>
+                  onClick={() => {
                     addPlan(post.coordinates[0], post.coordinates[1])
-                  }
+                    mapFunction.closePopup()
+                  }}
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                   disabled={editPlanData.id ? false : true}
@@ -106,8 +112,10 @@ export const NoteLogMarker: React.FC<NoteLogMarkerProps> = ({
                 </button>
                 <button
                   onClick={() =>
+                  {
                     addPlanAll(post.noteId, posts)
-                  }
+                    mapFunction.closePopup()
+                  }}
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300 `}
                   disabled={editPlanData.id ? false : true}

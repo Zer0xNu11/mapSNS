@@ -17,7 +17,7 @@ import {
 } from "@/store";
 import { LatLng, latLng, icon } from "leaflet";
 import React, { useEffect } from "react";
-import { Circle, Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
+import { Circle, Marker, Polyline, Popup, useMap, useMapEvent } from "react-leaflet";
 import { PlanLeafletType } from "@/types";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -60,6 +60,8 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
     console.log({ pointlat: lat, pointlng: lng });
   });
 
+  const mapFunction = useMap();
+
   if (!marker) return null;
 
   return (
@@ -94,7 +96,11 @@ export const EditMapMarker: React.FC<EditMapMarkerProps> = ({
             )}
           </div>
           <div className="flex flex-row gap-4">
-            <Button onClick={() => searchButtonHandler()}>周囲を検索</Button>
+            <Button onClick={() => 
+              {
+                searchButtonHandler()
+                mapFunction.closePopup()
+                }}>周囲を検索</Button>
             {editPlanData.id ? (
               <Link
                 href={`${process.env.NEXT_PUBLIC_BASE_URL}/create/planPoint/${planId}`}

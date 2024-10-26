@@ -5,7 +5,7 @@ import "leaflet/dist/leaflet.css";
 import "../map.css";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getPosition } from "@/lib/getPostion";
-import { LINE_COLOR, mapStyles } from "@/lib/mapSetting";
+import { ICON_Marker, ICON_UserMarker, LINE_COLOR, mapStyles } from "@/lib/mapSetting";
 import { EditMapMarker } from "./EditMapMarker";
 import { SearchResultMarkers } from "../SearchResultMarkers";
 import L from "leaflet";
@@ -773,18 +773,20 @@ const EditMap: React.FC<EditMapProps> = ({}) => {
               ""
             )}
             <NoteLogMarker
-              pathOption={LINE_COLOR.paleRed}
+              pathOption={LINE_COLOR.red}
               posts={searchedNoteSlot}
               polylineCoordinates={searchedNoteSlot.map(
                 (item) => item.coordinates
               )}
               searchedMode={true}
               planId={editPlanData.id}
+              markerType = {ICON_Marker}
             />
             <NoteLogMarker
-              pathOption={LINE_COLOR.red}
+              pathOption={LINE_COLOR.green}
               posts={noteSlot}
               polylineCoordinates={noteSlot.map((item) => item.coordinates)}
+              markerType={ICON_UserMarker}
             />
             <UserMarker />
           </MapContainer>

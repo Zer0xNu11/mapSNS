@@ -48,6 +48,14 @@ export const ICON_Marker = icon({
   className: 'text-blue-400'
 });
 
+export const ICON_UserMarker = icon({
+  iconUrl: "/images/circleGreen.svg",
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+  popupAnchor: [0, -30],
+  className: 'text-blue-400'
+});
+
 export const ICON_HIGHLIGHTED = icon({
   iconUrl: "/images/map-pin-fill.svg",
   iconSize: [32, 32],
@@ -75,7 +83,7 @@ export const LINE_COLOR = {
   red : { color: "#ff1100"},
   paleRed : { color: "#f47971", dashArray: '10, 10' },
   blue : { color: "#000dbd"},
-  green : {color: "#00c73c"},
+  green : {color: "#43f240"},
   yellow : {color: "#ffe229"},
   }
 

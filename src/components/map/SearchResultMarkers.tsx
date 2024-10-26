@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { LatLng, latLng, icon, LatLngExpression } from "leaflet";
-import { Marker, Polyline, Popup, useMapEvent } from "react-leaflet";
+import { Marker, Polyline, Popup, useMap, useMapEvent } from "react-leaflet";
 import {
   GOOGLEMAPSETTING,
   ICON_HIGHLIGHTED,
@@ -54,6 +54,8 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
     }
   };
 
+  const mapFunction = useMap();
+
   if (posts) {
     return (
       <>
@@ -82,16 +84,20 @@ export const SearchResultMarkers: React.FC<SearchResultMarkersProps> = ({
               <br />
               <div className="flex flex-row gap-2">
                 <button
-                  onClick={() => searchNoteId(post.noteId)}
+                  onClick={() => 
+                    {searchNoteId(post.noteId)
+                      mapFunction.closePopup()
+                    }}
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                 >
                   ノート表示
                 </button>
                 <br />
                 <button
-                  onClick={() =>
+                  onClick={() =>{
                     addPlan(post.coordinates[0], post.coordinates[1])
-                  }
+                    mapFunction.closePopup()
+                  }}
                   type="submit"
                   className={`mt-2 bg-gray-700 hover:bg-gray-600 duration-200 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-300`}
                   disabled={editPlanData.id ? false : true}
