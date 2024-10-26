@@ -1,16 +1,17 @@
-/** @type {import('next').NextConfig} */
-// const nextConfig = {};
+import nextPWA from 'next-pwa'
 
-const withPWA = require('next-pwa')({
-  dest: 'public',
+/** @type {import('next').NextConfig} */
+
+const withPWA = nextPWA ({
+  dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-})
+  disable: process.env.NODE_ENV === "development",
+});
 
-const nextConfig = {
-  // App Routerの設定
+const nextConfig = withPWA({
   reactStrictMode: true,
-}
+});
 
-export default withPWA(nextConfig);
+
+export default nextConfig;
