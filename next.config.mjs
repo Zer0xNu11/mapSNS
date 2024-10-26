@@ -1,15 +1,15 @@
-import nextPWA from 'next-pwa'
+import withPWA from 'next-pwa'
 
 /** @type {import('next').NextConfig} */
 
-const withPWA = nextPWA ({
+const nextPWA = withPWA ({
   dest: "public",
   register: true,
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
 });
 
-const nextConfig = withPWA({
+const nextConfig = nextPWA({
   reactStrictMode: true,
 });
 
