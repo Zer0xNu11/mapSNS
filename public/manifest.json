@@ -1,6 +1,6 @@
 {
   "name": "ぶらつ記",
-  "short_name": "ぶらつ記",
+  "short_name": "PREC",
   "description": "Location-based SNS application for solo travelers",
   "start_url": "https://map-sns.vercel.app/",
   "display": "standalone",
